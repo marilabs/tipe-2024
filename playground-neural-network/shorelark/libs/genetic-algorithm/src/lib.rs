@@ -20,14 +20,20 @@ mod tests {
 
 pub struct GeneticAlgorithm<S> {
     selection_method: S,
+    crossover_method: Box<dyn CrossoverMethod>,
+    mutation_method: Box<dyn MutationMethod>,
 }
 
 impl<S> GeneticAlgorithm<S>
     where
-        S: SelectionMethod, {
+        S: SelectionMethod,
+        crossover_method: impl CrossoverMethod + 'static,
+        mutation_method: impl MutationMethod + 'static, {
     
     pub fn new(selection_method: S) -> Self {
-        Self { selection_method }
+        Self { selection_method,
+            crossover_method: Box::new(crossover_method), 
+            mutation_method: Box::new(mutation_method),}
     }
 
     pub fn evolve<I>(
@@ -41,6 +47,15 @@ impl<S> GeneticAlgorithm<S>
             .map(|_| {
                 let parent_a = self.selection_method.select(rng, population);
                 let parent_b = self.selection_method.select(rng, population);
+
+                let mut child = self
+                    .crossover_method
+                    .crossover(rng, parent_a, parent_b);
+
+                self.mutation_method.mutate(rng, &mut child);
+
+                I::create(child)
+                
             })
             .collect()
     }
@@ -49,6 +64,7 @@ impl<S> GeneticAlgorithm<S>
 pub trait Individual {
     fn fitness(&self) -> f32;
     fn chromosome(&self) -> &Chromosome;
+    fn create(chromosome: Chromosome) -> Self;
 }
 
 pub trait SelectionMethod {
@@ -151,3 +167,53 @@ impl CrossoverMethod for UniformCrossover {
             .collect()
         }
     }
+
+    pub trait MutationMethod {
+        fn mutate(&self, rng: &mut dyn RngCore, child: &mut Chromosome);
+    }
+
+    pub struct GaussianMutation {
+        chance: f32,
+        coeff: f32,
+    }
+
+    impl GaussianMutation {
+        pub fn new(chance: f32, coeff: f32) -> Self {
+            assert!(chance >= 0.0 && chance <= 1.0);
+    
+            Self { chance, coeff }
+        }
+    }
+    
+    impl MutationMethod for GaussianMutation {
+        fn mutate(&self, rng: &mut dyn RngCore, child: &mut Chromosome) {
+            for gene in child.iter_mut() {
+                let sign = if rng.gen_bool(0.5) { -1.0 } else { 1.0 };
+    
+                if rng.gen_bool(self.chance as _) {
+                    *gene += sign * self.coeff * rng.gen::<f32>();
+                }
+            }
+        }
+    }
+
+#[cfg(test)]
+impl Individual for TestIndividual {
+    fn create(chromosome: Chromosome) -> Self {
+        Self::WithChromosome { chromosome }
+    }
+
+    fn chromosome(&self) -> &Chromosome {
+        match self {
+            Self::WithChromosome { chromosome } => chromosome,
+            Self::WithFitness { .. } => panic!("not supported for TestIndividual::WithFitness"),
+        }
+    }
+
+    fn fitness(&self) -> f32 {
+        match self {
+            Self::WithChromosome { chromosome } => chromosome.iter().sum(),
+            Self::WithFitness { fitness } => *fitness,
+        }
+    }
+}
