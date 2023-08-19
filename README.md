@@ -7,4 +7,4 @@ My work for the 2024 TIPE | Mon projet pour le TIPE de 2024 — French only
 * Autre idée: suivre [ce tutoriel](https://pwy.io/posts/learning-to-fly-pt1/) pour une simulation de l'évolution (plus éloigné du thème *jeux et sports*).
 
 ## Implémentation: 
-* [Ce tutorial](https://pwy.io/posts/learning-to-fly-pt1/) peut être suivi [ici](https://github.com/marilabs/tipe-2024/tree/main/playground%20réseaux%20neuronaux/shorelark), pour plus d'info: [GitHub lié au tutoriel](https://github.com/Patryk27/shorelark/tree/main)
+* [Ce tutorial](https://pwy.io/posts/learning-to-fly-pt1/) peut être suivi [ici](https://github.com/marilabs/tipe-2024/tree/main/shorelark), pour plus d'info: [GitHub lié au tutoriel](https://github.com/Patryk27/shorelark/tree/main) ✅
