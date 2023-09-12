@@ -8,3 +8,4 @@ My work for the 2024 TIPE | Mon projet pour le TIPE de 2024 — French only
 
 ## Implémentation: 
 * [Ce tutorial](https://pwy.io/posts/learning-to-fly-pt1/) peut être suivi [ici](https://github.com/marilabs/tipe-2024/tree/main/shorelark), pour plus d'info: [GitHub lié au tutoriel](https://github.com/Patryk27/shorelark/tree/main) ✅
+* Code du jeu de snake avec PyGame
