@@ -1,4 +1,3 @@
-# Example file showing a circle moving on screen
 import pygame
 from random import randrange
 from game import Game
@@ -13,8 +12,6 @@ screen = pygame.display.set_mode((game.WIDTH * SIDE, game.HEIGHT * SIDE))
 clock = pygame.time.Clock()
 running = True
 dt = 0
-
-# player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
 
 apple = (randrange(0, game.WIDTH), randrange(0, game.HEIGHT))
 
