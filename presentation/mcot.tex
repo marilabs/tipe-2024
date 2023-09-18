@@ -1,0 +1,189 @@
+\documentclass[11pt,a4paper]{article} 
+
+\usepackage[a4paper,margin=2cm]{geometry}
+\usepackage[T1]{fontenc}
+%\usepackage{pslatex}
+\usepackage[utf8]{inputenc}
+\usepackage[francais]{babel} 
+\usepackage{graphicx} 
+\usepackage{amsmath} 
+\setlength{\unitlength}{1mm}
+\usepackage{enumitem}
+\usepackage{cancel}
+\usepackage{amssymb} % pour les ensembles NN
+\usepackage{mathrsfs} % pour les hypothèses de récurrences \PP
+\usepackage{fancyhdr}
+\usepackage{tikz,tkz-tab,tikz-3dplot,tkz-euclide}
+\usetkzobj{all}
+\usetikzlibrary{angles,quotes,intersections,calc,through}
+\usepackage{fancybox}
+\usepackage{titling}
+\usepackage[explicit]{titlesec}
+\usepackage{mathtools}
+\usepackage{eurosym}
+\usepackage{stmaryrd} % pour parallèle // \sslash
+\usepackage{physics}
+\usepackage{pgfplots}
+\usepackage[lined,boxed,commentsnumbered, ruled,vlined,linesnumbered, french, onelanguage]{algorithm2e}
+\usepackage{hyperref}
+
+
+
+\definecolor{Honeydew1}{rgb}{.94,1,.94}
+\definecolor{lavendermist}{rgb}{0.9, 0.9, 0.98}
+
+\newcommand{\res}{\colorbox{lavendermist}}
+\newcommand{\resm}[1]{\colorbox{lavendermist}{$\displaystyle #1$}}
+
+% vecteurs
+\newcommand*\colvec[3][]{
+    \begin{pmatrix}\ifx\relax#1\relax\else#1\\\fi#2\\#3\end{pmatrix}
+}
+
+\pagestyle{fancy}
+
+% ensembles N,Z,Q,D,R,C
+\DeclareMathOperator{\NN}{\mathbb{N}}
+\DeclareMathOperator{\ZZ}{\mathbb{Z}}
+\DeclareMathOperator{\QQ}{\mathbb{Q}}
+\DeclareMathOperator{\DD}{\mathbb{D}}
+\DeclareMathOperator{\RR}{\mathbb{R}}
+\DeclareMathOperator{\CC}{\mathbb{C}}
+\DeclareMathOperator{\e}{e}
+
+% droite D et plan P
+\DeclareMathOperator{\GP}{\mathscr{P}}
+\DeclareMathOperator{\GD}{\mathscr{D}}
+\DeclareMathOperator{\GA}{\mathscr{A}}
+\DeclareMathOperator{\GC}{\mathscr{C}}
+\DeclareMathOperator{\GS}{\mathscr{S}}
+
+\newcommand*{\QEDA}{\null\nobreak\hfill\ensuremath{\blacksquare}}
+\newcommand*{\QEDB}{\null\nobreak\hfill\ensuremath{\square}}
+\newcommand{\usd}{\frac{1}{2}}
+\newcommand{\tsd}{\frac{3}{2}}
+\newcommand{\csd}{\frac{5}{2}}
+\newcommand{\usq}{\frac{1}{4}}
+\newcommand{\tsq}{\frac{3}{4}}
+\newcommand{\csq}{\frac{5}{4}}
+\newcommand{\ssq}{\frac{6}{4}}
+\newcommand{\ush}{\frac{1}{8}}
+\newcommand{\psd}{\frac{\pi}{2}}
+
+% angle deux vecteurs
+\newcommand{\angv}[2]{(\widehat{\overrightarrow{#1},\overrightarrow{#2}})}
+\newcommand{\vf}[1]{\overrightarrow{#1}}
+
+% conjugué complexe
+\newcommand{\zb}[1]{\overline{#1}}
+
+\newcommand{\monNom}{Marilou Bernard de Courville}
+\newcommand{\maClasse}{MP$^{*}$, Charlemagne}
+
+
+\lhead{\monNom}
+\chead{}
+\rhead{\maClasse}
+
+\lfoot{\jobname.tex}
+\cfoot{}
+\rfoot{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+\setlength{\droptitle}{-1.5cm}
+
+\makeatletter
+\renewcommand{\maketitle}{
+  \thispagestyle{empty}
+  \begin{center}
+  \shadowbox{\parbox{5in}{%
+     \centering%
+     \textrm{\textbf{\Large \@title}}\\
+     \vspace{0.2cm}
+     \textrm{\large \@author}\\
+     \vspace{0.2cm}
+     \textrm{\large \@date}
+  }} 
+  \end{center}
+  \null
+}
+
+\author{\monNom, \maClasse}
+\title{Mise en Cohérence des Objectifs du TIPE}
+\date{\today} 
+
+
+%\begin{enumerate}[label=(\alph*)]
+%	\item	
+%\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% NOTES
+
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\thispagestyle{fancy}
+
+\section{Titre - 20 mots}
+
+\begin{center}
+    Apprendre à une intelligence artificielle à jouer à Snake en utilisant un algorithme génétique.
+\end{center}
+
+\textit{14 mots}
+
+\section{Motivation pour le choix du sujet - 50 mots}
+
+Le jeu de snake, jeu ayant émergé dans les années 80 en salle d'arcade, permet d'illustrer le principe d'algorithme évolutionniste, plus précisément d'algorithme génétique.
+Ce genre d'algorithme s'inspirant de l'évolution naturelle, il a ensuite de nombreuses applications dans le domaine de l'ingéniérie, le rendant de plus en plus pertinant.
+
+\textit{49 mots}
+
+\section{Lien avec le thème de l'année (Jeux et Sports) - 50 mots}
+
+\section{Bibliographie commentée - 650 mots}
+
+
+
+\section{Problématique - 50 mots}
+
+La problématique est comment rendre une intelligence artificielle compétitive au jeu Snake, à l'aide de différents algorithmes d'apprentissage notamment des algorithmes génétiques.
+
+\textit{25 mots}
+
+\section{Objectifs - 100 mots}
+
+
+\section{Mots-clés - 5 en français et en anglais}
+
+\begin{tabular}{||r|c|c|c||} \hline
+	Français & Intelligence artificielle & Algorithme génétique & Snake & & \\ \hline \hline
+	Anglais & Artificial Intelligence & Genetic algorithm & Snake & & \\
+		\hline
+	\end{tabular}
+
+\section{Bibliographie}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
