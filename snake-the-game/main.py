@@ -2,25 +2,22 @@ import pygame
 from random import randrange
 from game import Game
 
-game = Game()
+# game = Game()
+
+from game_collection import GameCollection
+
+game_collection = GameCollection(100)
 
 SIDE = 50
+WIDTH = 20
+HEIGHT = 15
 
 # pygame setup
 pygame.init()
-screen = pygame.display.set_mode((game.WIDTH * SIDE, game.HEIGHT * SIDE))
+screen = pygame.display.set_mode((WIDTH * SIDE, HEIGHT * SIDE))
 clock = pygame.time.Clock()
 running = True
 dt = 0
-
-apple = (randrange(0, game.WIDTH), randrange(0, game.HEIGHT))
-
-snake_body = [(int(game.WIDTH / 2), int(game.HEIGHT / 2)),
-            (int(game.WIDTH / 2) + 1, int(game.HEIGHT / 2)), 
-            (int(game.WIDTH / 2) + 2, int(game.HEIGHT / 2))]
-
-direction = (-1, 0)
-
 
 while running:
     # poll for events
@@ -29,16 +26,19 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
+    # retrieve the new game
+    game = game_collection.snake_to_display()
+
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("white")
 
-    for (x, y) in snake_body:
+    for (x, y) in game.snake_body:
         pygame.draw.circle(screen, "green", (x * SIDE + SIDE/2, y * SIDE + SIDE/2), SIDE / 2)
 
-    (x, y) = snake_body[0]
+    (x, y) = game.snake_body[0]
     pygame.draw.circle(screen, "black", (x * SIDE + SIDE/2, y * SIDE + SIDE/2), SIDE / 4)
 
-    (x, y) = apple
+    (x, y) = game.apple
     pygame.draw.circle(screen, "red", (x * SIDE + SIDE/2, y * SIDE + SIDE/2), SIDE / 2)
 
 
@@ -46,10 +46,11 @@ while running:
 
     # update your game state here
 
-    running = running and game.setp()
+    running = running and game_collection.step()
 
     # flip() the display to put your work on screen
     pygame.display.flip()
+    print(running)
 
     # limits FPS to 60
     # dt is delta time in seconds since last frame, used for framerate-
