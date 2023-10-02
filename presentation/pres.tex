@@ -1,0 +1,652 @@
+\documentclass[10pt]{beamer}
+\usetheme{Goettingen}
+
+\usepackage[french]{babel}
+\usepackage[T1]{fontenc}
+
+\usepackage{amsmath}
+\usepackage{algpseudocode}
+
+\usepackage{algorithm}
+%\usepackage{algorithmic}
+\newcommand{\kw}[1]{\textrm{#1}}
+
+\usepackage{forest}
+
+%\usepackage{scrextend}
+%\changefontsizes{7.5pt}
+
+\usefonttheme[onlymath]{serif}
+
+\usepackage{xcolor}
+\usepackage{graphicx} 
+\usepackage{amsmath} 
+\setlength{\unitlength}{1mm}
+%\usepackage{enumitem}
+\usepackage{cancel}
+\usepackage{amssymb} % pour les ensembles NN
+\usepackage{mathrsfs} % pour les hypothèses de récurrences \PP
+%\usepackage{fancyhdr}
+\usepackage{multicol}
+\usepackage{minted}
+\setminted{
+    %linenos=true,
+    breaklines=true,
+    %breakanywhere=true,
+    encoding=utf8,
+    fontseries=heiti,
+    % autogobble=true,
+    %frame=lines
+}
+
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{array,collcell}
+\newcommand\AddLabel[1]{%
+  \refstepcounter{equation}% increment equation counter
+  (\theequation)% print equation number
+  \label{#1}% give the equation a \label
+}
+\newcolumntype{M}{>{\hfil}X<{\hfil}} % mathematics column
+%\newcolumntype{M}{>{\hfil$\displaystyle}X<{$\hfil}} % mathematics column
+%\newcolumntype{L}{>{\collectcell\AddLabel}r<{\endcollectcell}}
+\renewcommand\tabularxcolumn[1]{m{#1}}% for vertical centering text in X column
+
+\usepackage{tikz}
+\usetikzlibrary{calc, shapes}
+
+\usepackage{tkz-graph}
+\tikzset{EdgeStyle/.append style = {->}}
+\tikzset{LabelStyle/.style= {draw,
+fill = white,
+text = black}}
+
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw,inner sep=1pt] (char) {#1};}}
+
+% ensembles N,Z,Q,D,R,C
+\DeclareMathOperator{\NN}{\mathbb{N}}
+\DeclareMathOperator{\ZZ}{\mathbb{Z}}
+\DeclareMathOperator{\QQ}{\mathbb{Q}}
+\DeclareMathOperator{\DD}{\mathbb{D}}
+\DeclareMathOperator{\RR}{\mathbb{R}}
+\DeclareMathOperator{\CC}{\mathbb{C}}
+\DeclareMathOperator*{\argmax}{\arg\!\max}
+
+\title{TIPE 2023}
+\subtitle{Parcourir la ville efficacement - offrir aux visiteurs de Paris des itinéraires optimisés}
+\author{Marilou Bernard de Courville}
+\institute{N\textsuperscript{\underline{o}} SCEI 41188}
+\date{\today}
+
+\setbeamertemplate{footline}[frame number]
+
+
+\begin{document}
+ 
+\begin{frame}
+    \titlepage
+\end{frame}
+
+%\begin{frame}
+%    \frametitle{Table des matières}
+%    \tableofcontents
+%\end{frame}
+
+\section{Introduction}
+
+\begin{frame}
+\frametitle{Introduction}
+\framesubtitle{Problématique et pertinence au regard du thème de l'année}
+
+\begin{itemize}
+\item \textbf{Objectif:} parcourir efficacement la ville dans un but touristique.
+\item \textbf{Recherche opérationnelle:} permet d'atteindre l'objectif en réalisant des optimisations sous contraintes $[1]$.
+\item \textbf{Deux cas} envisagés:
+  \begin{enumerate}
+  \item optimiser un trajet en métro via l'algorithme de Dijkstra et différentes structures de données codées en OCaml $[3]$;
+  \item optimiser un trajet soit en métro ou à pied en passant par plusieurs types de chemins en utilisant un solveur linéaire (CPLEX d'IBM) et un code en Python.
+  \end{enumerate}
+\item Ces deux cas sont modélisés à l'aide de \textbf{graphes orientés}.
+\end{itemize}
+
+\end{frame}
+
+\section{\textbf{1\ier{} objectif}: un trajet efficace en métro}
+
+\subsection{Données du problème}
+
+\begin{frame}
+\frametitle{Trajet le plus court en métro - problème}
+\framesubtitle{Données du problème}
+\begin{columns}[T]
+\begin{column}{0.75\textwidth}
+\small
+\begin{itemize}
+\item Système étudié: métro parisien
+\item Problématique: plus court trajet entre 2 stations
+\item Graphe conséquent: 302 sommets, 347 arêtes
+\item Contribution: structures de données adaptées à une résolution efficace en temps
+ \item Rapport thème: qualifier distance maximale acceptable entre hôtel et lieux de visite.
+\end{itemize}
+\begin{figure}
+\centering
+\vspace{-0.3cm}\includegraphics[width=0.75\textwidth]{plan-metro.png}
+\end{figure}
+\end{column}
+\begin{column}{0.25\textwidth}
+\begin{figure}
+\vspace{-1cm}\includegraphics[height=0.9\textheight]{graphe-metro.eps}
+\end{figure}
+\end{column}
+\end{columns}
+\end{frame}
+
+\subsection{Algorithme de Dijkstra, structures de données}
+
+\begin{frame}
+\frametitle{Trajet le plus court en métro - modélisation}
+\framesubtitle{Modèles de données utilisés (types)}
+
+\small
+\begin{itemize}
+\item Un tas est une représentation organisée en arbre des stations en fonction d'une priorité (distance du chemin).
+\item Représentation en tas (heap) efficace en complexité pour accéder au n\oe ud de priorité minimum et mettre à jour les priorités.
+\item Trois structures étudiées: tas non modifiables (\textit{immutable heaps}), tas modifiables, et tarbres (\textit{treap}).
+\item Programmes réalisés en OCaml utilisent seulement le module \texttt{Hashtbl} de la bibliothèque standard pour manipuler les tas.
+\end{itemize}
+
+\begin{columns}[T]
+\begin{column}{0.5\textwidth}
+\tiny
+\forestset{default preamble={for tree={circle,draw}}}
+\begin{forest}
+[2[4[5[14][9]][6[11][10]]][7[8[12]][13]]]
+\end{forest}
+
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+    \hline
+    2 & 4 & 7 & 5 & 6 & 8 & 13 & 14 & 9 & 11 & 10 & 12\\
+    \hline
+\end{tabular}
+\\
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+\hline
+\textbf{Élément} & 2 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 & 13 & 14 \\
+\hline
+\textbf{Position} & 0 & 1 & 3 & 4 & 2 & 5 & 8 & 10 & 9 & 11 & 6 & 7 \\
+\hline
+\end{tabular}
+\end{column}
+\begin{column}{0.5\textwidth}
+\tiny
+\forestset{default preamble={for tree={circle,draw}}}
+rg0: 
+\begin{forest}
+[]
+\end{forest}
+rg1: 
+\begin{forest}
+[[]]
+\end{forest}
+rg2: 
+\begin{forest}
+[[[]][]]
+\end{forest}
+rg3: 
+\begin{forest}
+[[[[]][]][[]][]]
+\end{forest}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Trajet le plus court en métro - algorithme}
+\framesubtitle{Algorithme de Dijkstra et influence des structures de données sur la complexité}
+
+\begin{columns}[T]
+\begin{column}{0.5\textwidth}
+\scriptsize
+\begin{algorithmic}[0]
+\Require Un graphe $G=(V,A)$, $V$ sommets, $A$ arêtes 
+\Require Un noeud source $s$
+\Ensure $d$ tableau des plus court chemins de $s$ vers $v\in V$
+\ForAll {$v \in V[G]$}
+    \State $d[v] \leftarrow +\infty$, $\kw{père}[v] \leftarrow \kw{None}$
+\EndFor
+\State $d[s] \leftarrow 0$, $S \leftarrow \kw{$\emptyset$}$, $Q \leftarrow V[G]$
+\While{$Q \neq \emptyset$} 
+    \State $u \leftarrow  \kw{Extrait}_{\kw{Min}}(Q)$
+    \State $S \leftarrow  S \cup \{u\}$
+    \ForAll{arête $(u,v)$ d'origine $u$}  
+    \If{$d[u] + w(u,v) < d[v]$}
+        \State $d[v] \leftarrow d[u] + w(u,v)$, $\kw{père}[v] := u$ 
+    \EndIf
+    \EndFor
+\EndWhile
+\end{algorithmic}
+\end{column}
+\begin{column}{0.5\textwidth}
+\scriptsize
+
+\begin{table}[h]\vspace{-0.5cm}
+\centering
+\caption{Dijkstra: complexité (opérations)}
+%\label{tab:dijkstra-complexity}
+\hspace{-0.5cm}
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Implantation}	& \textbf{Complexity} \\ \hline
+Naif					& $\mathcal{O}\left(V^2 + A\right)$             \\ \hline
+Tas						& $\mathcal{O}\left((V + A) \log V\right)$      \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[h]\vspace{-0.5cm}
+\centering
+\caption{Simulations: temps exécution pour toutes les stations du métro}
+\hspace{-0.5cm}
+\begin{tabular}{|c|c|}
+\hline
+\textbf{Type} & \textbf{Temps exécution} \\
+\hline
+\textbf{Naif} &960ms \\
+\hline
+\textbf{Tas non mutable v1} &312ms \\
+\hline
+\textbf{Tas mutable} &191ms \\
+\hline
+\textbf{Tarbre} &1018ms \\
+\hline
+\textbf{Tas non mutable v2} &145ms \\
+\hline
+\end{tabular}
+\end{table}
+
+\end{column}
+\end{columns}
+
+\end{frame}
+
+\subsection{Résultat: stations les plus éloignées}
+
+\begin{frame}
+\frametitle{Trajet le plus court en métro - résultats}
+\framesubtitle{Quelles sont les stations les plus éloignées?}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.8\textwidth]{solution-dijkstra.png}
+\end{figure}
+
+\small
+\begin{itemize}
+\item Question: quelles sont les deux stations les plus éloignées au sens du plus court trajet?
+\item Hypothèses: aucun coût de changement de ligne et un même temps de parcours entre stations
+\item Réponse: \texttt{Pont de Sèvres $\rightarrow$ Créteil - Pointe du Lac} en 34 sauts!
+\end{itemize}
+
+% Pont de Sèvres $\rightarrow$ Billancourt $\rightarrow$ Marcel Sembat $\rightarrow$ Porte de Saint-Cloud - Parc des Princes $\rightarrow$ Exelmans $\rightarrow$ Michel-Ange - Molitor $\rightarrow$ Chardon-Lagache $\rightarrow$ Mirabeau $\rightarrow$ Javel - André Citroën $\rightarrow$ Charles Michels $\rightarrow$ Avenue Émile-Zola $\rightarrow$ La Motte-Picquet - Grenelle $\rightarrow$ École Militaire $\rightarrow$ La Tour-MauBourseg $\rightarrow$ Invalides $\rightarrow$ Concorde $\rightarrow$ Madeleine $\rightarrow$ Pyramides $\rightarrow$ Châtelet $\rightarrow$ Gare de Lyon $\rightarrow$ Reuilly - Diderot $\rightarrow$ MontGallieni Parc de Bagnoletet $\rightarrow$ Daumesnil - Felix Eboue $\rightarrow$ Michel Bizot $\rightarrow$ Porte Dorée $\rightarrow$ Porte de Charenton $\rightarrow$ Liberté $\rightarrow$ Charenton - Écoles Place Aristide Briand $\rightarrow$ École vétérinaire de Maisons-Alfort $\rightarrow$ Maisons-Alfort - Stade $\rightarrow$ Maisons-Alfort - Les Juilliottes $\rightarrow$ Créteil - L'Échat $\rightarrow$ Créteil - Université $\rightarrow$ Créteil - Préfecture Hôtel de Ville $\rightarrow$ Créteil - Pointe du Lac
+\end{frame}
+
+\section{\textbf{2\ieme{} objectif}: un trajet constitué de plusieurs types de chemins}
+
+\subsection{Cas préliminaire du métro}
+
+\begin{frame}
+\frametitle{Plus compliqué: plus petit chemin passant par toutes les lignes du métro}
+\framesubtitle{Étude de la résolution à l'aide d'un solveur linéaire}
+% https://interstices.info/quel-trajet-optimal-pour-passer-au-moins-une-fois-par-toutes-les-lignes-de-metro/
+\begin{itemize}
+\item Sujet traité par Florian Sikora $[7]$ par étude de graphe coloré pour le réseau du métro;
+\item Sommet: station, arête: trajet entre deux stations connexes, arête colorée par la couleur de la ligne reliant les stations
+\item Problème du "Generalised directed rural postman" $[2]$;
+\item Problème NP-difficile: pas de solution en temps polynomial $[6]$;
+\item Résolution requiert l'utilisation d’un solveur linéaire (CPLEX d'IBM) pour "integer linear programming" (ILP) $[9]$;
+\item Fait intervenir une matrice de contraintes (MIP) de \texttt{1270x1847, 6999 coeffs non nuls}.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Solution: un plus petit chemin passant par toutes les lignes du métro}
+\framesubtitle{Résolution à l'aide d'un solveur linéaire}
+\begin{center}
+\includegraphics[width=\textwidth]{solution-sikora.png}
+\end{center}
+\end{frame}
+
+\begin{frame}
+
+\subsection{Adaptation touristique}
+    
+\frametitle{Adaptation dans un but touristique à Paris}
+
+\framesubtitle{Problématique: trouver le plus court trajet qui passe par différents "types" de chemins et des monuments}
+
+\begin{columns}[T]
+\begin{column}{0.55\textwidth}
+\small
+20 monuments considérés:\\
+\scriptsize
+\circled{1} Tour Eiffel,
+\circled{2} Musée du Louvre,\\
+\circled{3} Palais du Luxembourg,
+\circled{4} Centre Pompidou,\\
+\circled{5} Sainte-Chapelle,
+\circled{6} Musée d'Orsay,\\
+\circled{7} Fondation Louis Vuitton,
+\circled{8} Panthéon,\\
+\circled{9} Arc de triomphe,
+\circled{10} Musée quai Branly,\\
+\circled{11} Institut monde arabe,
+\circled{12} Musée Rodin,\\
+\circled{13} Musée de Cluny,
+\circled{14} Grand Palais,\\
+\circled{15} Notre-Dame,
+\circled{16} Sacré-Coeur,\\
+\circled{17} Hotel de Ville,
+\circled{18} Place de la Concorde,\\
+\circled{19} Palais Garnier,
+\circled{20} Père Lachaise.
+\begin{center}
+\vspace{-0.1cm}\includegraphics[width=1.0\textwidth]{chemins-small.jpg}
+\end{center}
+\end{column}
+\begin{column}{0.45\textwidth}
+\begin{center}
+\vspace{-1cm}\includegraphics[width=1.0\textwidth]{graphe.png}
+\end{center}
+\small
+5 types de chemins (activités) passant:
+\scriptsize
+\begin{itemize}
+\item \fcolorbox{green}{green}{\rule{0pt}{3pt}\rule{3pt}{0pt}} par des espaces verts
+\item \fcolorbox{red}{red}{\rule{0pt}{3pt}\rule{3pt}{0pt}} par les quais de la Seine
+\item \fcolorbox{brown}{brown}{\rule{0pt}{3pt}\rule{3pt}{0pt}} par des quartiers historiques
+\item \fcolorbox{purple}{purple}{\rule{0pt}{3pt}\rule{3pt}{0pt}} proche d'architectures parisiennes typiques
+\item \fcolorbox{yellow}{yellow}{\rule{0pt}{3pt}\rule{3pt}{0pt}} par des rues commerçantes, grands magasins
+\end{itemize}
+\end{column}
+\end{columns}
+
+\end{frame}
+
+\subsection{Formalisation du problème}
+
+\begin{frame}
+\frametitle{Formalisation du problème: variables}
+%\framesubtitle{Objectif - caractérisation des variables}
+
+\begin{itemize}
+\item Ensemble $V$ des sommets, $A$ des arêtes, $C$ des couleurs.
+$(u,v)\in V^2$, $u \xrightarrow[l\in C]{} v\in A$.
+
+\item $x_{u,v,l}\in \lbrace 0,1 \rbrace$: variable binaire pour chaque arc $u \xrightarrow[l]{} v$ (sur ligne $l$), avec $x=1$ si l'arc est considéré, $x=0$ sinon.
+
+\item $w_{u,v,l}\in \NN$: est le temps pour parcourir l'arête $u \xrightarrow[l]{} v$
+
+\item $(u,v)\in V^2, f_{u,v,l}, y_v \in\NN$ sont les flots des arcs/sommets: positifs si l'arc/sommet est sur le chemin considéré.
+
+\item $s, t$ sont les points de départ/arrivée fictifs (temps nul pour rejoindre tout sommet).
+\item  $\forall ((u,v,l_1), (v,w,l_2)) \in A^2, z_{u,v,w,l_1,l_2} \in \lbrace 0,1 \rbrace$ indique si deux arêtes sont utilisées consécutivement $u \xrightarrow[l_1]{} v\xrightarrow[l_2]{} w$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Formalisation du problème: optimisation}
+\small
+Objectif: minimiser distance $\displaystyle \sum_{(u,v,l)\in A} w_{u,v,l}\times x_{u,v,l}$ sous contraintes.
+%\fontsize{7}{8}\selectfont
+\scriptsize
+\vspace{-0.2cm}\begin{table}[]
+\begin{tabularx}\textwidth{@{}>{\hsize=0.3\textwidth\linewidth=\textwidth}X|>{\hsize=0.6\textwidth\linewidth=\textwidth}M>{\hsize=0.1\textwidth\linewidth=\textwidth}r@{}}
+\hline
+Autant de chemins qui entrent sur un sommet et qui en sortent: & 
+$\displaystyle \forall v \in V\backslash \lbrace s,t \rbrace, \newline \sum_{(u,v,l) \in A} x_{u, v, l} = \sum_{(v,w,l) \in A} x_{v, w, l}$ & (1) \\ \hline
+Unique chemin de la source et vers la cible: &
+$\displaystyle \sum_{(s,v,l) \in A} x_{s, v, l} = \sum_{(u,t,l) \in A} x_{u, t, l} = 1$ & (2)\\ \hline
+Pour chaque ligne au moins 1 arc de cette ligne sélectionné: &
+$\displaystyle \forall l \in C, \sum_{(u,v,l) \in A} x_{u, v, l} \geq 1$ & (3)\\ \hline
+Evite solutions disjointes: le flot est décroissant pour solution connectée &
+$\displaystyle \forall (u,v,l) \in A, \mid V \mid  x_{u,v,l} \geq f_{u,v,l}$ & (4) \\ \hline
+Tous les sommets perdent du flot sauf la source: &
+$\displaystyle \forall v \in V\backslash \lbrace s \rbrace, \newline \sum_{(u,v,l) \in A} f_{u, v, l} - \sum_{(v,w,l) \in A} f_{v, w, l} \geq y_v$ & (5) \\ \hline
+Le flot au niveau du sommet est positif s'il est dans la solution: &
+$\displaystyle \forall v \in V, \newline y_v - \sum_{(u,v,l) \in A} x_{u, v, l} - \sum_{(v,w,l) \in A} f_{v, w, l} \geq 0$ & (6) \\ \hline
+Evite de prendre deux fois le même sommet: &
+$\displaystyle y_v \geq 2$ & (7) \\ \hline
+Chemin consécutif: &
+$\displaystyle x_{u,v,l_1} + x _{v,w,l_2} \leq z_{u,v,w,l_1,l_2} + 1$ & (8) \\ \hline
+Evite de reprendre deux fois la même ligne: &
+$\displaystyle \forall l \in C, \newline \sum_{(u,v,l_1),(v,w,l_2) \text{ / } l=l_1 \text{ ou } l=l_2} z_{u,v,w,l_1,l_2} = 2$ & (9) \\ \hline
+\end{tabularx}
+\end{table}
+
+%\begin{columns}
+%\begin{column}{0.5\textwidth}
+%\end{column}
+%\begin{column}{0.5\textwidth}
+%\end{column}
+%\end{columns}
+
+%\begin{center}
+%\includegraphics[width=0.5\textwidth]{image1.jpg}
+%\end{center}
+
+\end{frame} 
+
+\subsection{Résolution, application au cadre de la ville}
+
+\begin{frame}
+    \frametitle{Méthode de résolution}
+    \framesubtitle{Outils mis en oeuvre}
+\begin{itemize}
+	\item Utilisation de Google Maps REST API et un programme python pour récupérer automatiquement la matrice des distances entres monuments.
+	\item Représentation du graphe en utilisant le module \texttt{Networkx} et une structure de donnée \texttt{MultiDiGraph} de python.
+	\item Résolution du problème d'optimisation linéaire à variables entières (ILP) via un programme python s'interfaçant au solveur CPLEX d'IBM.
+\end{itemize}
+
+\end{frame}
+  
+\begin{frame}
+\frametitle{Résultats notables dans le cadre de la ville:}
+\framesubtitle{Meilleur trajet sans contrainte de départ et d'arrivée:}
+
+
+Application possible au tourisme: garantir un maximum d'activités (chemins) en un minimum de temps tout en croisant des monuments.
+
+\vfill
+Distance minimale trouvée par CPLEX pour le parcours: \texttt{2149m}
+
+\begin{columns}[T]
+\begin{column}{0.30\textwidth}
+\begin{center}
+\includegraphics[width=0.9\textwidth]{sol_chemin.png}
+\end{center}
+\end{column}
+\begin{column}{0.70\textwidth}
+ \texttt{\small
+    \begin{enumerate}
+        \item s $\rightarrow$ Panthéon
+        \item Panthéon $\color{green}\rightarrow$ Palais du Luxembourg
+        \item Palais du Luxembourg $\color{purple}\rightarrow$ Musée de Cluny
+        \item Musée de Cluny $\color{yellow}\rightarrow$ Notre-Dame
+        \item Notre-Dame $\color{red}\rightarrow$ Hotel de Ville
+        \item Hotel de Ville $\color{brown}\rightarrow$ Centre Pompidou
+        \item Centre Pompidou $\rightarrow$ t
+    \end{enumerate}
+    }
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Résultats notables dans le cadre de la ville:}
+\framesubtitle{Meilleur trajet cyclique (on sélectionne un point de départ dans le cycle):}
+
+Application possible au tourisme: trouver un hotel localisé sur le cycle qui permet de faire un parcours dans une journée et garantir un maximum d'activités (chemins) en un minimum de temps tout en croisant des monuments.
+
+\vfill
+Distance minimale trouvée par CPLEX  pour le cycle: \texttt{6268m}
+  
+\begin{columns}[T]
+\begin{column}{0.30\textwidth}
+\begin{center}
+\includegraphics[width=1.1\textwidth]{sol_cycle.png}
+\end{center}
+\end{column}
+\begin{column}{0.70\textwidth}
+ \texttt{\small
+    \begin{enumerate}
+        \item Musée du Louvre $\color{purple}\rightarrow$ Musée d'Orsay
+        \item Musée d'Orsay $\color{purple}\rightarrow$ Place de la Concorde
+        \item Place de la Concorde $\color{yellow}\rightarrow$ Grand Palais
+        \item Grand Palais $\color{green}\rightarrow$ Musée Rodin Paris
+        \item Musée Rodin Paris $\color{brown}\rightarrow$ Musée de Cluny
+        \item Musée de Cluny $\color{red}\rightarrow$ Sainte-Chapelle
+        \item Sainte-Chapelle $\color{red}\rightarrow$ Musée du Louvre
+    \end{enumerate}    
+    }
+\end{column}
+\end{columns}
+
+\end{frame}
+
+\subsection{Fonctionnement d'un solveur linéaire}
+
+\begin{frame}
+\frametitle{Principe de fonctionnement d'un solveur linéaire}
+\framesubtitle{Étude de la résolution à l’aide d’un solveur linéaire - code en python}
+
+\begin{itemize}
+	\item Formalisme programmation linéaire entière ILP: minimiser fonction objectif sous contraintes $\displaystyle \min_{A x\leq b, A'x=b', x_i\in \NN} w^\top x$, d'inconnues à variables entières $[8]$
+\end{itemize}
+\begin{columns}[T]
+\begin{column}{0.40\textwidth}
+\begin{center}
+\vspace{-0.5cm}
+\includegraphics[width=1.0\textwidth]{Example-Integer-Linear-Program-ILP.png}
+\end{center}
+\end{column}
+\begin{column}{0.60\textwidth}
+\begin{itemize}
+\item Solutions de l'ILP ne se déduisent pas par arrondi de celles obtenues par Linear Programming (LP) (variables réelles) par méthode du simplex.
+\item CPLEX: progiciel de résolution des problèmes ILP $[9]$.
+\end{itemize}
+\end{column}
+\end{columns}
+\begin{itemize}
+\item Procédé itératif de diviser pour régner par l'algorithme "branch-and-cut": combinaison de méthodes "branch-and-bound" et de "cutting-plane" en relaxant la contrainte de variable entière pour une résolution avec du LP.     
+\end{itemize}
+
+% https://slideplayer.com/slide/14408126/
+% https://www.cs.upc.edu/~erodri/webpage/cps/lab/lp/tutorial-cplex-slides/slides.pdf
+% https://www.cs.upc.edu/~erodri/webpage/cps/cps.html
+% https://www.cs.upc.edu/~erodri/webpage/cps/theory/lp/basics/slides.pdf
+
+\end{frame}
+
+\section{Conclusion}
+
+\begin{frame}
+\frametitle{Conclusion}
+\begin{itemize}
+\item Deux problématiques urbaines traitées: 
+  \begin{itemize}
+  \item optimisation d'un trajet en métro
+  \item parcours touristique efficace d'une ville en empruntant différents types de chemins
+  \end{itemize}
+\item Pertinence de la modélisation des problèmes urbains par des graphes pour les résoudre.
+\item Application de la recherche opérationnelle pour trouver une solution.
+  \begin{itemize}
+  \item Optimisation fait intervenir un grand nombre de contraintes
+résultant en des problèmes combinatoires complexes sans solution analytique.
+  \item Importance du choix des algorithmes et structures de données pour obtenir des solutions pratiques efficaces.
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\section{Annexe I: Méthode branch and bound}
+
+\begin{frame}
+\frametitle{Illustration méthode branch and bound}
+\framesubtitle{Un exemple simple à 2 variables}
+
+% cf. https://homepages.rpi.edu/~mitchj/handouts/bnbeg/
+
+\begin{columns}
+\begin{column}{0.4\textwidth}
+\small
+\begin{equation*}
+\text{IP}^0:\;\argmax_{\left\lbrace
+\begin{aligned}
+  x_1+2 x_2 & \leq 10\\
+  5 x_1 +2 x_2 & \leq 20\\
+  (x_1,x_2)& \in \NN^2\\
+\end{aligned}\right.}
+13 x_1 + 8 x_2
+\end{equation*}
+Notations:
+\begin{itemize}
+\item $\mbox{{\underline{$z$}}$_{ip}$}$ désigne la valeur de la meilleure solution entière connue, initialisée à $-\infty$;
+\item $z_i^R$ est la valeur de la solution LP en relaxant la contrainte pour $\text{IP}^i$.
+\end{itemize}
+
+\end{column}
+\begin{column}{0.6\textwidth}
+\begin{figure}
+\centering
+\vspace{-0.5cm}\includegraphics[width=\textwidth]{bnbegpic.jpeg}
+\end{figure}
+\end{column}
+\end{columns}
+
+\end{frame}
+\section{Annexe II: \textbf{Dijkstra: code en OCaml}}
+
+\begin{frame}[t,allowframebreaks]{Dijkstra - algorithme naif - }{Code OCaml}
+\scriptsize
+\inputminted{ocaml}{dijkstra-naif.ml}
+\end{frame}
+
+
+\begin{frame}[t,allowframebreaks]{Dijkstra - Tas non mutable v1 - }{Code OCaml}
+\scriptsize
+\inputminted{ocaml}{dijkstra-tas-non-mutable-v1.ml}
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Dijkstra - Tas  mutable - }{Code OCaml}
+\scriptsize
+\inputminted{ocaml}{dijkstra-tas-mutable.ml}
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Dijkstra - Tas binomiaux - }{Code OCaml}
+\scriptsize
+\inputminted{ocaml}{dijkstra-tas-binomiaux.ml}
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Dijkstra - Tas non mutable v2 - }{Code OCaml}
+\scriptsize
+\inputminted{ocaml}{dijkstra-tas-non-mutable-v2.ml}
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Dijkstra - Calcul du temps d'exécution - }{Code OCaml}
+\scriptsize
+\inputminted{ocaml}{calc-time.ml}
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Dijkstra - Fonction pour trouver le max. - }{Code OCaml}
+\scriptsize
+\inputminted{ocaml}{trajet-max.ml}
+\end{frame}
+
+\section{Annexe III: \textbf{ILP: code en python}}
+
+\begin{frame}[t,allowframebreaks]{ILP - Monuments de Paris - }{Code python}
+\scriptsize
+\inputminted[mathescape]{python}{monuments.py}
+\end{frame}
+
+\end{document}
