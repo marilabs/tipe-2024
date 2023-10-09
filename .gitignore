@@ -15,6 +15,7 @@ Cargo.lock
 
 **/.DS_Store
 
+**/__pycache__
 **/__pycache__/
 
 ## Core latex/pdflatex auxiliary files:

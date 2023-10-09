@@ -19,3 +19,4 @@ class GameCollection:
                 game.step()
 
         return one_game_not_lost
+    
