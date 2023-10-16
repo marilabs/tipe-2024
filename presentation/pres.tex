@@ -28,16 +28,7 @@
 \usepackage{mathrsfs} % pour les hypothèses de récurrences \PP
 %\usepackage{fancyhdr}
 \usepackage{multicol}
-\usepackage{minted}
-\setminted{
-    %linenos=true,
-    breaklines=true,
-    %breakanywhere=true,
-    encoding=utf8,
-    fontseries=heiti,
-    % autogobble=true,
-    %frame=lines
-}
+
 
 \usepackage{booktabs}
 \usepackage{tabularx}
@@ -73,8 +64,8 @@ text = black}}
 \DeclareMathOperator{\CC}{\mathbb{C}}
 \DeclareMathOperator*{\argmax}{\arg\!\max}
 
-\title{TIPE 2023}
-\subtitle{Parcourir la ville efficacement - offrir aux visiteurs de Paris des itinéraires optimisés}
+\title{TIPE 2024}
+\subtitle{Apprendre à une intelligence artificielle à jouer à Snake en utilisant un algorithme génétique}
 \author{Marilou Bernard de Courville}
 \institute{N\textsuperscript{\underline{o}} SCEI 41188}
 \date{\today}
@@ -115,32 +106,6 @@ text = black}}
 \section{\textbf{1\ier{} objectif}: un trajet efficace en métro}
 
 \subsection{Données du problème}
-
-\begin{frame}
-\frametitle{Trajet le plus court en métro - problème}
-\framesubtitle{Données du problème}
-\begin{columns}[T]
-\begin{column}{0.75\textwidth}
-\small
-\begin{itemize}
-\item Système étudié: métro parisien
-\item Problématique: plus court trajet entre 2 stations
-\item Graphe conséquent: 302 sommets, 347 arêtes
-\item Contribution: structures de données adaptées à une résolution efficace en temps
- \item Rapport thème: qualifier distance maximale acceptable entre hôtel et lieux de visite.
-\end{itemize}
-\begin{figure}
-\centering
-\vspace{-0.3cm}\includegraphics[width=0.75\textwidth]{plan-metro.png}
-\end{figure}
-\end{column}
-\begin{column}{0.25\textwidth}
-\begin{figure}
-\vspace{-1cm}\includegraphics[height=0.9\textheight]{graphe-metro.eps}
-\end{figure}
-\end{column}
-\end{columns}
-\end{frame}
 
 \subsection{Algorithme de Dijkstra, structures de données}
 
@@ -272,25 +237,6 @@ Tas						& $\mathcal{O}\left((V + A) \log V\right)$      \\ \hline
 
 \subsection{Résultat: stations les plus éloignées}
 
-\begin{frame}
-\frametitle{Trajet le plus court en métro - résultats}
-\framesubtitle{Quelles sont les stations les plus éloignées?}
-
-\begin{figure}
-\centering
-\includegraphics[width=0.8\textwidth]{solution-dijkstra.png}
-\end{figure}
-
-\small
-\begin{itemize}
-\item Question: quelles sont les deux stations les plus éloignées au sens du plus court trajet?
-\item Hypothèses: aucun coût de changement de ligne et un même temps de parcours entre stations
-\item Réponse: \texttt{Pont de Sèvres $\rightarrow$ Créteil - Pointe du Lac} en 34 sauts!
-\end{itemize}
-
-% Pont de Sèvres $\rightarrow$ Billancourt $\rightarrow$ Marcel Sembat $\rightarrow$ Porte de Saint-Cloud - Parc des Princes $\rightarrow$ Exelmans $\rightarrow$ Michel-Ange - Molitor $\rightarrow$ Chardon-Lagache $\rightarrow$ Mirabeau $\rightarrow$ Javel - André Citroën $\rightarrow$ Charles Michels $\rightarrow$ Avenue Émile-Zola $\rightarrow$ La Motte-Picquet - Grenelle $\rightarrow$ École Militaire $\rightarrow$ La Tour-MauBourseg $\rightarrow$ Invalides $\rightarrow$ Concorde $\rightarrow$ Madeleine $\rightarrow$ Pyramides $\rightarrow$ Châtelet $\rightarrow$ Gare de Lyon $\rightarrow$ Reuilly - Diderot $\rightarrow$ MontGallieni Parc de Bagnoletet $\rightarrow$ Daumesnil - Felix Eboue $\rightarrow$ Michel Bizot $\rightarrow$ Porte Dorée $\rightarrow$ Porte de Charenton $\rightarrow$ Liberté $\rightarrow$ Charenton - Écoles Place Aristide Briand $\rightarrow$ École vétérinaire de Maisons-Alfort $\rightarrow$ Maisons-Alfort - Stade $\rightarrow$ Maisons-Alfort - Les Juilliottes $\rightarrow$ Créteil - L'Échat $\rightarrow$ Créteil - Université $\rightarrow$ Créteil - Préfecture Hôtel de Ville $\rightarrow$ Créteil - Pointe du Lac
-\end{frame}
-
 \section{\textbf{2\ieme{} objectif}: un trajet constitué de plusieurs types de chemins}
 
 \subsection{Cas préliminaire du métro}
@@ -307,70 +253,6 @@ Tas						& $\mathcal{O}\left((V + A) \log V\right)$      \\ \hline
 \item Résolution requiert l'utilisation d’un solveur linéaire (CPLEX d'IBM) pour "integer linear programming" (ILP) $[9]$;
 \item Fait intervenir une matrice de contraintes (MIP) de \texttt{1270x1847, 6999 coeffs non nuls}.
 \end{itemize}
-\end{frame}
-
-\begin{frame}
-\frametitle{Solution: un plus petit chemin passant par toutes les lignes du métro}
-\framesubtitle{Résolution à l'aide d'un solveur linéaire}
-\begin{center}
-\includegraphics[width=\textwidth]{solution-sikora.png}
-\end{center}
-\end{frame}
-
-\begin{frame}
-
-\subsection{Adaptation touristique}
-    
-\frametitle{Adaptation dans un but touristique à Paris}
-
-\framesubtitle{Problématique: trouver le plus court trajet qui passe par différents "types" de chemins et des monuments}
-
-\begin{columns}[T]
-\begin{column}{0.55\textwidth}
-\small
-20 monuments considérés:\\
-\scriptsize
-\circled{1} Tour Eiffel,
-\circled{2} Musée du Louvre,\\
-\circled{3} Palais du Luxembourg,
-\circled{4} Centre Pompidou,\\
-\circled{5} Sainte-Chapelle,
-\circled{6} Musée d'Orsay,\\
-\circled{7} Fondation Louis Vuitton,
-\circled{8} Panthéon,\\
-\circled{9} Arc de triomphe,
-\circled{10} Musée quai Branly,\\
-\circled{11} Institut monde arabe,
-\circled{12} Musée Rodin,\\
-\circled{13} Musée de Cluny,
-\circled{14} Grand Palais,\\
-\circled{15} Notre-Dame,
-\circled{16} Sacré-Coeur,\\
-\circled{17} Hotel de Ville,
-\circled{18} Place de la Concorde,\\
-\circled{19} Palais Garnier,
-\circled{20} Père Lachaise.
-\begin{center}
-\vspace{-0.1cm}\includegraphics[width=1.0\textwidth]{chemins-small.jpg}
-\end{center}
-\end{column}
-\begin{column}{0.45\textwidth}
-\begin{center}
-\vspace{-1cm}\includegraphics[width=1.0\textwidth]{graphe.png}
-\end{center}
-\small
-5 types de chemins (activités) passant:
-\scriptsize
-\begin{itemize}
-\item \fcolorbox{green}{green}{\rule{0pt}{3pt}\rule{3pt}{0pt}} par des espaces verts
-\item \fcolorbox{red}{red}{\rule{0pt}{3pt}\rule{3pt}{0pt}} par les quais de la Seine
-\item \fcolorbox{brown}{brown}{\rule{0pt}{3pt}\rule{3pt}{0pt}} par des quartiers historiques
-\item \fcolorbox{purple}{purple}{\rule{0pt}{3pt}\rule{3pt}{0pt}} proche d'architectures parisiennes typiques
-\item \fcolorbox{yellow}{yellow}{\rule{0pt}{3pt}\rule{3pt}{0pt}} par des rues commerçantes, grands magasins
-\end{itemize}
-\end{column}
-\end{columns}
-
 \end{frame}
 
 \subsection{Formalisation du problème}
@@ -439,114 +321,7 @@ $\displaystyle \forall l \in C, \newline \sum_{(u,v,l_1),(v,w,l_2) \text{ / } l=
 
 \subsection{Résolution, application au cadre de la ville}
 
-\begin{frame}
-    \frametitle{Méthode de résolution}
-    \framesubtitle{Outils mis en oeuvre}
-\begin{itemize}
-	\item Utilisation de Google Maps REST API et un programme python pour récupérer automatiquement la matrice des distances entres monuments.
-	\item Représentation du graphe en utilisant le module \texttt{Networkx} et une structure de donnée \texttt{MultiDiGraph} de python.
-	\item Résolution du problème d'optimisation linéaire à variables entières (ILP) via un programme python s'interfaçant au solveur CPLEX d'IBM.
-\end{itemize}
 
-\end{frame}
-  
-\begin{frame}
-\frametitle{Résultats notables dans le cadre de la ville:}
-\framesubtitle{Meilleur trajet sans contrainte de départ et d'arrivée:}
-
-
-Application possible au tourisme: garantir un maximum d'activités (chemins) en un minimum de temps tout en croisant des monuments.
-
-\vfill
-Distance minimale trouvée par CPLEX pour le parcours: \texttt{2149m}
-
-\begin{columns}[T]
-\begin{column}{0.30\textwidth}
-\begin{center}
-\includegraphics[width=0.9\textwidth]{sol_chemin.png}
-\end{center}
-\end{column}
-\begin{column}{0.70\textwidth}
- \texttt{\small
-    \begin{enumerate}
-        \item s $\rightarrow$ Panthéon
-        \item Panthéon $\color{green}\rightarrow$ Palais du Luxembourg
-        \item Palais du Luxembourg $\color{purple}\rightarrow$ Musée de Cluny
-        \item Musée de Cluny $\color{yellow}\rightarrow$ Notre-Dame
-        \item Notre-Dame $\color{red}\rightarrow$ Hotel de Ville
-        \item Hotel de Ville $\color{brown}\rightarrow$ Centre Pompidou
-        \item Centre Pompidou $\rightarrow$ t
-    \end{enumerate}
-    }
-\end{column}
-\end{columns}
-\end{frame}
-
-\begin{frame}
-\frametitle{Résultats notables dans le cadre de la ville:}
-\framesubtitle{Meilleur trajet cyclique (on sélectionne un point de départ dans le cycle):}
-
-Application possible au tourisme: trouver un hotel localisé sur le cycle qui permet de faire un parcours dans une journée et garantir un maximum d'activités (chemins) en un minimum de temps tout en croisant des monuments.
-
-\vfill
-Distance minimale trouvée par CPLEX  pour le cycle: \texttt{6268m}
-  
-\begin{columns}[T]
-\begin{column}{0.30\textwidth}
-\begin{center}
-\includegraphics[width=1.1\textwidth]{sol_cycle.png}
-\end{center}
-\end{column}
-\begin{column}{0.70\textwidth}
- \texttt{\small
-    \begin{enumerate}
-        \item Musée du Louvre $\color{purple}\rightarrow$ Musée d'Orsay
-        \item Musée d'Orsay $\color{purple}\rightarrow$ Place de la Concorde
-        \item Place de la Concorde $\color{yellow}\rightarrow$ Grand Palais
-        \item Grand Palais $\color{green}\rightarrow$ Musée Rodin Paris
-        \item Musée Rodin Paris $\color{brown}\rightarrow$ Musée de Cluny
-        \item Musée de Cluny $\color{red}\rightarrow$ Sainte-Chapelle
-        \item Sainte-Chapelle $\color{red}\rightarrow$ Musée du Louvre
-    \end{enumerate}    
-    }
-\end{column}
-\end{columns}
-
-\end{frame}
-
-\subsection{Fonctionnement d'un solveur linéaire}
-
-\begin{frame}
-\frametitle{Principe de fonctionnement d'un solveur linéaire}
-\framesubtitle{Étude de la résolution à l’aide d’un solveur linéaire - code en python}
-
-\begin{itemize}
-	\item Formalisme programmation linéaire entière ILP: minimiser fonction objectif sous contraintes $\displaystyle \min_{A x\leq b, A'x=b', x_i\in \NN} w^\top x$, d'inconnues à variables entières $[8]$
-\end{itemize}
-\begin{columns}[T]
-\begin{column}{0.40\textwidth}
-\begin{center}
-\vspace{-0.5cm}
-\includegraphics[width=1.0\textwidth]{Example-Integer-Linear-Program-ILP.png}
-\end{center}
-\end{column}
-\begin{column}{0.60\textwidth}
-\begin{itemize}
-\item Solutions de l'ILP ne se déduisent pas par arrondi de celles obtenues par Linear Programming (LP) (variables réelles) par méthode du simplex.
-\item CPLEX: progiciel de résolution des problèmes ILP $[9]$.
-\end{itemize}
-\end{column}
-\end{columns}
-\begin{itemize}
-\item Procédé itératif de diviser pour régner par l'algorithme "branch-and-cut": combinaison de méthodes "branch-and-bound" et de "cutting-plane" en relaxant la contrainte de variable entière pour une résolution avec du LP.     
-\end{itemize}
-
-% https://slideplayer.com/slide/14408126/
-% https://www.cs.upc.edu/~erodri/webpage/cps/lab/lp/tutorial-cplex-slides/slides.pdf
-% https://www.cs.upc.edu/~erodri/webpage/cps/cps.html
-% https://www.cs.upc.edu/~erodri/webpage/cps/theory/lp/basics/slides.pdf
-
-\end{frame}
 
 \section{Conclusion}
 
@@ -568,85 +343,5 @@ résultant en des problèmes combinatoires complexes sans solution analytique.
 \end{itemize}
 \end{frame}
 
-\section{Annexe I: Méthode branch and bound}
-
-\begin{frame}
-\frametitle{Illustration méthode branch and bound}
-\framesubtitle{Un exemple simple à 2 variables}
-
-% cf. https://homepages.rpi.edu/~mitchj/handouts/bnbeg/
-
-\begin{columns}
-\begin{column}{0.4\textwidth}
-\small
-\begin{equation*}
-\text{IP}^0:\;\argmax_{\left\lbrace
-\begin{aligned}
-  x_1+2 x_2 & \leq 10\\
-  5 x_1 +2 x_2 & \leq 20\\
-  (x_1,x_2)& \in \NN^2\\
-\end{aligned}\right.}
-13 x_1 + 8 x_2
-\end{equation*}
-Notations:
-\begin{itemize}
-\item $\mbox{{\underline{$z$}}$_{ip}$}$ désigne la valeur de la meilleure solution entière connue, initialisée à $-\infty$;
-\item $z_i^R$ est la valeur de la solution LP en relaxant la contrainte pour $\text{IP}^i$.
-\end{itemize}
-
-\end{column}
-\begin{column}{0.6\textwidth}
-\begin{figure}
-\centering
-\vspace{-0.5cm}\includegraphics[width=\textwidth]{bnbegpic.jpeg}
-\end{figure}
-\end{column}
-\end{columns}
-
-\end{frame}
-\section{Annexe II: \textbf{Dijkstra: code en OCaml}}
-
-\begin{frame}[t,allowframebreaks]{Dijkstra - algorithme naif - }{Code OCaml}
-\scriptsize
-\inputminted{ocaml}{dijkstra-naif.ml}
-\end{frame}
-
-
-\begin{frame}[t,allowframebreaks]{Dijkstra - Tas non mutable v1 - }{Code OCaml}
-\scriptsize
-\inputminted{ocaml}{dijkstra-tas-non-mutable-v1.ml}
-\end{frame}
-
-\begin{frame}[t,allowframebreaks]{Dijkstra - Tas  mutable - }{Code OCaml}
-\scriptsize
-\inputminted{ocaml}{dijkstra-tas-mutable.ml}
-\end{frame}
-
-\begin{frame}[t,allowframebreaks]{Dijkstra - Tas binomiaux - }{Code OCaml}
-\scriptsize
-\inputminted{ocaml}{dijkstra-tas-binomiaux.ml}
-\end{frame}
-
-\begin{frame}[t,allowframebreaks]{Dijkstra - Tas non mutable v2 - }{Code OCaml}
-\scriptsize
-\inputminted{ocaml}{dijkstra-tas-non-mutable-v2.ml}
-\end{frame}
-
-\begin{frame}[t,allowframebreaks]{Dijkstra - Calcul du temps d'exécution - }{Code OCaml}
-\scriptsize
-\inputminted{ocaml}{calc-time.ml}
-\end{frame}
-
-\begin{frame}[t,allowframebreaks]{Dijkstra - Fonction pour trouver le max. - }{Code OCaml}
-\scriptsize
-\inputminted{ocaml}{trajet-max.ml}
-\end{frame}
-
-\section{Annexe III: \textbf{ILP: code en python}}
-
-\begin{frame}[t,allowframebreaks]{ILP - Monuments de Paris - }{Code python}
-\scriptsize
-\inputminted[mathescape]{python}{monuments.py}
-\end{frame}
 
 \end{document}
