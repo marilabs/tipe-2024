@@ -67,7 +67,7 @@ text = black}}
 \title{TIPE 2024}
 \subtitle{Apprendre à une intelligence artificielle à jouer à Snake en utilisant un algorithme génétique}
 \author{Marilou Bernard de Courville}
-\institute{N\textsuperscript{\underline{o}} SCEI 41188}
+\institute{Lycée Charlemagne}
 \date{\today}
 
 \setbeamertemplate{footline}[frame number]
@@ -91,14 +91,19 @@ text = black}}
 \framesubtitle{Problématique et pertinence au regard du thème de l'année}
 
 \begin{itemize}
-\item \textbf{Objectif:} parcourir efficacement la ville dans un but touristique.
-\item \textbf{Recherche opérationnelle:} permet d'atteindre l'objectif en réalisant des optimisations sous contraintes $[1]$.
-\item \textbf{Deux cas} envisagés:
-  \begin{enumerate}
-  \item optimiser un trajet en métro via l'algorithme de Dijkstra et différentes structures de données codées en OCaml $[3]$;
-  \item optimiser un trajet soit en métro ou à pied en passant par plusieurs types de chemins en utilisant un solveur linéaire (CPLEX d'IBM) et un code en Python.
-  \end{enumerate}
-\item Ces deux cas sont modélisés à l'aide de \textbf{graphes orientés}.
+
+\item \textbf{Le jeu de Snake:} piloter un serpent dans le but de
+manger des pommes, sans rentrer dans les murs ni se replier sur 
+soi-même.
+
+\item \textbf{Objectif:} mettre en place une intelligence
+artificielle pouvant jouer au jeu de Snake.
+
+\item \textbf{Le moyen d'y parvenir:} utiliser un algorithme génétique,
+qui s'inspire de l'évolution naturelle.
+
+\item 
+
 \end{itemize}
 
 \end{frame}
@@ -209,27 +214,6 @@ Tas						& $\mathcal{O}\left((V + A) \log V\right)$      \\ \hline
 \end{tabular}
 \end{table}
 
-\begin{table}[h]\vspace{-0.5cm}
-\centering
-\caption{Simulations: temps exécution pour toutes les stations du métro}
-\hspace{-0.5cm}
-\begin{tabular}{|c|c|}
-\hline
-\textbf{Type} & \textbf{Temps exécution} \\
-\hline
-\textbf{Naif} &960ms \\
-\hline
-\textbf{Tas non mutable v1} &312ms \\
-\hline
-\textbf{Tas mutable} &191ms \\
-\hline
-\textbf{Tarbre} &1018ms \\
-\hline
-\textbf{Tas non mutable v2} &145ms \\
-\hline
-\end{tabular}
-\end{table}
-
 \end{column}
 \end{columns}
 
@@ -276,48 +260,6 @@ $(u,v)\in V^2$, $u \xrightarrow[l\in C]{} v\in A$.
 \end{itemize}
 \end{frame}
 
-\begin{frame}
-\frametitle{Formalisation du problème: optimisation}
-\small
-Objectif: minimiser distance $\displaystyle \sum_{(u,v,l)\in A} w_{u,v,l}\times x_{u,v,l}$ sous contraintes.
-%\fontsize{7}{8}\selectfont
-\scriptsize
-\vspace{-0.2cm}\begin{table}[]
-\begin{tabularx}\textwidth{@{}>{\hsize=0.3\textwidth\linewidth=\textwidth}X|>{\hsize=0.6\textwidth\linewidth=\textwidth}M>{\hsize=0.1\textwidth\linewidth=\textwidth}r@{}}
-\hline
-Autant de chemins qui entrent sur un sommet et qui en sortent: & 
-$\displaystyle \forall v \in V\backslash \lbrace s,t \rbrace, \newline \sum_{(u,v,l) \in A} x_{u, v, l} = \sum_{(v,w,l) \in A} x_{v, w, l}$ & (1) \\ \hline
-Unique chemin de la source et vers la cible: &
-$\displaystyle \sum_{(s,v,l) \in A} x_{s, v, l} = \sum_{(u,t,l) \in A} x_{u, t, l} = 1$ & (2)\\ \hline
-Pour chaque ligne au moins 1 arc de cette ligne sélectionné: &
-$\displaystyle \forall l \in C, \sum_{(u,v,l) \in A} x_{u, v, l} \geq 1$ & (3)\\ \hline
-Evite solutions disjointes: le flot est décroissant pour solution connectée &
-$\displaystyle \forall (u,v,l) \in A, \mid V \mid  x_{u,v,l} \geq f_{u,v,l}$ & (4) \\ \hline
-Tous les sommets perdent du flot sauf la source: &
-$\displaystyle \forall v \in V\backslash \lbrace s \rbrace, \newline \sum_{(u,v,l) \in A} f_{u, v, l} - \sum_{(v,w,l) \in A} f_{v, w, l} \geq y_v$ & (5) \\ \hline
-Le flot au niveau du sommet est positif s'il est dans la solution: &
-$\displaystyle \forall v \in V, \newline y_v - \sum_{(u,v,l) \in A} x_{u, v, l} - \sum_{(v,w,l) \in A} f_{v, w, l} \geq 0$ & (6) \\ \hline
-Evite de prendre deux fois le même sommet: &
-$\displaystyle y_v \geq 2$ & (7) \\ \hline
-Chemin consécutif: &
-$\displaystyle x_{u,v,l_1} + x _{v,w,l_2} \leq z_{u,v,w,l_1,l_2} + 1$ & (8) \\ \hline
-Evite de reprendre deux fois la même ligne: &
-$\displaystyle \forall l \in C, \newline \sum_{(u,v,l_1),(v,w,l_2) \text{ / } l=l_1 \text{ ou } l=l_2} z_{u,v,w,l_1,l_2} = 2$ & (9) \\ \hline
-\end{tabularx}
-\end{table}
-
-%\begin{columns}
-%\begin{column}{0.5\textwidth}
-%\end{column}
-%\begin{column}{0.5\textwidth}
-%\end{column}
-%\end{columns}
-
-%\begin{center}
-%\includegraphics[width=0.5\textwidth]{image1.jpg}
-%\end{center}
-
-\end{frame} 
 
 \subsection{Résolution, application au cadre de la ville}
 
