@@ -1,6 +1,6 @@
 # Fdb version 3
-["pdflatex"] 1697462984 "/Users/mariloudecourville/Documents/git/tipe-2024/presentation/mcot.tex" "mcot.pdf" "mcot" 1697462985
-  "/Users/mariloudecourville/Documents/git/tipe-2024/presentation/mcot.tex" 1697462983 5735 5875a66d8667c9ceaa279b430c1cef45 ""
+["pdflatex"] 1699884083 "/Users/mariloudecourville/Documents/git/tipe-2024/presentation/mcot.tex" "mcot.pdf" "mcot" 1699884084
+  "/Users/mariloudecourville/Documents/git/tipe-2024/presentation/mcot.tex" 1699884083 5819 43d86091b658793ac60b917427687a7a ""
   "/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc" 1136849721 2971 def0b6c1f0b107b3b936def894055589 ""
   "/usr/local/texlive/2022/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/local/texlive/2022/texmf-dist/fonts/tfm/jknappen/ec/ecbx1095.tfm" 1136768653 3584 21b378cca2e40816b0e6d74a4dc98f04 ""
@@ -230,10 +230,10 @@
   "/usr/local/texlive/2022/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1647878959 4410336 7d30a02e9fa9a16d7d1f8d037ba69641 ""
   "/usr/local/texlive/2022/texmf-var/web2c/pdftex/pdflatex.fmt" 1671961974 2826445 ec85424d8f00391c68584300fce09824 ""
   "/usr/local/texlive/2022/texmf.cnf" 1647878952 577 209b46be99c9075fd74d4c0369380e8c ""
-  "mcot.aux" 1697462984 1907 3416121f6367febb37ae49a276a18c9e "pdflatex"
-  "mcot.out" 1697462984 1700 9732ccbee1cde1a25a959d754cc908b0 "pdflatex"
-  "mcot.tex" 1697462983 5735 5875a66d8667c9ceaa279b430c1cef45 ""
-  "mcot.toc" 1697462984 726 6bfc4ada132d9de0e49a54f83f43a39c "pdflatex"
+  "mcot.aux" 1699884084 1907 3416121f6367febb37ae49a276a18c9e "pdflatex"
+  "mcot.out" 1699884084 1700 9732ccbee1cde1a25a959d754cc908b0 "pdflatex"
+  "mcot.tex" 1699884083 5819 43d86091b658793ac60b917427687a7a ""
+  "mcot.toc" 1699884084 726 6bfc4ada132d9de0e49a54f83f43a39c "pdflatex"
   (generated)
   "mcot.aux"
   "mcot.log"

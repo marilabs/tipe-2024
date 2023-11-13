@@ -18,7 +18,7 @@ class Game:
 
     direction = (-1, 0)
 
-    brain = NeuralNetwork()
+    brain = NeuralNetwork.random([24, 18, 18, 4])
 
     '''def step(self) -> bool:
         keys = pygame.key.get_pressed()

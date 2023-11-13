@@ -1,0 +1,45 @@
+import numpy as np
+
+from neural_network import NeuralNetwork
+
+class GeneticAlgorithm:
+
+    save_bests = 0
+
+    def __init__(self, save_bests: int) -> None:
+        self.save_bests = save_bests
+    
+    def calculate_fitness(self, population: list) -> list:
+        pass
+
+    def select_parent(self, population: [NeuralNetwork, int]) -> NeuralNetwork: 
+        pass
+
+    def crossover(self, population: list, fitness: list) -> list:
+        pass
+
+    def evolve(self, population: [NeuralNetwork, int]) -> list:
+        assert(len(population) != 0)
+
+        new_population = []
+
+        # sélection des meilleurs
+        population = population.sort(lambda x : x[0], reverse=True)
+
+        for i in range(len(population)):
+            if i < self.save_bests:
+                new_population.append(population[i][0])
+            else:
+                parent_a = self.select_parent(population).to_genome()
+                parent_b = self.select_parent(population).to_genome()
+
+                child = self.crossover(parent_a, parent_b)
+
+
+'''
+il faut trouver
+* une façon de timer les snakes dans game collection
+* une façon de récupérer les scores des snakes dans game collection
+* une façon de récumérer les caractéristiques des snakes pour la mutation
+
+'''
