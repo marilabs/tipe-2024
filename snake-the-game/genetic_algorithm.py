@@ -10,10 +10,11 @@ class GeneticAlgorithm:
         self.save_bests = save_bests
 
     def select_parent(self, population: [NeuralNetwork, int]) -> NeuralNetwork: 
-        """
-        Roulette-wheel selection: numpy.random.choice
-        """
-        pass
+        # Roulette-wheel selection: numpy.random.choice
+        maxi = sum([x[1] for x in population])
+        selection_probability = [x[1] / maxi for x in population]
+        parent = np.random.choice(len(population), p=selection_probability)
+        return population[parent][0]
 
     def crossover(parent_a: [float], parent_b: [float]) -> [float]:
         """
@@ -21,7 +22,21 @@ class GeneticAlgorithm:
         - select k random points in range(len(parent_a))
         - create a new array which alternate between coefficients of parent_a and parent_b
         """
-        pass
+        n = len(parent_a)
+        k = 5
+        l = sorted([np.random.randint(0, n) for i in range(k)])
+        child = []
+        current_parent = 0
+        current_index = 0
+        for i in range(n):
+            if i == l[current_index]:
+                current_parent = 1 - current_parent
+                current_index += 1
+            if current_parent == 0:
+                child.append(parent_a[i])
+            else:
+                child.append(parent_b[i])
+        return child
 
     def mutate(genome: [float]) -> None:
         """
