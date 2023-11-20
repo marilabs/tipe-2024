@@ -47,7 +47,13 @@ class GeneticAlgorithm:
                 - generate an amplitude (between 0 and 1)
                 - add sign * amplitude * coeff to the coefficient (coeff is a parameter)
         """
-        pass
+        mut_chance = 0.1
+        coeff = 0.1
+        for g in genome:
+            if np.random() <= mut_chance:
+                sign = 1 if np.random() <= 0.5 else -1
+                amplitude = np.random()
+                g += sign * amplitude * coeff
 
     def evolve(self, population: [NeuralNetwork, int]) -> list:
         assert(len(population) != 0)

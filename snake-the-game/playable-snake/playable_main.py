@@ -33,16 +33,16 @@ while running:
             running = False
 
     # fill the screen with a color to wipe away anything from last frame
-    screen.fill("white")
+    screen.fill("darkolivegreen3")
 
     for (x, y) in game.snake_body:
-        pygame.draw.circle(screen, "green", (x * SIDE + SIDE/2, y * SIDE + SIDE/2), SIDE / 2)
+        pygame.draw.circle(screen, "darkolivegreen4", (x * SIDE + SIDE/2, y * SIDE + SIDE/2), SIDE / 2)
 
     (x, y) = game.snake_body[0]
     pygame.draw.circle(screen, "black", (x * SIDE + SIDE/2, y * SIDE + SIDE/2), SIDE / 4)
 
     (a, b) = game.apple
-    pygame.draw.circle(screen, "red", (a * SIDE + SIDE/2, b * SIDE + SIDE/2), SIDE / 2)
+    pygame.draw.circle(screen, "brown3", (a * SIDE + SIDE/2, b * SIDE + SIDE/2), SIDE / 2)
 
 
     # pygame.draw.circle(screen, "red", player_pos, 40)
