@@ -1,6 +1,8 @@
 \documentclass[10pt]{beamer}
 \usetheme{Goettingen}
 
+
+
 \usepackage[french]{babel}
 \usepackage[T1]{fontenc}
 
@@ -92,198 +94,66 @@ text = black}}
 
 \begin{itemize}
 
-\item \textbf{Le jeu de Snake:} piloter un serpent dans le but de
+\item \textbf{Le jeu de Snake:} piloter un serpent sur une grille dans le but de
 manger des pommes, sans rentrer dans les murs ni se replier sur 
 soi-même.
 
 \item \textbf{Objectif:} mettre en place une intelligence
-artificielle pouvant jouer au jeu de Snake.
+artificielle pouvant jouer au jeu de Snake, apprenant de manière autonome.
 
 \item \textbf{Le moyen d'y parvenir:} utiliser un algorithme génétique,
 qui s'inspire de l'évolution naturelle.
 
-\item 
-
 \end{itemize}
 
 \end{frame}
 
-\section{\textbf{1\ier{} objectif}: un trajet efficace en métro}
-
-\subsection{Données du problème}
-
-\subsection{Algorithme de Dijkstra, structures de données}
+\section{Le principe}
 
 \begin{frame}
-\frametitle{Trajet le plus court en métro - modélisation}
-\framesubtitle{Modèles de données utilisés (types)}
-
-\small
-\begin{itemize}
-\item Un tas est une représentation organisée en arbre des stations en fonction d'une priorité (distance du chemin).
-\item Représentation en tas (heap) efficace en complexité pour accéder au n\oe ud de priorité minimum et mettre à jour les priorités.
-\item Trois structures étudiées: tas non modifiables (\textit{immutable heaps}), tas modifiables, et tarbres (\textit{treap}).
-\item Programmes réalisés en OCaml utilisent seulement le module \texttt{Hashtbl} de la bibliothèque standard pour manipuler les tas.
-\end{itemize}
-
-\begin{columns}[T]
-\begin{column}{0.5\textwidth}
-\tiny
-\forestset{default preamble={for tree={circle,draw}}}
-\begin{forest}
-[2[4[5[14][9]][6[11][10]]][7[8[12]][13]]]
-\end{forest}
-
-\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|}
-    \hline
-    2 & 4 & 7 & 5 & 6 & 8 & 13 & 14 & 9 & 11 & 10 & 12\\
-    \hline
-\end{tabular}
-\\
-\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|}
-\hline
-\textbf{Élément} & 2 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 & 13 & 14 \\
-\hline
-\textbf{Position} & 0 & 1 & 3 & 4 & 2 & 5 & 8 & 10 & 9 & 11 & 6 & 7 \\
-\hline
-\end{tabular}
-\end{column}
-\begin{column}{0.5\textwidth}
-\tiny
-\forestset{default preamble={for tree={circle,draw}}}
-rg0: 
-\begin{forest}
-[]
-\end{forest}
-rg1: 
-\begin{forest}
-[[]]
-\end{forest}
-rg2: 
-\begin{forest}
-[[[]][]]
-\end{forest}
-rg3: 
-\begin{forest}
-[[[[]][]][[]][]]
-\end{forest}
-\end{column}
-\end{columns}
+\frametitle{Le principe}
 \end{frame}
 
+\subsection{L'algorithme génétique}
 
 \begin{frame}
-\frametitle{Trajet le plus court en métro - algorithme}
-\framesubtitle{Algorithme de Dijkstra et influence des structures de données sur la complexité}
+  \frametitle{Le principe}
+  \end{frame}
 
-\begin{columns}[T]
-\begin{column}{0.5\textwidth}
-\scriptsize
-\begin{algorithmic}[0]
-\Require Un graphe $G=(V,A)$, $V$ sommets, $A$ arêtes 
-\Require Un noeud source $s$
-\Ensure $d$ tableau des plus court chemins de $s$ vers $v\in V$
-\ForAll {$v \in V[G]$}
-    \State $d[v] \leftarrow +\infty$, $\kw{père}[v] \leftarrow \kw{None}$
-\EndFor
-\State $d[s] \leftarrow 0$, $S \leftarrow \kw{$\emptyset$}$, $Q \leftarrow V[G]$
-\While{$Q \neq \emptyset$} 
-    \State $u \leftarrow  \kw{Extrait}_{\kw{Min}}(Q)$
-    \State $S \leftarrow  S \cup \{u\}$
-    \ForAll{arête $(u,v)$ d'origine $u$}  
-    \If{$d[u] + w(u,v) < d[v]$}
-        \State $d[v] \leftarrow d[u] + w(u,v)$, $\kw{père}[v] := u$ 
-    \EndIf
-    \EndFor
-\EndWhile
-\end{algorithmic}
-\end{column}
-\begin{column}{0.5\textwidth}
-\scriptsize
-
-\begin{table}[h]\vspace{-0.5cm}
-\centering
-\caption{Dijkstra: complexité (opérations)}
-%\label{tab:dijkstra-complexity}
-\hspace{-0.5cm}
-\begin{tabular}{|l|l|}
-\hline
-\textbf{Implantation}	& \textbf{Complexity} \\ \hline
-Naif					& $\mathcal{O}\left(V^2 + A\right)$             \\ \hline
-Tas						& $\mathcal{O}\left((V + A) \log V\right)$      \\ \hline
-\end{tabular}
-\end{table}
-
-\end{column}
-\end{columns}
-
-\end{frame}
-
-\subsection{Résultat: stations les plus éloignées}
-
-\section{\textbf{2\ieme{} objectif}: un trajet constitué de plusieurs types de chemins}
-
-\subsection{Cas préliminaire du métro}
+\subsubsection{Les réseaux neuronnaux}
 
 \begin{frame}
-\frametitle{Plus compliqué: plus petit chemin passant par toutes les lignes du métro}
-\framesubtitle{Étude de la résolution à l'aide d'un solveur linéaire}
-% https://interstices.info/quel-trajet-optimal-pour-passer-au-moins-une-fois-par-toutes-les-lignes-de-metro/
-\begin{itemize}
-\item Sujet traité par Florian Sikora $[7]$ par étude de graphe coloré pour le réseau du métro;
-\item Sommet: station, arête: trajet entre deux stations connexes, arête colorée par la couleur de la ligne reliant les stations
-\item Problème du "Generalised directed rural postman" $[2]$;
-\item Problème NP-difficile: pas de solution en temps polynomial $[6]$;
-\item Résolution requiert l'utilisation d’un solveur linéaire (CPLEX d'IBM) pour "integer linear programming" (ILP) $[9]$;
-\item Fait intervenir une matrice de contraintes (MIP) de \texttt{1270x1847, 6999 coeffs non nuls}.
-\end{itemize}
-\end{frame}
+  \frametitle{Le principe}
+  \end{frame}
 
-\subsection{Formalisation du problème}
+\section{L'algorithme appliqué au jeu de Snake}
 
 \begin{frame}
-\frametitle{Formalisation du problème: variables}
-%\framesubtitle{Objectif - caractérisation des variables}
+  \frametitle{Le principe}
+  \end{frame}
 
-\begin{itemize}
-\item Ensemble $V$ des sommets, $A$ des arêtes, $C$ des couleurs.
-$(u,v)\in V^2$, $u \xrightarrow[l\in C]{} v\in A$.
+\section{La théorie}
 
-\item $x_{u,v,l}\in \lbrace 0,1 \rbrace$: variable binaire pour chaque arc $u \xrightarrow[l]{} v$ (sur ligne $l$), avec $x=1$ si l'arc est considéré, $x=0$ sinon.
+\begin{frame}
+  \frametitle{Le principe}
+  \end{frame}
 
-\item $w_{u,v,l}\in \NN$: est le temps pour parcourir l'arête $u \xrightarrow[l]{} v$
+\subsection{L'algorithme génétique}
 
-\item $(u,v)\in V^2, f_{u,v,l}, y_v \in\NN$ sont les flots des arcs/sommets: positifs si l'arc/sommet est sur le chemin considéré.
+\begin{frame}
+  \frametitle{Le principe}
+  \end{frame}
 
-\item $s, t$ sont les points de départ/arrivée fictifs (temps nul pour rejoindre tout sommet).
-\item  $\forall ((u,v,l_1), (v,w,l_2)) \in A^2, z_{u,v,w,l_1,l_2} \in \lbrace 0,1 \rbrace$ indique si deux arêtes sont utilisées consécutivement $u \xrightarrow[l_1]{} v\xrightarrow[l_2]{} w$.
-\end{itemize}
-\end{frame}
+\subsubsection{Les réseaux neuronnaux}
 
-
-\subsection{Résolution, application au cadre de la ville}
-
-
+\begin{frame}
+  \frametitle{Le principe}
+  \end{frame}
 
 \section{Conclusion}
 
 \begin{frame}
-\frametitle{Conclusion}
-\begin{itemize}
-\item Deux problématiques urbaines traitées: 
-  \begin{itemize}
-  \item optimisation d'un trajet en métro
-  \item parcours touristique efficace d'une ville en empruntant différents types de chemins
-  \end{itemize}
-\item Pertinence de la modélisation des problèmes urbains par des graphes pour les résoudre.
-\item Application de la recherche opérationnelle pour trouver une solution.
-  \begin{itemize}
-  \item Optimisation fait intervenir un grand nombre de contraintes
-résultant en des problèmes combinatoires complexes sans solution analytique.
-  \item Importance du choix des algorithmes et structures de données pour obtenir des solutions pratiques efficaces.
-  \end{itemize}
-\end{itemize}
-\end{frame}
-
+  \frametitle{Le principe}
+  \end{frame}
 
 \end{document}
