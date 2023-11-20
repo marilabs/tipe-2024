@@ -19,19 +19,6 @@ class Game:
     direction = (-1, 0)
 
     brain = NeuralNetwork.random([24, 18, 18, 4])
-
-    '''def step(self) -> bool:
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_RIGHT]:
-            self.direction = (1, 0)
-        elif keys[pygame.K_UP]:
-            self.direction = (0, -1)
-        elif keys[pygame.K_LEFT]:
-            self.direction = (-1, 0)
-        elif keys[pygame.K_DOWN]:
-            self.direction = (0, 1)
-
-        return self.move_snake(self.direction)'''
     
     def __init__(self, width: int, height: int) -> None:
         self.width = width
@@ -57,16 +44,6 @@ class Game:
                 self.direction = (0, 1)
 
         
-        '''
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_RIGHT]:
-            self.direction = (1, 0)
-        elif keys[pygame.K_UP]:
-            self.direction = (0, -1)
-        elif keys[pygame.K_LEFT]:
-            self.direction = (-1, 0)
-        elif keys[pygame.K_DOWN]:
-            self.direction = (0, 1)'''
 
         return self.move_snake(self.direction)
 
