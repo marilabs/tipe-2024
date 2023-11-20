@@ -76,3 +76,4 @@ class GeneticAlgorithm:
 
                 new_population.append(NeuralNetwork.from_genome(child, population[i].layers_sizes))
 
+        return new_population
