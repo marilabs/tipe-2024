@@ -18,19 +18,15 @@ class Game:
 
     direction = (-1, 0)
 
-    brain = NeuralNetwork.random([24, 18, 18, 4])
+    apples_eaten = 0
     
     def __init__(self, width: int, height: int) -> None:
         self.width = width
         self.height = height
-        self.snake_body = [
-        (int(width / 2), int(height / 2)),
-            (int(width / 2) + 1, int(height / 2)), 
-            (int(width / 2) + 2, int(height / 2))
-        ]
+        self.brain = NeuralNetwork.random([24, 18, 18, 4])
     
     def step(self) -> bool:
-        activation = self.brain.feedforward([0.0 for _ in range(18)])
+        activation = self.brain.feedforward(self.process_vision())
         index = argmax(activation)
 
         match index:
@@ -42,8 +38,6 @@ class Game:
                 self.direction = (-1, 0)
             case 3:
                 self.direction = (0, 1)
-
-        
 
         return self.move_snake(self.direction)
 
@@ -74,5 +68,48 @@ class Game:
         if self.snake_body[0] == self.apple:
             self.snake_body.append(end_tail)
             self.apple = (randrange(0, self.width), randrange(0, self.height))
+            self.apples_eaten += 1
 
         return True
+    
+
+    def process_vision(self) -> [float]:
+        vision = [None for _ in range(3*8)]
+        directions = [(1, 0), (1, 1), (0, 1), (-1, 1), (-1, 0), (-1, -1), (0, -1), (1, -1)]
+
+        for (i, incrementer) in enumerate(directions):
+            apple_distance = -1
+            wall_distance = -1
+            tail_distance = -1
+
+            (x, y) = self.snake_body[0]
+            distance = 0
+
+            while True:
+                x += incrementer[0]
+                y += incrementer[1]
+                distance += 1
+
+                # sortie de grille
+                if x < 0 or x >= self.width or y < 0 or y >= self.height:
+                    wall_distance = distance
+                    break
+
+                # sur la pomme
+                if (x, y) == self.apple:
+                    apple_distance = distance
+
+                # sur la queue
+                if (x, y) in self.snake_body and tail_distance == -1:
+                    tail_distance = distance
+
+            vision[3*i] = 0 if apple_distance == -1 else 1
+            vision[3*i + 1] = 1/wall_distance
+            vision[3*i + 2] = tail_distance if tail_distance != -1 else 0
+
+
+        return vision
+    
+    def fitness(self, age):
+        return (age * age) * pow(2, self.apples_eaten) * (100 * self.apples_eaten + 1)
+    

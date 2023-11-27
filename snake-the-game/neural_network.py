@@ -23,10 +23,10 @@ class NeuralNetwork:
         self.layers_sizes = layers_sizes"""
     
     @classmethod
-    def random(layers_sizes: [int]):
+    def random(self, layers_sizes: [int]):
         nn = NeuralNetwork()
         nn.biases = [
-            np.random.randn(i, 1) for i in layers_sizes[:1]
+            np.random.randn(i, 1) for i in layers_sizes[1:]
         ]
 
         nn.weights = [
@@ -56,21 +56,21 @@ class NeuralNetwork:
         return genome
     
     @classmethod
-    def from_genome(genome: [float]):
+    def from_genome(self, genome: [float], layers: [int]):
+        assert(layers != [])
 
         nn = NeuralNetwork()
+        self.layers_sizes = layers
         
         genome = list(reversed(genome))
 
         nn.weights = [
-            np.array([[genome.pop() for _ in range(j)] for _ in range(i)]) for (i, j) in zip(nn.layers_sizes[1:], nn.layers_sizes[:-1])
+            np.array([[genome.pop() for _ in range(j)] for _ in range(i)]) for (i, j) in zip(self.layers_sizes[1:], self.layers_sizes[:-1])
         ]
 
 
         nn.biases = [
-            np.array([genome.pop() for _ in range(i)]) for i in nn.layers_sizes[:1]
+            np.array([genome.pop() for _ in range(i)]) for i in self.layers_sizes[1:]
         ]
-
-        assert(len(genome) == 0)
         return nn
 

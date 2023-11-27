@@ -6,11 +6,11 @@ from game import Game
 
 from game_collection import GameCollection
 
-game_collection = GameCollection(100)
-
 SIDE = 50
 WIDTH = 20
 HEIGHT = 15
+
+game_collection = GameCollection(100, WIDTH, HEIGHT)
 
 # pygame setup
 pygame.init()
@@ -18,6 +18,8 @@ screen = pygame.display.set_mode((WIDTH * SIDE, HEIGHT * SIDE))
 clock = pygame.time.Clock()
 running = True
 dt = 0
+
+iteration = 0
 
 while running:
     # poll for events
@@ -46,16 +48,15 @@ while running:
 
     # update your game state here
 
-    running = running and game_collection.step()
+    if not game_collection.step():
+        print(iteration)
+        iteration += 1
+        if iteration >= 10:
+            break
 
     # flip() the display to put your work on screen
     pygame.display.flip()
-    print(running)
 
-    # limits FPS to 60
-    # dt is delta time in seconds since last frame, used for framerate-
-    # independent physics.
-    # dt = clock.tick(60) / 1000
     clock.tick(3)
 
 pygame.quit()

@@ -5,7 +5,7 @@ from neural_network import NeuralNetwork
 class GeneticAlgorithm:
 
     save_bests = 0
-    k = 5
+    k = 1
     mut_chance = 0.1
     coeff = 0.1
 
@@ -27,6 +27,7 @@ class GeneticAlgorithm:
         """
         n = len(parent_a)
         l = sorted([np.random.randint(0, n) for _ in range(self.k)])
+        l.append(-1)
         child = []
         current_parent = 0
         current_index = 0
@@ -61,20 +62,21 @@ class GeneticAlgorithm:
         new_population = []
 
         # sélection des meilleurs
-        population = population.sort(lambda x : x[0], reverse=True)
+        population.sort(key=lambda x : x[1], reverse=True)
 
         for i in range(len(population)):
             if i < self.save_bests:
                 new_population.append(population[i][0])
             else:
-                parent_a = self.select_parent(population).to_genome()
-                parent_b = self.select_parent(population).to_genome()
+                parent_a, parent_b = self.select_parent(population)
+
+                parent_a, parent_b = parent_a.to_genome(), parent_b.to_genome()
 
                 child = self.crossover(parent_a, parent_b)
 
                 self.mutate(child)
 
-                new_population.append(NeuralNetwork.from_genome(child, population[i].layers_sizes))
+                new_population.append(NeuralNetwork.from_genome(child, population[i][0].layers_sizes))
 
         return new_population
     
