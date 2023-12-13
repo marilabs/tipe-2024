@@ -35,13 +35,13 @@ while running:
     screen.fill("white")
 
     for (x, y) in game.snake_body:
-        pygame.draw.circle(screen, "green", (x * SIDE + SIDE/2, y * SIDE + SIDE/2), SIDE / 2)
+        pygame.draw.circle(screen, "darkolivegreen3", (x * SIDE + SIDE/2, y * SIDE + SIDE/2), SIDE / 2)
 
     (x, y) = game.snake_body[0]
     pygame.draw.circle(screen, "black", (x * SIDE + SIDE/2, y * SIDE + SIDE/2), SIDE / 4)
 
     (x, y) = game.apple
-    pygame.draw.circle(screen, "red", (x * SIDE + SIDE/2, y * SIDE + SIDE/2), SIDE / 2)
+    pygame.draw.circle(screen, "brown3", (x * SIDE + SIDE/2, y * SIDE + SIDE/2), SIDE / 2)
 
 
     # pygame.draw.circle(screen, "red", player_pos, 40)
@@ -49,7 +49,12 @@ while running:
     # update your game state here
 
     if not game_collection.step():
-        print(iteration)
+        for game in game_collection.games:
+            game.snake_body = [
+            (int(game.width / 2), int(game.height / 2)),
+                (int(game.width / 2) + 1, int(game.height / 2)), 
+                (int(game.width / 2) + 2, int(game.height / 2))
+            ]
         iteration += 1
         if iteration >= 10:
             break
@@ -57,6 +62,6 @@ while running:
     # flip() the display to put your work on screen
     pygame.display.flip()
 
-    clock.tick(3)
+    clock.tick(10)
 
 pygame.quit()

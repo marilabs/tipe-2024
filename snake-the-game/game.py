@@ -58,7 +58,7 @@ class Game:
         
         self.snake_body[0] = moved_head
 
-        #collisions avec la corps
+        #collisions avec le corps
         for bit in self.snake_body[1:]:
             if bit == self.snake_body[0]:
                 self.lost = True
@@ -111,5 +111,5 @@ class Game:
         return vision
     
     def fitness(self, age):
-        return (age * age) * pow(2, self.apples_eaten) * (100 * self.apples_eaten + 1)
+        return (age * age) * pow(2, self.apples_eaten) * (500 * self.apples_eaten + 1)
     
