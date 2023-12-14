@@ -111,5 +111,5 @@ class Game:
         return vision
     
     def fitness(self, age):
-        return (age * age) * pow(2, self.apples_eaten) * (500 * self.apples_eaten + 1)
-    
+        return (age * age * age * age) * pow(2, self.apples_eaten) * (500 * self.apples_eaten + 1)
+    # age to the power of 4 vs 3 vs 2

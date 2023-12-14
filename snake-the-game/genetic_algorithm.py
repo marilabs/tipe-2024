@@ -5,9 +5,9 @@ from neural_network import NeuralNetwork
 class GeneticAlgorithm:
 
     save_bests = 0
-    k = 1
-    mut_chance = 0.1
-    coeff = 0.1
+    k = 5 # avant: 1
+    mut_chance = 0.3 # avant: 0.1
+    coeff = 0.3 # avant: 0.1
 
     def __init__(self, save_bests: int) -> None:
         self.save_bests = save_bests

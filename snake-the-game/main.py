@@ -44,7 +44,6 @@ while running:
     pygame.draw.circle(screen, "brown3", (x * SIDE + SIDE/2, y * SIDE + SIDE/2), SIDE / 2)
 
 
-    # pygame.draw.circle(screen, "red", player_pos, 40)
 
     # update your game state here
 
@@ -56,12 +55,12 @@ while running:
                 (int(game.width / 2) + 2, int(game.height / 2))
             ]
         iteration += 1
-        if iteration >= 10:
+        if iteration >= 50:
             break
 
     # flip() the display to put your work on screen
     pygame.display.flip()
 
-    clock.tick(10)
+    clock.tick(50)
 
 pygame.quit()
