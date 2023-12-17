@@ -1,6 +1,6 @@
 import pygame
-from random import randrange
-from game import Game
+# from random import randrange
+# from game import Game
 
 # game = Game()
 
@@ -55,7 +55,7 @@ while running:
                 (int(game.width / 2) + 2, int(game.height / 2))
             ]
         iteration += 1
-        if iteration >= 50:
+        if iteration >= 20:
             break
 
     # flip() the display to put your work on screen
