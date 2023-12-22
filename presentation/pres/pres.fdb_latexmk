@@ -1,6 +1,6 @@
 # Fdb version 3
-["pdflatex"] 1703238626 "/Users/mariloudecourville/Documents/git/tipe-2024/presentation/pres/pres.tex" "pres.pdf" "pres" 1703238629
-  "/Users/mariloudecourville/Documents/git/tipe-2024/presentation/pres/pres.tex" 1703238626 5750 bed99484ecb48c72ad1aa75411d2206f ""
+["pdflatex"] 1703238893 "/Users/mariloudecourville/Documents/git/tipe-2024/presentation/pres/pres.tex" "pres.pdf" "pres" 1703238896
+  "/Users/mariloudecourville/Documents/git/tipe-2024/presentation/pres/pres.tex" 1703238893 5749 de5a3215792b6d6e4cee808a107459dd ""
   "/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc" 1136849721 2971 def0b6c1f0b107b3b936def894055589 ""
   "/usr/local/texlive/2022/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/local/texlive/2022/texmf-dist/fonts/tfm/jknappen/ec/ecsi1000.tfm" 1136768653 3584 87c00098505ed1ab5849d7a05016cb73 ""
@@ -255,10 +255,10 @@
   "/usr/local/texlive/2022/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1647878959 4410336 7d30a02e9fa9a16d7d1f8d037ba69641 ""
   "/usr/local/texlive/2022/texmf-var/web2c/pdftex/pdflatex.fmt" 1671961974 2826445 ec85424d8f00391c68584300fce09824 ""
   "/usr/local/texlive/2022/texmf.cnf" 1647878952 577 209b46be99c9075fd74d4c0369380e8c ""
-  "pres.aux" 1703238628 5110 871fa9a55ae611f7e5d59f75f5588276 "pdflatex"
-  "pres.nav" 1703238628 2614 b2dd98dacdbe7e56f0ca2335586ee77e "pdflatex"
-  "pres.out" 1703238628 1311 19d2717e5c132518a8d7c6865fdf0dc9 "pdflatex"
-  "pres.tex" 1703238626 5750 bed99484ecb48c72ad1aa75411d2206f ""
+  "pres.aux" 1703238895 5110 871fa9a55ae611f7e5d59f75f5588276 "pdflatex"
+  "pres.nav" 1703238895 2614 b2dd98dacdbe7e56f0ca2335586ee77e "pdflatex"
+  "pres.out" 1703238895 1311 19d2717e5c132518a8d7c6865fdf0dc9 "pdflatex"
+  "pres.tex" 1703238893 5749 de5a3215792b6d6e4cee808a107459dd ""
   (generated)
   "pres.aux"
   "pres.log"
