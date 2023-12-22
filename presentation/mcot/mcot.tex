@@ -24,6 +24,8 @@
 \usepackage[lined,boxed,commentsnumbered, ruled,vlined,linesnumbered, french, onelanguage]{algorithm2e}
 \usepackage{hyperref}
 
+\pgfplotsset{compat=1.18}
+\setlength{\headheight}{13.59999pt}
 
 \definecolor{Honeydew1}{rgb}{.94,1,.94}
 \definecolor{lavendermist}{rgb}{0.9, 0.9, 0.98}
@@ -149,12 +151,12 @@ pertinent pour concevoir des pièces optimales.
 
 Le jeu de Snake, même s'il semble simple, continue de provoquer 
 une forme de compétitivité encore aujourd'hui. 
-Le caractère ludique de cette ancienne application est 
+Le caractère ludique de cette ancien jeu d'arcade est 
 indéniable, d'où l'intéret porté.
 Le rapport avec le thème de l'année est donc évident: on va
 faire jouer une IA.
 
-\textit{45 mots}
+\textit{48 mots}
 
 \section{Bibliographie commentée - 650 mots}
 
@@ -166,19 +168,23 @@ La problématique est comment rendre une intelligence artificielle compétitive 
 
 \section{Objectifs - 100 mots}
 
-Le premier objectif est de mettre en place une intelligence
-artificielle pouvant jouer au jeu de Snake se reposant sur un
-algorithme génétique.
-La mise en place de cet algorithme sera
-Par la suite, on essaiera d'améliorer notre algorithme, et 
-comparerons les différents résultats dans une compétition de Snake,
-dans le but d'avoir la meilleure intelligence artificielle possible.
+L'objectif proposé est la mise en place d'une intelligence artificielle pouvant jouer à Snake.
+
+D'abord, on cherche à coder un jeu de Snake fonctionnel: on se servira de la bibliothèque PyGame de Python.
+
+Ensuite, on créé un réseau neuronal: on codera les fonctions permettant la vision du serpent, l'activation des neurones et leur réponse, mais également des fonctions permettant l'exploitation du réseau neuronal par l'algorithme génétique.
+
+En effet, notre dernier objectif est de coder des fonctions permettant d'appliquer des opérateurs génétiques sur le réseau neuronal.
+
+On pourra alors se pencher sur des aspects théoriques de cette méthode.
+
+\textit{97 mots}
 
 \section{Mots-clés - 5 en français et en anglais}
 
 \begin{tabular}{||r|c|c|c|c|c||} \hline
 	Français & Intelligence artificielle & Algorithme génétique & Snake & Réseaux neuronaux & Crossing-over \\ \hline \hline
-	Anglais & Artificial Intelligence & Genetic algorithm & Snake & Neural networks & Crossover \\
+	Anglais & Artificial Intelligence & Genetic Algorithm & Snake & Neural Networks & Crossover \\
 		\hline
 	\end{tabular}
 
