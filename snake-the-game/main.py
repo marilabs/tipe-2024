@@ -10,7 +10,7 @@ SIDE = 50
 WIDTH = 20
 HEIGHT = 15
 
-game_collection = GameCollection(100, WIDTH, HEIGHT)
+game_collection = GameCollection(500, WIDTH, HEIGHT)
 
 # pygame setup
 pygame.init()
@@ -55,7 +55,7 @@ while running:
                 (int(game.width / 2) + 2, int(game.height / 2))
             ]
         iteration += 1
-        if iteration >= 20:
+        if iteration >= 50:
             break
 
     # flip() the display to put your work on screen

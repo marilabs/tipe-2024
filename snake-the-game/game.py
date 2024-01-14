@@ -44,6 +44,7 @@ class Game:
 
     def move_snake(self, incrementer: (int, int)) -> bool:
         moved_head = (self.snake_body[0][0] + incrementer[0], self.snake_body[0][1] + incrementer[1])
+
         # vérification de la présence de la tête dans la grille
         if not (0 <= moved_head[0] < self.width and 0 <= moved_head[1] < self.height):
             self.lost = True
@@ -104,7 +105,7 @@ class Game:
                     tail_distance = distance
 
             vision[3*i] = 0 if apple_distance == -1 else 1
-            vision[3*i + 1] = 1/wall_distance
+            vision[3*i + 1] = 1 / wall_distance
             vision[3*i + 2] = tail_distance if tail_distance != -1 else 0
 
 
