@@ -4,7 +4,7 @@
 \usepackage[T1]{fontenc}
 %\usepackage{pslatex}
 \usepackage[utf8]{inputenc}
-\usepackage[francais]{babel} 
+\usepackage[french]{babel} 
 \usepackage{graphicx} 
 \usepackage{amsmath} 
 \setlength{\unitlength}{1mm}
@@ -25,6 +25,8 @@
 \usepackage{hyperref}
 
 \setlength{\headheight}{13.59999pt}
+
+\pgfplotsset{compat=1.18}
 
 \definecolor{Honeydew1}{rgb}{.94,1,.94}
 \definecolor{lavendermist}{rgb}{0.9, 0.9, 0.98}
@@ -141,7 +143,7 @@ Le jeu de snake, ayant émergé dans les années 80 en salle d'arcade,
 permet l'application d'un algorithme évolutionniste, 
 plus précisément d'un algorithme génétique.
 Ce genre d'algorithme s'inspirant de l'évolution naturelle a ainsi de 
-nombreuses applications dans le domaine de l'ingéniérie au delà de l'informatique, 
+nombreuses applications dans le domaine de l'ingénierie au delà de l'informatique, 
 pertinent pour concevoir des pièces optimales.
 
 \textit{50 mots}
@@ -151,13 +153,45 @@ pertinent pour concevoir des pièces optimales.
 Le jeu de Snake, même s'il semble simple, continue de provoquer 
 une forme de compétitivité encore aujourd'hui. 
 Le caractère ludique de cette ancien jeu d'arcade est 
-indéniable, d'où l'intéret porté.
+indéniable, d'où l'intérêt porté.
 Le rapport avec le thème de l'année est donc évident: on va
 faire jouer une IA.
 
 \textit{48 mots}
 
 \section{Bibliographie commentée - 650 mots}
+
+\subsection{Introduction réseaux neuronaux}
+
+En 1943, Warren McCulloch et Walter Pitts comparent des neurones à la logique booléenne. 
+L'idée est de supposer qu'un neurone est activé à partir du moment où il a un seuil suffisant, et l'activation ou non de différents neurones ont un effet sur les décisions prises par l'ensemble de neurones, donc le réseau neuronal.
+On peut donc aisément trouver une application de ce modèle au jeu de Snake: on veut en effet modéliser un serpent, ainsi, on utilise un réseau neuronal pour modéliser le cerveau du serpent.
+C'est de cette façon dont notre serpent va décider de quelle façon il va se déplacer. 
+
+\subsection{Introduction algorithmes génétiques}
+
+Frank Rosenblatt, en 1958, a introduit la notion de poids, qui permet d'accorder plus ou moins d'importance à certains neurones, donc à certaines informations sur la situation dans laquelle le serpent se trouve.
+C'est donc une amélioration du modèle de McCulloch et Pitts, qui permet de rendre le réseau neuronal plus performant.
+Il faut donc trouver une façon de déterminer les poids optimaux, c'est-à-dire les poids qui permettent au serpent de survivre le plus longtemps possible.
+Pour cela, on va faire des opérations successives sur le réseau neuronal.
+Au lieu d'étudier un seul serpent, on va donc étudier une population de serpents, et on va faire évoluer cette population de serpents.
+On va donc appliquer différents opérateurs génétiques sur cette population, qui vont permettre de faire converger les poids des différents neurones vers les poids optimaux.
+
+Cet ensemble d'opérateurs génétiques sont effectués dans un type d'algorithme évolutionniste, appelé algorithme génétique, développés par John Holland en 1975.
+Le but est ainsi d'imiter l'évolution naturelle, en sélectionnant des serpents performant et en les faisant se reproduire, créant ainsi des enfants dont le réseau neuronal est composé d'une partie du réseau neuronal de chaque parent.
+De plus, on fait subir au réseau neuronal des enfants une mutation, qui permet d'engendrer des possibles améliorations du réseau neuronal.
+
+Ce qui est délicat et qui peut être décisif dans l'efficacité de l'algorithme, est la façon dont on sélectionne les serpents qui vont se reproduire.
+Cette sélection est effectuée à l'aide d'une fonction de fitness, qui permet de déterminer la performance d'un serpent.
+Cette fonction dépend ainsi de l'âge du serpent et du nombre de pommes mangées par le serpent, mais on a la liberté de choisir la dépendance de cette fonction en ces paramètres.
+Il est ainsi intéressant d'étudier l'effet de différentes fonctions de fitness sur l'efficacité de l'algorithme génétique.
+
+\subsection{Intérêt pour des questions théoriques: comment modéliser le sys. pour prouver les résultats?}
+
+On peut enfin se demander comment formaliser ces différents concepts, et comment au moins comprendre pourquoi l'algorithme génétique fonctionne.
+On s'intéresse alors d'une part aux graphes, pour comprendre la structure du réseau neuronal, et d'autre part aux schemata de Holland, qui permettent de comprendre comment les opérateurs génétiques agissent sur la population de serpents.
+
+\textit{461 mots}
 
 \section{Problématique - 50 mots}
 
@@ -181,6 +215,7 @@ On pourra alors se pencher sur des aspects théoriques de cette méthode.
 
 \section{Mots-clés - 5 en français et en anglais}
 
+\footnotesize
 \begin{tabular}{||r|c|c|c|c|c||} \hline
 	Français & Intelligence artificielle & Algorithme génétique & Snake & Réseaux neuronaux & Crossing-over \\ \hline \hline
 	Anglais & Artificial Intelligence & Genetic Algorithm & Snake & Neural Networks & Crossover \\
@@ -188,25 +223,6 @@ On pourra alors se pencher sur des aspects théoriques de cette méthode.
 	\end{tabular}
 
 \section{Bibliographie}
-
-En vrac:
-
-\href{https://www.3blue1brown.com/topics/neural-networks}{3Blue1Brown, réseaux neuronaux}
-
-\href{http://neuralnetworksanddeeplearning.com/index.html}{Livre sur les réseaux, By Michael Nielsen / Dec 2019}
-
-\href{https://distill.pub}{distill, montre des trucs avec les réseaux neuronaux}
-
-\href{http://www0.cs.ucl.ac.uk/staff/W.Langdon/ftp/papers/poli08_fieldguide.pdf}{livre sur genetic programming jsp si c'est utile}
-
-\href{https://pwy.io/posts/learning-to-fly-pt1/}{Shorelark guy Rust}
-
-\begin{quotation}
-  "On découpe les cerveaux"
-\end{quotation}
-Antoine Groudiev, 2023
-
-
 
 
 
