@@ -26,7 +26,7 @@
 
 \setlength{\headheight}{13.59999pt}
 
-\pgfplotsset{compat=1.18}
+\pgfplotsset{compat=1.15}
 
 \definecolor{Honeydew1}{rgb}{.94,1,.94}
 \definecolor{lavendermist}{rgb}{0.9, 0.9, 0.98}
@@ -133,11 +133,18 @@
 
 \begin{center}
     Apprendre à une intelligence artificielle à jouer à Snake en utilisant un algorithme génétique.
+    
+    -->
+    
+    Conception d'une intelligence artificielle capable de jouer de manière autonome et performante au jeu Snake à l'aide d'un algorithme génétique
+    
 \end{center}
 
-\textit{14 mots}
+\textit{14 - 20 mots}
 
 \section{Motivation pour le choix du sujet - 50 mots}
+
+%+ Ce qui te motive!
 
 Le jeu de snake, ayant émergé dans les années 80 en salle d'arcade,
 permet l'application d'un algorithme évolutionniste, 
@@ -146,20 +153,52 @@ Ce genre d'algorithme s'inspirant de l'évolution naturelle a ainsi de
 nombreuses applications dans le domaine de l'ingénierie au delà de l'informatique, 
 pertinent pour concevoir des pièces optimales.
 
-\textit{50 mots}
+-->
+
+Ma passion pour l'informatique et les jeux vidéo, combinée à l'importance croissante de l'intelligence artificielle, m'a motivée à explorer les algorithmes génétiques et les réseaux neuronaux dans le context du jeu Snake.
+Je souhaite comprendre les fondements théoriques de cette technologie et son application pratique dans un contexte ludique.
+
+%passion de l'informatique combiné à mon intérêt pour les jeux vidéos
+%mettre en pratique tout en comprenant les fondements théoriques
+%AI problématique actuelle
+%première étape pour mettre au service de domaines d'applications au delà de l'informatique
+
+\textit{50 - 49 mots}
 
 \section{Lien avec le thème de l'année (Jeux et Sports) - 50 mots}
 
 Le jeu de Snake, même s'il semble simple, continue de provoquer 
 une forme de compétitivité encore aujourd'hui. 
-Le caractère ludique de cette ancien jeu d'arcade est 
+Le caractère ludique de cette ancien jeu d'arcade des années 1980 est 
 indéniable, d'où l'intérêt porté.
 Le rapport avec le thème de l'année est donc évident: on va
 faire jouer une IA.
 
-\textit{48 mots}
+--> 
+
+L'engouement persistant pour le jeu Snake lui confère un caractère ludique indéniable. En concevant une IA performante et autonome pour résoudre ce jeu d'arcade des années 1980 nous établissons un lien évident avec le thème de l'année tout en explorant les fondements théoriques des réseaux neuronaux et les algorithmes génétiques.
+
+\textit{48 - 50 mots}
 
 \section{Bibliographie commentée - 650 mots}
+
+\subsection{Introduction de snake}
+
+Le jeu Snake est né en 1976 en tant que borne d'arcade fabriquée par l'entreprise Gremlin, initialement sous le nom de Blockade. Il a été conçu par Lane Hauck, Ago Kiss et Bob Pecarero.
+
+%[1]  https://allincolorforaquarter.blogspot.com/2015/09/the-ultimate-so-far-history-of-gremlin_25.html The Golden Age Arcade Historian "The Ultimate (So-Far) History of Gremlin Industries Part 2"
+
+L'objectif du jeu Snake est de contrôler un serpent qui se déplace à travers un espace limité, en mangeant des objets pour grandir. Le joueur doit éviter de se heurter aux murs ou de se mordre la queue, car cela entraînerait la fin du jeu. L'objectif ultime est de survivre le plus longtemps possible et de marquer le plus de points en faisant grandir le serpent.
+
+
+L'idée est de concevoir et d'entraîner une IA pour jouer de manière autonome à ce jeu en se basant sur un algorithme génétique appliqué à un réseau de neurones.
+
+
+
+Développement d'une méthode de prise de décision : L'agent du jeu Snake prend une décision pour chaque direction à chaque image du jeu (haut, bas, gauche, droite) en utilisant un réseau de neurones avec deux couches cachées.
+
+Définition des entrées du réseau de neurones: Les entrées comprennent la distance de Manhattan de la tête du serpent au fruit dans chaque direction, la quantité d'espace disponible si le serpent se déplace dans chaque direction (calculée par une recherche en largeur), et la longueur du serpent.
+
 
 \subsection{Introduction réseaux neuronaux}
 
@@ -171,6 +210,7 @@ C'est de cette façon dont notre serpent va décider de quelle façon il va se d
 \subsection{Introduction algorithmes génétiques}
 
 Frank Rosenblatt, en 1958, a introduit la notion de poids, qui permet d'accorder plus ou moins d'importance à certains neurones, donc à certaines informations sur la situation dans laquelle le serpent se trouve.
+
 C'est donc une amélioration du modèle de McCulloch et Pitts, qui permet de rendre le réseau neuronal plus performant.
 Il faut donc trouver une façon de déterminer les poids optimaux, c'est-à-dire les poids qui permettent au serpent de survivre le plus longtemps possible.
 Pour cela, on va faire des opérations successives sur le réseau neuronal.
@@ -193,13 +233,20 @@ On s'intéresse alors d'une part aux graphes, pour comprendre la structure du r�
 
 \textit{461 mots}
 
-\section{Problématique - 50 mots}
+\section{Problématique retenue - 50 mots}
 
 La problématique est comment rendre une intelligence artificielle compétitive au jeu Snake, à l'aide de différents algorithmes d'apprentissage notamment des algorithmes génétiques.
 
-\textit{25 mots}
+--> 
 
-\section{Objectifs - 100 mots}
+Notre sujet vise à répondre aux questions suivantes:
+Comment entraîner une IA pour être compétitive au jeu Snake à l'aide d'un algorithme génétique?
+Quelles optimisations et paramètres sont à prendre en compte pour obtenir un bon score.
+Comment garantir l'efficacité du réseau de neurones obtenu?
+
+\textit{25 - 45 mots}
+
+\section{Objectifs du TIPE - 100 mots}
 
 L'objectif proposé est la mise en place d'une intelligence artificielle pouvant jouer à Snake.
 
@@ -210,6 +257,16 @@ Ensuite, on créé un réseau neuronal: on codera les fonctions permettant la vi
 En effet, notre dernier objectif est de coder des fonctions permettant d'appliquer des opérateurs génétiques sur le réseau neuronal.
 
 On pourra alors se pencher sur des aspects théoriques de cette méthode.
+
+-->
+
+L'objectif est de concevoir une intelligence artificielle capable de jouer de manière autonome et performante au jeu Snake.
+Pour cela un réseau de neurones est entraîné par un algorithme génétique qui simule la sélection naturelle.
+Les entrées du réseau de neurones sont constituées de paramètres de vision obtenus à partir de la tête du serpent.
+Plusieurs fonctions de fitness sont considérées afin d'obtenir le meilleur score et d'éviter les boucles.
+Le tout est codé en python et seule la librairie pygame est utilisée et toutes les fonctions d'algorithme génétique ou réseau de neurones sont ré-implantées.
+Les aspects théoriques et de convergence des stratégies proposées sont étudiées.
+
 
 \textit{97 mots}
 
