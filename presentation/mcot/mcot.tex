@@ -132,31 +132,28 @@
 \section{Titre - 20 mots}
 
 \begin{center}
-    Apprendre à une intelligence artificielle à jouer à Snake en utilisant un algorithme génétique.
-    
-    -->
-    
-    Conception d'une intelligence artificielle capable de jouer de manière autonome et performante au jeu Snake à l'aide d'un algorithme génétique
-    
+    Conception d'une intelligence artificielle capable de jouer de manière autonome et performante au jeu Snake à l'aide d'un algorithme génétique  
 \end{center}
 
-\textit{14 - 20 mots}
+\textit{20 mots}
 
 \section{Motivation pour le choix du sujet - 50 mots}
 
 %+ Ce qui te motive!
 
 Le jeu de snake, ayant émergé dans les années 80 en salle d'arcade,
-permet l'application d'un algorithme évolutionniste, 
-plus précisément d'un algorithme génétique.
-Ce genre d'algorithme s'inspirant de l'évolution naturelle a ainsi de 
-nombreuses applications dans le domaine de l'ingénierie au delà de l'informatique, 
-pertinent pour concevoir des pièces optimales.
+permet l'application d'un algorithme génétique.
+Ce genre d'algorithme s'inspirant de l'évolution naturelle a de 
+nombreuses applications dans le domaine de l'ingénierie, permettant de concevoir 
+des pièces de forme optimale jusqu'à permettre de créer des tests d'applications
+efficaces.
 
--->
 
-Ma passion pour l'informatique et les jeux vidéo, combinée à l'importance croissante de l'intelligence artificielle, m'a motivée à explorer les algorithmes génétiques et les réseaux neuronaux dans le context du jeu Snake.
-Je souhaite comprendre les fondements théoriques de cette technologie et son application pratique dans un contexte ludique.
+Ma passion pour l'informatique et les jeux vidéo, combinée à l'importance 
+croissante de l'intelligence artificielle, m'a motivée à explorer les algorithmes 
+génétiques et les réseaux neuronaux dans le context du jeu Snake.
+Je souhaite comprendre les fondements théoriques de cette technologie et son 
+application pratique dans un contexte ludique.
 
 %passion de l'informatique combiné à mon intérêt pour les jeux vidéos
 %mettre en pratique tout en comprenant les fondements théoriques
@@ -167,55 +164,58 @@ Je souhaite comprendre les fondements théoriques de cette technologie et son ap
 
 \section{Lien avec le thème de l'année (Jeux et Sports) - 50 mots}
 
-Le jeu de Snake, même s'il semble simple, continue de provoquer 
-une forme de compétitivité encore aujourd'hui. 
-Le caractère ludique de cette ancien jeu d'arcade des années 1980 est 
-indéniable, d'où l'intérêt porté.
-Le rapport avec le thème de l'année est donc évident: on va
-faire jouer une IA.
+L'engouement persistant pour le jeu Snake lui confère un caractère ludique 
+indéniable. En concevant une IA performante et autonome pour résoudre ce jeu 
+d'arcade des années 80, nous établissons un lien évident avec le thème de 
+l'année tout en explorant les fondements théoriques des réseaux neuronaux et 
+des algorithmes génétiques.
 
---> 
-
-L'engouement persistant pour le jeu Snake lui confère un caractère ludique indéniable. En concevant une IA performante et autonome pour résoudre ce jeu d'arcade des années 1980 nous établissons un lien évident avec le thème de l'année tout en explorant les fondements théoriques des réseaux neuronaux et les algorithmes génétiques.
-
-\textit{48 - 50 mots}
+\textit{50 mots}
 
 \section{Bibliographie commentée - 650 mots}
 
-\subsection{Introduction de snake}
+% \subsection{Introduction de snake}
 
-Le jeu Snake est né en 1976 en tant que borne d'arcade fabriquée par l'entreprise Gremlin, initialement sous le nom de Blockade. Il a été conçu par Lane Hauck, Ago Kiss et Bob Pecarero.
+Le jeu Snake est né en 1976 en tant que borne d'arcade fabriquée par l'entreprise Gremlin,
+ initialement sous le nom de Blockade. Il a été conçu par Lane Hauck, Ago Kiss et Bob Pecarero. [1]
 
 %[1]  https://allincolorforaquarter.blogspot.com/2015/09/the-ultimate-so-far-history-of-gremlin_25.html The Golden Age Arcade Historian "The Ultimate (So-Far) History of Gremlin Industries Part 2"
 
-L'objectif du jeu Snake est de contrôler un serpent qui se déplace à travers un espace limité, en mangeant des objets pour grandir. Le joueur doit éviter de se heurter aux murs ou de se mordre la queue, car cela entraînerait la fin du jeu. L'objectif ultime est de survivre le plus longtemps possible et de marquer le plus de points en faisant grandir le serpent.
+L'objectif du jeu Snake est de contrôler un serpent qui se déplace à travers un espace limité, 
+en mangeant des objets pour grandir. Le joueur doit éviter de se heurter aux murs ou de se mordre 
+la queue, car cela entraînerait la fin du jeu. L'objectif ultime est de survivre le plus longtemps 
+possible et de marquer le plus de points en faisant grandir le serpent.
+
+L'idée est de concevoir et d'entraîner une IA pour jouer de manière autonome à ce jeu en se 
+basant sur un algorithme génétique appliqué à un réseau de neurones.
+
+% \subsection{Introduction réseaux neuronaux}
 
 
-L'idée est de concevoir et d'entraîner une IA pour jouer de manière autonome à ce jeu en se basant sur un algorithme génétique appliqué à un réseau de neurones.
+% [2] https://www.ibm.com/fr-fr/topics/neural-networks Qu'est-ce qu'un réseau de neurones ?
 
 
-
-Développement d'une méthode de prise de décision : L'agent du jeu Snake prend une décision pour chaque direction à chaque image du jeu (haut, bas, gauche, droite) en utilisant un réseau de neurones avec deux couches cachées.
-
-Définition des entrées du réseau de neurones: Les entrées comprennent la distance de Manhattan de la tête du serpent au fruit dans chaque direction, la quantité d'espace disponible si le serpent se déplace dans chaque direction (calculée par une recherche en largeur), et la longueur du serpent.
-
-
-\subsection{Introduction réseaux neuronaux}
-
-En 1943, Warren McCulloch et Walter Pitts comparent des neurones à la logique booléenne. 
-L'idée est de supposer qu'un neurone est activé à partir du moment où il a un seuil suffisant, et l'activation ou non de différents neurones ont un effet sur les décisions prises par l'ensemble de neurones, donc le réseau neuronal.
-On peut donc aisément trouver une application de ce modèle au jeu de Snake: on veut en effet modéliser un serpent, ainsi, on utilise un réseau neuronal pour modéliser le cerveau du serpent.
+En 1943, Warren McCulloch et Walter Pitts comparent des neurones à la logique booléenne. [2]
+L'idée est de supposer qu'un neurone est activé à partir du moment où il a un seuil suffisant,
+et l'activation ou non de différents neurones ont un effet sur les décisions prises par l'ensemble
+de neurones, donc le réseau neuronal.
+On peut donc aisément trouver une application de ce modèle au jeu de Snake: on veut en effet 
+modéliser un serpent, ainsi, on utilise un réseau neuronal pour modéliser le cerveau du serpent.
 C'est de cette façon dont notre serpent va décider de quelle façon il va se déplacer. 
 
-\subsection{Introduction algorithmes génétiques}
-
-Frank Rosenblatt, en 1958, a introduit la notion de poids, qui permet d'accorder plus ou moins d'importance à certains neurones, donc à certaines informations sur la situation dans laquelle le serpent se trouve.
+Frank Rosenblatt, en 1958, a introduit la notion de poids [2], qui permet d'accorder plus ou moins d'importance à certains neurones, donc à certaines informations sur la situation dans laquelle le serpent se trouve.
 
 C'est donc une amélioration du modèle de McCulloch et Pitts, qui permet de rendre le réseau neuronal plus performant.
 Il faut donc trouver une façon de déterminer les poids optimaux, c'est-à-dire les poids qui permettent au serpent de survivre le plus longtemps possible.
 Pour cela, on va faire des opérations successives sur le réseau neuronal.
 Au lieu d'étudier un seul serpent, on va donc étudier une population de serpents, et on va faire évoluer cette population de serpents.
-On va donc appliquer différents opérateurs génétiques sur cette population, qui vont permettre de faire converger les poids des différents neurones vers les poids optimaux.
+On va donc appliquer différents opérateurs génétiques sur cette population, qui vont permettre de faire converger les poids des différents neurones vers les poids optimaux. [3][4]
+
+% \subsection{Introduction algorithmes génétiques}
+
+% [3] http://www0.cs.ucl.ac.uk/staff/W.Langdon/ftp/papers/poli08_fieldguide.pdf A Field Guide to Genetic Programming, Riccardo Poli; William B. Langdon; Nicholas F. McPhee
+
+% [4] A Genetic Algorithm Tutorial, Darrell Whitley
 
 Cet ensemble d'opérateurs génétiques sont effectués dans un type d'algorithme évolutionniste, appelé algorithme génétique, développés par John Holland en 1975.
 Le but est ainsi d'imiter l'évolution naturelle, en sélectionnant des serpents performant et en les faisant se reproduire, créant ainsi des enfants dont le réseau neuronal est composé d'une partie du réseau neuronal de chaque parent.
@@ -226,25 +226,25 @@ Cette sélection est effectuée à l'aide d'une fonction de fitness, qui permet 
 Cette fonction dépend ainsi de l'âge du serpent et du nombre de pommes mangées par le serpent, mais on a la liberté de choisir la dépendance de cette fonction en ces paramètres.
 Il est ainsi intéressant d'étudier l'effet de différentes fonctions de fitness sur l'efficacité de l'algorithme génétique.
 
-\subsection{Intérêt pour des questions théoriques: comment modéliser le sys. pour prouver les résultats?}
+% \subsection{Intérêt pour des questions théoriques: comment modéliser le sys. pour prouver les résultats?}
 
 On peut enfin se demander comment formaliser ces différents concepts, et comment au moins comprendre pourquoi l'algorithme génétique fonctionne.
 On s'intéresse alors d'une part aux graphes, pour comprendre la structure du réseau neuronal, et d'autre part aux schemata de Holland, qui permettent de comprendre comment les opérateurs génétiques agissent sur la population de serpents.
 
+% [4] A Genetic Algorithm Tutorial, Darrell Whitley
+
+% [5] Handbook Of Genetic Algorithms, L. Davis
+
 \textit{461 mots}
 
 \section{Problématique retenue - 50 mots}
-
-La problématique est comment rendre une intelligence artificielle compétitive au jeu Snake, à l'aide de différents algorithmes d'apprentissage notamment des algorithmes génétiques.
-
---> 
 
 Notre sujet vise à répondre aux questions suivantes:
 Comment entraîner une IA pour être compétitive au jeu Snake à l'aide d'un algorithme génétique?
 Quelles optimisations et paramètres sont à prendre en compte pour obtenir un bon score.
 Comment garantir l'efficacité du réseau de neurones obtenu?
 
-\textit{25 - 45 mots}
+\textit{45 mots}
 
 \section{Objectifs du TIPE - 100 mots}
 
@@ -264,9 +264,8 @@ L'objectif est de concevoir une intelligence artificielle capable de jouer de ma
 Pour cela un réseau de neurones est entraîné par un algorithme génétique qui simule la sélection naturelle.
 Les entrées du réseau de neurones sont constituées de paramètres de vision obtenus à partir de la tête du serpent.
 Plusieurs fonctions de fitness sont considérées afin d'obtenir le meilleur score et d'éviter les boucles.
-Le tout est codé en python et seule la librairie pygame est utilisée et toutes les fonctions d'algorithme génétique ou réseau de neurones sont ré-implantées.
+Le tout est codé en python et seule la librairie PyGame est utilisée et toutes les fonctions d'algorithme génétique ou réseau de neurones sont ré-implantées.
 Les aspects théoriques et de convergence des stratégies proposées sont étudiées.
-
 
 \textit{97 mots}
 
@@ -282,11 +281,23 @@ Les aspects théoriques et de convergence des stratégies proposées sont étudi
 \section{Bibliographie}
 
 
+[1]  \href{https://allincolorforaquarter.blogspot.com/2015/09/the-ultimate-so-far-history-of-gremlin_25.html}{The Golden Age Arcade Historian "The Ultimate (So-Far) History of Gremlin Industries Part 2"}
 
+[2] \href{https://www.ibm.com/fr-fr/topics/neural-networks}{Qu'est-ce qu'un réseau de neurones ?}
 
+[3] \href{http://www0.cs.ucl.ac.uk/staff/W.Langdon/ftp/papers/poli08_fieldguide.pdf}{A Field Guide to Genetic Programming, Riccardo Poli; William B. Langdon; Nicholas F. McPhee}
 
+[4] A Genetic Algorithm Tutorial, Darrell Whitley
 
-
-
+[5] Handbook Of Genetic Algorithms, L. Davis
 
 \end{document}
+
+
+
+
+
+Développement d'une méthode de prise de décision : L'agent du jeu Snake prend une décision pour chaque direction à chaque image du jeu (haut, bas, gauche, droite) en utilisant un réseau de neurones avec deux couches cachées.
+
+Définition des entrées du réseau de neurones: Les entrées comprennent la distance de Manhattan de la tête du serpent au fruit dans chaque direction, la quantité d'espace disponible si le serpent se déplace dans chaque direction (calculée par une recherche en largeur), et la longueur du serpent.
+
