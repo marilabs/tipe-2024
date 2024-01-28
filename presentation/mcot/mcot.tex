@@ -112,7 +112,6 @@
 \title{Mise en Cohérence des Objectifs du TIPE}
 \date{\today} 
 
-
 %\begin{enumerate}[label=(\alph*)]
 %	\item	
 %\end{enumerate}
@@ -177,7 +176,7 @@ des algorithmes génétiques.
 % \subsection{Introduction de snake}
 
 Le jeu Snake est né en 1976 en tant que borne d'arcade fabriquée par l'entreprise Gremlin,
- initialement sous le nom de Blockade. Il a été conçu par Lane Hauck, Ago Kiss et Bob Pecarero. [1]
+ initialement sous le nom de Blockade. Il a été conçu par Lane Hauck, Ago Kiss et Bob Pecarero \cite{GoldenAgeArcadeHistorian2015}.
 
 %[1]  https://allincolorforaquarter.blogspot.com/2015/09/the-ultimate-so-far-history-of-gremlin_25.html The Golden Age Arcade Historian "The Ultimate (So-Far) History of Gremlin Industries Part 2"
 
@@ -195,7 +194,7 @@ basant sur un algorithme génétique appliqué à un réseau de neurones.
 % [2] https://www.ibm.com/fr-fr/topics/neural-networks Qu'est-ce qu'un réseau de neurones ?
 
 
-En 1943, Warren McCulloch et Walter Pitts comparent des neurones à la logique booléenne. [2]
+En 1943, Warren McCulloch et Walter Pitts comparent des neurones à la logique booléenne \cite{reseauNeuronesIBM}.
 L'idée est de supposer qu'un neurone est activé à partir du moment où il a un seuil suffisant,
 et l'activation ou non de différents neurones ont un effet sur les décisions prises par l'ensemble
 de neurones, donc le réseau neuronal.
@@ -209,9 +208,10 @@ C'est donc une amélioration du modèle de McCulloch et Pitts, qui permet de ren
 Il faut donc trouver une façon de déterminer les poids optimaux, c'est-à-dire les poids qui permettent au serpent de survivre le plus longtemps possible.
 Pour cela, on va faire des opérations successives sur le réseau neuronal.
 Au lieu d'étudier un seul serpent, on va donc étudier une population de serpents, et on va faire évoluer cette population de serpents.
-On va donc appliquer différents opérateurs génétiques sur cette population, qui vont permettre de faire converger les poids des différents neurones vers les poids optimaux. [3][4]
+On va donc appliquer différents opérateurs génétiques sur cette population, qui vont permettre de faire converger les poids des différents neurones vers les poids optimaux. \cite{poli2008field,whitley1994geneticAlgorithmTutorial}.
 
 % \subsection{Introduction algorithmes génétiques}
+
 
 % [3] http://www0.cs.ucl.ac.uk/staff/W.Langdon/ftp/papers/poli08_fieldguide.pdf A Field Guide to Genetic Programming, Riccardo Poli; William B. Langdon; Nicholas F. McPhee
 
@@ -234,6 +234,7 @@ On s'intéresse alors d'une part aux graphes, pour comprendre la structure du r�
 % [4] A Genetic Algorithm Tutorial, Darrell Whitley
 
 % [5] Handbook Of Genetic Algorithms, L. Davis
+\cite{davis1991handbookGeneticAlgorithms}
 
 \textit{461 mots}
 
@@ -280,15 +281,9 @@ Les aspects théoriques et de convergence des stratégies proposées sont étudi
 
 \section{Bibliographie}
 
-[1] \href{https://allincolorforaquarter.blogspot.com/2015/09/the-ultimate-so-far-history-of-gremlin_25.html}{The Golden Age Arcade Historian "The Ultimate (So-Far) History of Gremlin Industries Part 2"}
 
-[2] \href{https://www.ibm.com/fr-fr/topics/neural-networks}{Qu'est-ce qu'un réseau de neurones ?}
-
-[3] \href{http://www0.cs.ucl.ac.uk/staff/W.Langdon/ftp/papers/poli08_fieldguide.pdf}{A Field Guide to Genetic Programming, Riccardo Poli; William B. Langdon; Nicholas F. McPhee}
-
-[4] A Genetic Algorithm Tutorial, Darrell Whitley
-
-[5] Handbook Of Genetic Algorithms, L. Davis
+\bibliography{mcot.bib}
+\bibliographystyle{plain}
 
 \end{document}
 
