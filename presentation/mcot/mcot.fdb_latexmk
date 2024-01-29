@@ -1,13 +1,13 @@
 # Fdb version 3
-["bibtex mcot"] 1706478760 "mcot.aux" "mcot.bbl" "mcot" 1706478762
+["bibtex mcot"] 1706478760 "mcot.aux" "mcot.bbl" "mcot" 1706526663
   "/usr/local/texlive/2022/texmf-dist/bibtex/bst/base/ieeetr.bst" 1292289607 18361 1a00e58565e7f19bf2b3e1bfb82254ae ""
-  "mcot.aux" 1706478761 2550 6b7a60a30696817a06d2970e8cea76bc "pdflatex"
+  "mcot.aux" 1706526663 2550 6b7a60a30696817a06d2970e8cea76bc "pdflatex"
   "mcot.bib" 1706478651 2434 98bba1540fb5c0fabf2fd1c05eb16218 ""
   (generated)
   "mcot.bbl"
   "mcot.blg"
-["pdflatex"] 1706478760 "/Users/mariloudecourville/Documents/git/tipe-2024/presentation/mcot/mcot.tex" "mcot.pdf" "mcot" 1706478762
-  "/Users/mariloudecourville/Documents/git/tipe-2024/presentation/mcot/mcot.tex" 1706478651 9692 5a8b1d87d20baff48253e6baaeb279dc ""
+["pdflatex"] 1706526662 "/Users/mariloudecourville/Documents/git/tipe-2024/presentation/mcot/mcot.tex" "mcot.pdf" "mcot" 1706526663
+  "/Users/mariloudecourville/Documents/git/tipe-2024/presentation/mcot/mcot.tex" 1706526662 9692 b8f47fc9cf2ed4ae503278506e0cae70 ""
   "/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc" 1136849721 2971 def0b6c1f0b107b3b936def894055589 ""
   "/usr/local/texlive/2022/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/local/texlive/2022/texmf-dist/fonts/tfm/jknappen/ec/ecbx1095.tfm" 1136768653 3584 21b378cca2e40816b0e6d74a4dc98f04 ""
@@ -251,11 +251,11 @@
   "/usr/local/texlive/2022/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1647878959 4410336 7d30a02e9fa9a16d7d1f8d037ba69641 ""
   "/usr/local/texlive/2022/texmf-var/web2c/pdftex/pdflatex.fmt" 1671961974 2826445 ec85424d8f00391c68584300fce09824 ""
   "/usr/local/texlive/2022/texmf.cnf" 1647878952 577 209b46be99c9075fd74d4c0369380e8c ""
-  "mcot.aux" 1706478761 2550 6b7a60a30696817a06d2970e8cea76bc "pdflatex"
+  "mcot.aux" 1706526663 2550 6b7a60a30696817a06d2970e8cea76bc "pdflatex"
   "mcot.bbl" 1706478760 1641 2671c1e2cd38ad542f1d5496f542ef5b "bibtex mcot"
-  "mcot.out" 1706478761 1789 207d3b230eab3aa7be0590ee097bb6dd "pdflatex"
-  "mcot.tex" 1706478651 9692 5a8b1d87d20baff48253e6baaeb279dc ""
-  "mcot.toc" 1706478761 742 04a73618665efba8b9bd918066ae6340 "pdflatex"
+  "mcot.out" 1706526663 1789 207d3b230eab3aa7be0590ee097bb6dd "pdflatex"
+  "mcot.tex" 1706526662 9692 b8f47fc9cf2ed4ae503278506e0cae70 ""
+  "mcot.toc" 1706526663 742 04a73618665efba8b9bd918066ae6340 "pdflatex"
   (generated)
   "mcot.aux"
   "mcot.log"
