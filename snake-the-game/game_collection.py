@@ -5,6 +5,7 @@ from genetic_algorithm import GeneticAlgorithm
 
 class GameCollection:
     games = []
+    # GeneticAlgorithm(10) : 10 bests are saved
     ga = GeneticAlgorithm(10)
     age = 0
     generation = 1

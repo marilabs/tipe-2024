@@ -23,10 +23,14 @@ class Game:
     def __init__(self, width: int, height: int) -> None:
         self.width = width
         self.height = height
+        # Neural network composed of 4 layers, input layer has 24 neurons, 2 hidden layers each with 18 neurons, output layer has 4 neurons (4 directions)
+        # in total it has 24 + 18 + 18 + 4 = 64 neurons.
         self.brain = NeuralNetwork.random([24, 18, 18, 4])
     
     def step(self) -> bool:
+        # process the vision output through the neural network and output activation
         activation = self.brain.feedforward(self.process_vision())
+        # take the highest activation index for the direction to take
         index = argmax(activation)
 
         match index:
