@@ -2,6 +2,7 @@
 
 from game import Game
 from genetic_algorithm import GeneticAlgorithm
+import pickle
 
 class GameCollection:
     games = []
@@ -58,6 +59,15 @@ class GameCollection:
 
         self.age = 0
         self.generation += 1
+
+    def save_to_file(self, filename):
+        with open(filename, 'wb') as f:
+            pickle.dump(self, f)
+
+    @classmethod
+    def load_from_file(cls, filename):
+        with open(filename, 'rb') as f:
+            return pickle.load(f)
 
         
     

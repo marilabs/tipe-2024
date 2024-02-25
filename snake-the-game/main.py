@@ -1,4 +1,7 @@
 import pygame
+import os
+import signal
+import sys
 # from random import randrange
 # from game import Game
 
@@ -18,6 +21,13 @@ screen = pygame.display.set_mode((WIDTH * SIDE, HEIGHT * SIDE))
 clock = pygame.time.Clock()
 running = True
 dt = 0
+
+def save_and_exit(signal, frame):
+    game_collection.save_to_file('saved_game_collection.pickle')
+    sys.exit(0)
+
+# save program state in case of interuption
+signal.signal(signal.SIGINT, save_and_exit)
 
 iteration = 0
 
@@ -62,5 +72,7 @@ while running:
     pygame.display.flip()
 
     clock.tick(50)
+
+game_collection.save_to_file('saved_game_collection.pickle')
 
 pygame.quit()
