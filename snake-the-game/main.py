@@ -53,8 +53,6 @@ while running:
     (x, y) = game.apple
     pygame.draw.circle(screen, "brown3", (x * SIDE + SIDE/2, y * SIDE + SIDE/2), SIDE / 2)
 
-
-
     # update your game state here
 
     if not game_collection.step():

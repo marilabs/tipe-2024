@@ -68,7 +68,6 @@ class NeuralNetwork:
             np.array([[genome.pop() for _ in range(j)] for _ in range(i)]) for (i, j) in zip(self.layers_sizes[1:], self.layers_sizes[:-1])
         ]
 
-
         nn.biases = [
             np.array([genome.pop() for _ in range(i)]) for i in self.layers_sizes[1:]
         ]
