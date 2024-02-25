@@ -75,7 +75,7 @@ class Game:
     
 
     def process_vision(self) -> [float]:
-        vision = [None for _ in range(3*8)]
+        vision = [0 for _ in range(3*8)]
         directions = [(1, 0), (1, 1), (0, 1), (-1, 1), (-1, 0), (-1, -1), (0, -1), (1, -1)]
 
         for (i, incrementer) in enumerate(directions):
@@ -97,7 +97,7 @@ class Game:
                     break
 
                 # sur la pomme
-                if (x, y) == self.apple:
+                if (x, y) == self.apple and apple_distance == -1:
                     apple_distance = distance
 
                 # sur la queue
@@ -112,5 +112,6 @@ class Game:
         return vision
     
     def fitness(self, age):
-        return (age * age * age * age) * pow(2, self.apples_eaten) * (500 * self.apples_eaten + 1)
+        return (age * age) * pow(2, self.apples_eaten) * (100 * self.apples_eaten + 1)
+        # return (age * age * age * age) * pow(2, self.apples_eaten) * (500 * self.apples_eaten + 1)
     # age to the power of 4 vs 3 vs 2

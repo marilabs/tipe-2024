@@ -13,6 +13,9 @@ class GameCollection:
         self.games = [Game(width, height) for _ in range(number_games)]
 
     def snake_to_display(self) -> Game:
+        for i in range(len(self.games)):
+            if not self.games[i].lost:
+                return self.games[i]
         return self.games[0]
     
     def step(self) -> bool:
@@ -26,8 +29,13 @@ class GameCollection:
                 one_game_not_lost = True
                 game.step()
 
+        # if all games are lost, evolve
         if not one_game_not_lost:
             self.evolve()
+
+        """# if the displayed game is lost, evolve to avoid waiting with a frozen snake
+        if self.games[0].lost:
+            self.evolve() """
 
         return one_game_not_lost
     

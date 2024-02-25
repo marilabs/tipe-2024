@@ -6,8 +6,8 @@ class GeneticAlgorithm:
 
     save_bests = 10 # avant: 0
     k = 5 # avant: 1
-    mut_chance = 0.08 # avant: 0.1
-    coeff = 0.3 # avant: 0.1
+    mut_chance = 0.5 # avant: 0.1
+    coeff = 0.5# avant: 0.1
 
     def __init__(self, save_bests: int) -> None:
         self.save_bests = save_bests
