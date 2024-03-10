@@ -19,6 +19,15 @@ class GameCollection:
             if not self.games[i].lost:
                 return self.games[i], i
         return self.games[0], 0
+
+    def longest_snake(self) -> (Game, int):
+        longest = 0
+        index = 0
+        for i in range(len(self.games)):
+            if len(self.games[i].snake_body) > longest:
+                longest = len(self.games[i].snake_body)
+                index = i
+        return self.games[index], index
     
     def step(self) -> bool:
 
@@ -34,11 +43,6 @@ class GameCollection:
         # if all games are lost, evolve
         if not one_game_not_lost:
             self.evolve()
-
-        """# if the displayed game is lost, evolve to avoid waiting with a frozen snake
-        if self.games[0].lost:
-            self.evolve() """
-
         return one_game_not_lost
     
 
@@ -52,10 +56,9 @@ class GameCollection:
         width, height = self.games[0].width, self.games[0].height
 
         for i in range(len(new_population)):
-
-            g = Game(width, height)
-            g.brain = new_population[i]
-            self.games[i] = g
+            g = Game(width, height) # create new game
+            g.brain = new_population[i] # inject brain in game
+            self.games[i] = g # replace current game with new one
 
         self.iteration = 0
         self.generation += 1
@@ -68,6 +71,15 @@ class GameCollection:
     def load_from_file(cls, filename):
         with open(filename, 'rb') as f:
             return pickle.load(f)
+
+    def best_fitness(self):
+        return max(game.fitness() for game in self.games)
+
+    def average_fitness(self):
+        return sum(game.fitness() for game in self.games) / len(self.games)
+
+    def max_apple_eaten(self):
+        return max(game.apples_eaten for game in self.games)
 
         
     

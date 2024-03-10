@@ -1,25 +1,13 @@
-# un seul serpent
+# un jeu = un seul serpent
 
 from random import randrange
 from neural_network import NeuralNetwork
 from numpy import argmax
 
 class Game:
-    width = 20
-    height = 15
-    snake_body = [
-        (int(width / 2), int(height / 2)),
-            (int(width / 2) + 1, int(height / 2)), 
-            (int(width / 2) + 2, int(height / 2))
-        ]
-    apple = (0,0)
-    age = 0
     max_age = 500
     apple_lifetime_gain = 50
-    lost = False
-    direction = (-1, 0) # default direction is left for first move
-    apples_eaten = 0
-    
+
     def __init__(self, width: int, height: int) -> None:
         self.width = width
         self.height = height
@@ -27,7 +15,16 @@ class Game:
         # in total it has 24 + 18 + 18 + 4 = 64 neurons.
         self.brain = NeuralNetwork.random([24, 18, 18, 4])
         self.apple = (randrange(0, width), randrange(0, height))
-    
+        self.age = 0
+        self.lost = False
+        self.apples_eaten = 0
+        self.direction = (-1, 0) # default direction is left for first move
+        self.snake_body = [ # snake starts at the center and has 3 bits
+            (int(width / 2), int(height / 2)),
+            (int(width / 2) + 1, int(height / 2)), 
+            (int(width / 2) + 2, int(height / 2))
+        ]
+
     def step(self) -> bool:
         # process the vision output through the neural network and output activation
         activation = self.brain.feedforward(self.process_vision())
@@ -36,13 +33,13 @@ class Game:
 
         match index:
             case 0:
-                self.direction = (1, 0)
+                self.direction = (1, 0) # right
             case 1:
-                self.direction = (0, -1)
+                self.direction = (0, 1) # up
             case 2:
-                self.direction = (-1, 0)
+                self.direction = (-1, 0) # left
             case 3:
-                self.direction = (0, 1)
+                self.direction = (0, -1) # down
 
         return self.move_snake(self.direction)
 
@@ -76,7 +73,7 @@ class Game:
             self.snake_body.append(end_tail) # agrandir le serpent avec la queue précédente
             self.apple = (randrange(0, self.width), randrange(0, self.height)) # nouvelle pomme
             self.apples_eaten += 1
-            self.age -= self.apple_lifetime_gain
+            self.age = max(0, self.age - self.apple_lifetime_gain) # gain de durée de vie si pomme mangée
 
         # vérification de la durée de vie
         if self.age >= self.max_age:
@@ -87,7 +84,7 @@ class Game:
     
     def process_vision(self) -> [float]:
         vision = [0 for _ in range(3*8)]
-        directions = [(1, 0), (1, 1), (0, 1), (-1, 1), (-1, 0), (-1, -1), (0, -1), (1, -1)]
+        directions = [(1, 0), (1, 1), (0, 1), (-1, 1), (-1, 0), (-1, -1), (0, -1), (1, -1)] # right, up-right, up, up-left, left, down-left, down, down-right
 
         for (i, incrementer) in enumerate(directions):
             apple_distance = -1

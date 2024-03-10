@@ -5,10 +5,11 @@ import sys
 
 from game_collection import GameCollection
 
-SIDE = 50
-WIDTH = 20
-HEIGHT = 15
-NUMBER_GAMES = 500
+SIDE = 30
+WIDTH = 30
+HEIGHT = 30
+NUMBER_GAMES = 500 # number of games in the collection -> number of snakes in parallel
+MAX_ITERATION = 50 # number of iterations before stopping the program
 
 game_collection = GameCollection(NUMBER_GAMES, WIDTH, HEIGHT)
 
@@ -37,9 +38,11 @@ while running:
 
     # retrieve the new game
     game, current_snake = game_collection.snake_to_display()
+    #game, current_snake = game_collection.longest_snake() # to see the longest snake
+
 
     # display game iteration and fitness of the game (generation) as window title
-    pygame.display.set_caption(f"Generation {game_collection.generation} - Current snake {current_snake} - Iteration {game_collection.iteration} - Fitness {game.fitness()}")
+    pygame.display.set_caption(f"Gen {game_collection.generation} - Cur snake {current_snake} - Iter {game_collection.iteration} - Fitness {game.fitness()} - Max fitness {game_collection.best_fitness()} - Avg fitness {game_collection.average_fitness()} - Max eaten {game_collection.max_apple_eaten()}")
 
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("white")
@@ -55,15 +58,9 @@ while running:
 
     # update your game state here
 
-    if not game_collection.step():
-        for game in game_collection.games:
-            game.snake_body = [
-            (int(game.width / 2), int(game.height / 2)),
-                (int(game.width / 2) + 1, int(game.height / 2)), 
-                (int(game.width / 2) + 2, int(game.height / 2))
-            ]
+    if not game_collection.step(): # all sakes in collection dead go next iteration
         iteration += 1
-        if iteration >= 50:
+        if iteration >= MAX_ITERATION:
             break
 
     # flip() the display to put your work on screen
