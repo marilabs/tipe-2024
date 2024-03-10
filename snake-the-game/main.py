@@ -2,18 +2,15 @@ import pygame
 import os
 import signal
 import sys
-# from random import randrange
-# from game import Game
-
-# game = Game()
 
 from game_collection import GameCollection
 
 SIDE = 50
 WIDTH = 20
 HEIGHT = 15
+NUMBER_GAMES = 500
 
-game_collection = GameCollection(500, WIDTH, HEIGHT)
+game_collection = GameCollection(NUMBER_GAMES, WIDTH, HEIGHT)
 
 # pygame setup
 pygame.init()
@@ -39,7 +36,10 @@ while running:
             running = False
 
     # retrieve the new game
-    game = game_collection.snake_to_display()
+    game, current_snake = game_collection.snake_to_display()
+
+    # display game iteration and fitness of the game (generation) as window title
+    pygame.display.set_caption(f"Generation {game_collection.generation} - Current snake {current_snake} - Iteration {game_collection.iteration} - Fitness {game.fitness()}")
 
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("white")
