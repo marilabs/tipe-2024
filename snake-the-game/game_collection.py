@@ -8,21 +8,21 @@ class GameCollection:
     games = []
     # GeneticAlgorithm(10) : 10 bests are saved
     ga = GeneticAlgorithm(10)
-    age = 0
+    iteration = 0
     generation = 1
 
     def __init__(self, number_games:int, width:int, height:int) -> None:
         self.games = [Game(width, height) for _ in range(number_games)]
 
-    def snake_to_display(self) -> Game:
+    def snake_to_display(self) -> (Game, int):
         for i in range(len(self.games)):
             if not self.games[i].lost:
-                return self.games[i]
-        return self.games[0]
+                return self.games[i], i
+        return self.games[0], 0
     
     def step(self) -> bool:
 
-        self.age += 1
+        self.iteration += 1
 
         one_game_not_lost = False
 
@@ -45,7 +45,7 @@ class GameCollection:
     def evolve(self):
 
         new_population = self.ga.evolve([
-            (game.brain, game.fitness(self.age))
+            (game.brain, game.fitness())
             for game in self.games
         ])
 
@@ -57,7 +57,7 @@ class GameCollection:
             g.brain = new_population[i]
             self.games[i] = g
 
-        self.age = 0
+        self.iteration = 0
         self.generation += 1
 
     def save_to_file(self, filename):
