@@ -12,12 +12,12 @@ class Game:
             (int(width / 2) + 1, int(height / 2)), 
             (int(width / 2) + 2, int(height / 2))
         ]
-    apple = (randrange(0, width), randrange(0, height))
-
+    apple = (0,0)
+    age = 0
+    max_age = 500
+    apple_lifetime_gain = 50
     lost = False
-
-    direction = (-1, 0)
-
+    direction = (-1, 0) # default direction is left for first move
     apples_eaten = 0
     
     def __init__(self, width: int, height: int) -> None:
@@ -26,6 +26,7 @@ class Game:
         # Neural network composed of 4 layers, input layer has 24 neurons, 2 hidden layers each with 18 neurons, output layer has 4 neurons (4 directions)
         # in total it has 24 + 18 + 18 + 4 = 64 neurons.
         self.brain = NeuralNetwork.random([24, 18, 18, 4])
+        self.apple = (randrange(0, width), randrange(0, height))
     
     def step(self) -> bool:
         # process the vision output through the neural network and output activation
@@ -44,7 +45,6 @@ class Game:
                 self.direction = (0, 1)
 
         return self.move_snake(self.direction)
-
 
     def move_snake(self, incrementer: (int, int)) -> bool:
         moved_head = (self.snake_body[0][0] + incrementer[0], self.snake_body[0][1] + incrementer[1])
@@ -68,16 +68,23 @@ class Game:
             if bit == self.snake_body[0]:
                 self.lost = True
                 return False
+
+        self.age += 1
             
         #collisions avec la pomme
         if self.snake_body[0] == self.apple:
-            self.snake_body.append(end_tail)
-            self.apple = (randrange(0, self.width), randrange(0, self.height))
+            self.snake_body.append(end_tail) # agrandir le serpent avec la queue précédente
+            self.apple = (randrange(0, self.width), randrange(0, self.height)) # nouvelle pomme
             self.apples_eaten += 1
+            self.age -= self.apple_lifetime_gain
+
+        # vérification de la durée de vie
+        if self.age >= self.max_age:
+            self.lost = True
+            return False
 
         return True
     
-
     def process_vision(self) -> [float]:
         vision = [0 for _ in range(3*8)]
         directions = [(1, 0), (1, 1), (0, 1), (-1, 1), (-1, 0), (-1, -1), (0, -1), (1, -1)]
@@ -112,10 +119,9 @@ class Game:
             vision[3*i + 1] = 1 / wall_distance
             vision[3*i + 2] = tail_distance if tail_distance != -1 else 0
 
-
         return vision
     
-    def fitness(self, age):
-        return (age * age) * pow(2, self.apples_eaten) * (100 * self.apples_eaten + 1)
-        # return (age * age * age * age) * pow(2, self.apples_eaten) * (500 * self.apples_eaten + 1)
+    def fitness(self):
+        return (self.age * self.age) * pow(2, self.apples_eaten) * (100 * self.apples_eaten + 1)
+        # return (self.age * self.age * self.age * self.age) * pow(2, self.apples_eaten) * (500 * self.apples_eaten + 1)
     # age to the power of 4 vs 3 vs 2
