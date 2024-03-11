@@ -6,8 +6,8 @@ import sys
 from game_collection import GameCollection
 
 SIDE = 30
-WIDTH = 10
-HEIGHT = 10
+WIDTH = 30
+HEIGHT = 30
 NUMBER_GAMES = 500 # number of games in the collection -> number of snakes in parallel
 MAX_ITERATION = 50 # number of iterations before stopping the program
 
@@ -24,7 +24,7 @@ def save_and_exit(signal, frame):
     game_collection.save_to_file('saved_game_collection.pickle')
     sys.exit(0)
 
-# save program state in case of interuption
+# save program state in case of interruption
 signal.signal(signal.SIGINT, save_and_exit)
 
 iteration = 0

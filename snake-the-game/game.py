@@ -25,6 +25,7 @@ class Game:
             (int(width / 2) + 2, int(height / 2))
         ]
         self.life_points = self.max_life_points
+        self.died_bc_no_apple = 0
 
     def step(self) -> bool:
         # process the vision output through the neural network and output activation
@@ -75,11 +76,24 @@ class Game:
             self.snake_body.append(end_tail) # agrandir le serpent avec la queue précédente
             self.apple = (randrange(0, self.width), randrange(0, self.height)) # nouvelle pomme
             self.apples_eaten += 1
-            self.life_points = self.age + self.apple_lifetime_gain # gain de durée de vie si pomme mangée
+            self.life_points = self.apple_lifetime_gain # on réinitialise la durée de vie conformément au commentaire en dessous:
+
+            """
+            The genetic algorithm was run many different times with many different fitness functions. 
+            Formulaically, the first fitness function was:
+            ((score^3)*(frame_score)
+            Score is equivalent to the length of the snake minus 1 (since the snake always starts at length 1), 
+            and frame_score is the amount of frames that the snake was alive. However, originally this fitness 
+            function resulted in many snakes that looped in circles endlessly without eating any fruit to maximize 
+            the frame_score component of the function. Thus, the training was modified such that all snakes are 
+            killed off if they do not eat a fruit in 50 frames. Also, if a snake died due to not eating any fruit 
+            for 50 frames, 50 points were subtracted from the frame_score to discourage the behaviour.
+            """
 
         # vérification de la durée de vie
         if self.life_points <= 0:
             self.lost = True
+            self.died_bc_no_apple = 1
             return False
 
         return True
@@ -121,7 +135,8 @@ class Game:
         return vision
     
     def fitness(self):
+        return pow(3, self.apples_eaten) * (self.age - 50 * self.died_bc_no_apple)
         #return (self.age * self.age) * pow(2, self.apples_eaten) * (100 * self.apples_eaten + 1)
-        return ((self.apples_eaten * 2) ** 2) * (self.age ** 1.5)
+        #return ((self.apples_eaten * 2) ** 2) * (self.age ** 1.5)
         #return (self.age * self.age * self.age * self.age) * pow(2, self.apples_eaten) * (500 * self.apples_eaten + 1)
     # age to the power of 4 vs 3 vs 2
