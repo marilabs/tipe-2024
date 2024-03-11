@@ -5,7 +5,7 @@ from neural_network import NeuralNetwork
 from numpy import argmax
 
 class Game:
-    max_age = 500
+    max_life_points = 50
     apple_lifetime_gain = 50
 
     def __init__(self, width: int, height: int) -> None:
@@ -24,6 +24,7 @@ class Game:
             (int(width / 2) + 1, int(height / 2)), 
             (int(width / 2) + 2, int(height / 2))
         ]
+        self.life_points = self.max_life_points
 
     def step(self) -> bool:
         # process the vision output through the neural network and output activation
@@ -67,16 +68,17 @@ class Game:
                 return False
 
         self.age += 1
+        self.life_points -= 1
             
         #collisions avec la pomme
         if self.snake_body[0] == self.apple:
             self.snake_body.append(end_tail) # agrandir le serpent avec la queue précédente
             self.apple = (randrange(0, self.width), randrange(0, self.height)) # nouvelle pomme
             self.apples_eaten += 1
-            self.age = max(0, self.age - self.apple_lifetime_gain) # gain de durée de vie si pomme mangée
+            self.life_points = self.age + self.apple_lifetime_gain # gain de durée de vie si pomme mangée
 
         # vérification de la durée de vie
-        if self.age >= self.max_age:
+        if self.life_points <= 0:
             self.lost = True
             return False
 
@@ -119,6 +121,7 @@ class Game:
         return vision
     
     def fitness(self):
-        return (self.age * self.age) * pow(2, self.apples_eaten) * (100 * self.apples_eaten + 1)
-        # return (self.age * self.age * self.age * self.age) * pow(2, self.apples_eaten) * (500 * self.apples_eaten + 1)
+        #return (self.age * self.age) * pow(2, self.apples_eaten) * (100 * self.apples_eaten + 1)
+        return ((self.apples_eaten * 2) ** 2) * (self.age ** 1.5)
+        #return (self.age * self.age * self.age * self.age) * pow(2, self.apples_eaten) * (500 * self.apples_eaten + 1)
     # age to the power of 4 vs 3 vs 2
