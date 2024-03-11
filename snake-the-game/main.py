@@ -9,7 +9,7 @@ SIDE = 30
 WIDTH = 30
 HEIGHT = 30
 NUMBER_GAMES = 500 # number of games in the collection -> number of snakes in parallel
-MAX_ITERATION = 50 # number of iterations before stopping the program
+MAX_ITERATION = 100 # number of iterations before stopping the program
 
 game_collection = GameCollection(NUMBER_GAMES, WIDTH, HEIGHT)
 
