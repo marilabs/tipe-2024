@@ -3,6 +3,8 @@
 from game import Game
 from genetic_algorithm import GeneticAlgorithm
 import pickle
+import config
+from typing import List, Tuple
 
 class GameCollection:
     games = []
@@ -14,13 +16,13 @@ class GameCollection:
     def __init__(self, number_games:int, width:int, height:int) -> None:
         self.games = [Game(width, height) for _ in range(number_games)]
 
-    def snake_to_display(self) -> (Game, int):
+    def snake_to_display(self) -> Tuple[Game, int]:
         for i in range(len(self.games)):
             if not self.games[i].lost:
                 return self.games[i], i
         return self.games[0], 0
 
-    def longest_snake(self) -> (Game, int):
+    def longest_snake(self) -> Tuple[Game, int]:
         longest = 0
         index = 0
         for i in range(len(self.games)):
@@ -62,6 +64,30 @@ class GameCollection:
 
         self.iteration = 0
         self.generation += 1
+
+    def save_brains(self, filename):
+        # save the game collection and all the games in the game collection to a file
+        #for game in self.games:
+        #    print(game.brain.layers_sizes)
+        game_brains = [game.brain for game in self.games]
+        if config.DEBUG:
+            for brain in game_brains:
+                print(brain.weights, end=' ')
+            print()
+        print("save_brains: len(game_brains): ", len(game_brains))
+        with open(filename, 'wb') as f:
+            pickle.dump(game_brains, f)
+
+    def restore_brains(self, filename):
+        with open(filename, 'rb') as f:
+            game_brains = pickle.load(f)
+            print("restore_brains: len(game_brains): ", len(game_brains))
+            for i in range(len(self.games)):
+                self.games[i].brain = game_brains[i]
+            if config.DEBUG:
+                for brain in game_brains:
+                    print(brain.weights, end=' ')
+                print()
 
     def save_to_file(self, filename):
         with open(filename, 'wb') as f:
