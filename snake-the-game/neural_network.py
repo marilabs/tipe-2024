@@ -16,12 +16,12 @@ class NeuralNetwork:
         self.weights = [np.random.randn(i, j) for (i, j) in zip(layers_sizes[1:], layers_sizes[:-1])]
         self.activation_function = sigmoid
         self.layers_sizes = layers_sizes
-    
+
     def feedforward(self, activation):
         for w, b in zip(self.weights, self.biases):
             activation = self.activation_function(np.dot(w, activation) + b)
         return activation
-   
+
     """
     def to_genome(self) -> List[float]:
         genome = []
@@ -29,23 +29,21 @@ class NeuralNetwork:
             for line in w:
                 for c in line:
                     genome.append(c)
-
         for b in self.biases:
             for c in b:
                 genome.append(c)
-
         return genome
-    
     """
-    
-    def to_genome(self):
+
+    def to_genome(self) -> List[float]:
         genome = np.concatenate([w.flatten() for w in self.weights] + [b.flatten() for b in self.biases])
         return genome.tolist()
-    
+
     @classmethod
     def from_genome(cls, genome: List[float], layers: List[int]):
         assert len(layers) > 0
         nn = cls(layers)
+        # this code is more efficient than the commented code below because it avoids the list inversions
         offset = 0
         for i, (j, k) in enumerate(zip(layers[:-1], layers[1:])):
             nn.weights[i] = np.reshape(genome[offset:offset + j * k], (k, j))
@@ -55,8 +53,7 @@ class NeuralNetwork:
             offset += k
         """
         genome = list(reversed(genome))
-        nn.weights = [np.array([[genome.pop() for _ in range(j)] for _ in range(i)]) for (i, j) in zip(cls.layers_sizes[1:], cls.layers_sizes[:-1])]
-        nn.biases = [np.array([genome.pop() for _ in range(i)]) for i in cls.layers_sizes[1:]]
+        nn.weights = [np.array([[genome.pop() for _ in range(j)] for _ in range(i)]) for (i, j) in zip(nn.layers_sizes[1:], nn.layers_sizes[:-1])]
+        nn.biases = [np.array([genome.pop() for _ in range(i)]) for i in nn.layers_sizes[1:]]
         """
         return nn
-
