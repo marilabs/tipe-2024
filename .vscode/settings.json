@@ -3,5 +3,6 @@
         "darkolivegreen",
         "randn",
         "Rosenblatt"
-    ]
+    ],
+    "editor.renderWhitespace": "all"
 }

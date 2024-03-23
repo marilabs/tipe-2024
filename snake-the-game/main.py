@@ -73,7 +73,7 @@ while running:
 
     # display game iteration and fitness of the game (generation) as window title
     info = f"Gen {game_collection.generation} - Iter {game_collection.iteration} - Fitness {game.fitness():.2e} - Max fitness {cur_max_fitness:.2e} - Avg fitness {round(cur_avg_fitness, 2):.2e} - Max eaten {cur_max_apple_eaten} - Longest ever {max_snake_length}"
-    
+
     if c.DISPLAY_GRAPHICS:
         # poll for events
         # pygame.QUIT event means the user clicked X to close your window
@@ -104,7 +104,7 @@ while running:
 
                 # if game is lost change the color of the rectangle to red
                 if game.lost:
-                    pygame.draw.rect(screen, "red", (col * GAME_WIDTH, row * GAME_HEIGHT, GAME_WIDTH, GAME_HEIGHT)) 
+                    pygame.draw.rect(screen, "red", (col * GAME_WIDTH, row * GAME_HEIGHT, GAME_WIDTH, GAME_HEIGHT))
 
                 # do a case switch to change the color of the rectangle depending on the death reason
                 if game.death_reason == "Wall":
@@ -195,14 +195,14 @@ ax1.set_yscale('log')
 ax1.plot(range(len(max_fitness)), max_fitness, color=color)
 ax1.tick_params(axis='y', labelcolor=color)
 
-ax2 = ax1.twinx()  
+ax2 = ax1.twinx()
 color = 'tab:red'
 ax2.set_ylabel('Average Fitness', color=color)
 ax2.set_yscale('log')
 ax2.plot(range(len(avg_fitness)), avg_fitness, color=color)
 ax2.tick_params(axis='y', labelcolor=color)
 
-fig.tight_layout()  
+fig.tight_layout()
 plt.title('Max and Average Fitness vs Iteration')
 plt.grid(True)
 plt.show()
@@ -217,7 +217,7 @@ ax1.plot(range(len(max_fitness)), max_fitness, color=color1)
 ax1.tick_params(axis='y', labelcolor=color1)
 
 color2 = 'tab:red'
-ax2 = ax1.twinx()  
+ax2 = ax1.twinx()
 ax2.set_ylabel('Average Fitness', color=color2)
 ax2.plot(range(len(avg_fitness)), avg_fitness, color=color2)
 ax2.tick_params(axis='y', labelcolor=color2)
@@ -225,7 +225,7 @@ ax2.tick_params(axis='y', labelcolor=color2)
 color3 = 'tab:green'
 ax1.plot(range(len(max_apple_eaten)), max_apple_eaten, color=color3, linestyle='dashed', label='Max Apples Eaten')
 
-fig.tight_layout()  
+fig.tight_layout()
 plt.title('Fitness vs Iteration')
 plt.grid(True)
 plt.show()

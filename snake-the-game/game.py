@@ -18,7 +18,7 @@ class Game:
         # The number of hidden neurons should be between the size of the input layer and the size of the output layer.
         # The number of hidden neurons should be 2/3 the size of the input layer, plus the size of the output layer.
         # The number of hidden neurons should be less than twice the size of the input layer.
-        
+
         # The number of hidden neurons should be between the size of the input layer and the output layer.
         # The most appropriate number of hidden neurons is sqrt(input layer nodes * output layer nodes)
 
@@ -74,14 +74,14 @@ class Game:
             self.death_reason = "Wall"
             self.lost = True
             return False
-        
+
         # sauvegarde de la fin de la queue
         end_tail = self.snake_body[-1]
-        
+
         # déplacement du serpent
         for i in reversed(range(1, len(self.snake_body))):
             self.snake_body[i] = self.snake_body[i - 1]
-        
+
         self.snake_body[0] = moved_head
 
         #collisions avec le corps
@@ -93,7 +93,7 @@ class Game:
 
         self.age += 1
         self.life_points -= 1
-            
+
         #collisions avec la pomme
         if self.snake_body[0] == self.apple:
             self.snake_body.append(end_tail) # agrandir le serpent avec la queue précédente
@@ -121,7 +121,7 @@ class Game:
             return False
 
         return True
-    
+
     #? VERIFIED libs/eye.rs
     def process_vision(self) -> List[float]:
         vision = [0 for _ in range(3*8)]
@@ -157,9 +157,9 @@ class Game:
             vision[3*i + 2] = tail_distance if tail_distance != -1 else 0
 
         return vision
-    
+
     #? weights 8 bits vs. float? normalization?
-    
+
     def process_vision2(self) -> List[float]:
         # neural network input contains free space in all directions, distance to apple in all directions, and number of apples eaten (size of snake)
         # 9 inputs in total
@@ -170,16 +170,16 @@ class Game:
             (dx, dy) = direction
             (hx, hy) = self.snake_body[0] # head of the snake body
             neural_network_input.append(self.count_free_moving_spaces(hx + dx, hy + dy) / constant)
-            neural_network_input.append(self.manhattan_distance_to_apple((hx + dx, hy + dy)))   
+            neural_network_input.append(self.manhattan_distance_to_apple((hx + dx, hy + dy)))
         neural_network_input.append(self.apples_eaten + self.original_size)
         return neural_network_input
-    
+
     def is_on_board(self, x, y) -> bool:
         return 0 <= x < self.width and 0 <= y < self.height
-    
+
     def is_possible_move(self, x, y) -> bool:
         return self.is_on_board(x, y) and (x, y) not in self.snake_body
-    
+
     def get_possible_moves(self, cur):
         (x, y) = cur
         moves = []
@@ -188,11 +188,11 @@ class Game:
             if self.is_possible_move(x + i, y + j):
                 moves.append((x + i, y + j))
         return moves
-    
+
     def count_free_moving_spaces(self, x, y) -> int:
         if not self.is_possible_move(x, y):
             return 0
-        
+
         space = 0
         visited = set([x, y])
         queue = collections.deque([(x, y)]) # efficient for pop(0) and append
@@ -205,12 +205,12 @@ class Game:
                 if (x + i, y + j) not in visited and self.is_possible_move(x + i, y + j):
                     queue.append((x + i, y + j))
                     visited.add((x + i, y + j))
-        
+
         return space
-    
+
     def manhattan_distance_to_apple(self, head):
         return abs(self.apple[0] - head[0]) + abs(self.apple[1] - head[1])
-    
+
     #? VERIFIED libs/snake.rs
     def fitness(self):
         return pow(3, self.apples_eaten) * (self.age - 50 * self.died_bc_no_apple)

@@ -30,7 +30,7 @@ class GameCollection:
                 longest = len(self.games[i].snake_body)
                 index = i
         return self.games[index], index
-    
+
     def step(self) -> bool:
 
         self.iteration += 1
@@ -46,7 +46,7 @@ class GameCollection:
         if not one_game_not_lost:
             self.evolve()
         return one_game_not_lost
-    
+
 
     def evolve(self):
 
@@ -106,6 +106,3 @@ class GameCollection:
 
     def max_apple_eaten(self):
         return max(game.apples_eaten for game in self.games)
-
-        
-    
