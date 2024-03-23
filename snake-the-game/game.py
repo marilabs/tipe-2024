@@ -8,12 +8,12 @@ import config
 from typing import Tuple, List
 
 class Game:
-    max_life_points = 50
-    apple_lifetime_gain = 50
 
-    def __init__(self, width: int, height: int) -> None:
+    def __init__(self, width: int = 10, height: int = 10, max_life_points: int = 50, apple_lifetime_gain: int = 50) -> None:
         self.width = width
         self.height = height
+        self.max_life_points = max_life_points
+        self.apple_lifetime_gain = apple_lifetime_gain
 
         # The number of hidden neurons should be between the size of the input layer and the size of the output layer.
         # The number of hidden neurons should be 2/3 the size of the input layer, plus the size of the output layer.

@@ -3,18 +3,18 @@
 from game import Game
 from genetic_algorithm import GeneticAlgorithm
 import pickle
-import config
+import config as c
+import math
 from typing import List, Tuple
 
 class GameCollection:
     games = []
-    # GeneticAlgorithm(10) : 10 bests are saved
-    ga = GeneticAlgorithm(10)
+    ga = GeneticAlgorithm(math.ceil(c.PORTION_BESTS * c.POPULATION / 100), c.NUMBER_CROSSOVER_POINTS, c.MUTATION_CHANCE, c.MUTATION_COEFF)
     iteration = 0
     generation = 1
 
     def __init__(self, number_games:int, width:int, height:int) -> None:
-        self.games = [Game(width, height) for _ in range(number_games)]
+        self.games = [Game(width, height, c.MAX_LIFE_POINTS, c.APPLE_LIFETIME_GAIN) for _ in range(number_games)]
 
     def snake_to_display(self) -> Tuple[Game, int]:
         for i in range(len(self.games)):
@@ -58,7 +58,7 @@ class GameCollection:
         width, height = self.games[0].width, self.games[0].height
 
         for i in range(len(new_population)):
-            g = Game(width, height) # create new game
+            g = Game(width, height, c.MAX_LIFE_POINTS, c.APPLE_LIFETIME_GAIN) # create new game
             g.brain = new_population[i] # inject brain in game
             self.games[i] = g # replace current game with new one
 
@@ -70,7 +70,7 @@ class GameCollection:
         #for game in self.games:
         #    print(game.brain.layers_sizes)
         game_brains = [game.brain for game in self.games]
-        if config.DEBUG:
+        if c.DEBUG:
             for brain in game_brains:
                 print(brain.weights, end=' ')
             print()
@@ -84,7 +84,7 @@ class GameCollection:
             print("restore_brains: len(game_brains): ", len(game_brains))
             for i in range(len(self.games)):
                 self.games[i].brain = game_brains[i]
-            if config.DEBUG:
+            if c.DEBUG:
                 for brain in game_brains:
                     print(brain.weights, end=' ')
                 print()

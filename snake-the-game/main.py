@@ -10,8 +10,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 import config as c
+from scipy.interpolate import make_interp_spline
 
-game_collection = GameCollection(c.NUMBER_GAMES, c.WIDTH, c.HEIGHT)
+game_collection = GameCollection(c.POPULATION, c.WIDTH, c.HEIGHT)
 
 if c.RESTORE and os.path.exists(c.BRAINS_FILE):
     game_collection.restore_brains(c.BRAINS_FILE)
@@ -23,7 +24,7 @@ pygame.init()
 # each game has WIDTH x HEIGHT cells
 
 if c.DISPLAY_ALL_POPULATION:
-    games_per_side = math.ceil(math.sqrt(c.NUMBER_GAMES))
+    games_per_side = math.ceil(math.sqrt(c.POPULATION))
 else:
     games_per_side = 1
 
@@ -57,17 +58,6 @@ max_snake_length = 0
 
 #? VERIFIED
 while running:
-    # poll for events
-    # pygame.QUIT event means the user clicked X to close your window
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-
-    # retrieve the new game
-    if c.DISPLAY_LARGEST_SNAKE:
-        game, current_snake = game_collection.longest_snake() # to see the longest snake
-    else:
-        game, current_snake = game_collection.snake_to_display()
 
     cur_max_fitness = game_collection.best_fitness()
     cur_avg_fitness = game_collection.average_fitness()
@@ -75,72 +65,86 @@ while running:
     if cur_max_apple_eaten >= max_snake_length:
         max_snake_length = cur_max_apple_eaten + 1
 
-    # display game iteration and fitness of the game (generation) as window title
-    pygame.display.set_caption(f"Gen {game_collection.generation} - Iter {game_collection.iteration} - Fitness {game.fitness():.2e} - Max fitness {cur_max_fitness:.2e} - Avg fitness {round(cur_avg_fitness, 2):.2e} - Max eaten {cur_max_apple_eaten} - Longest ever {max_snake_length}")
-    # print the same on console
-    #print(f"Gen {game_collection.generation} - Cur snake {current_snake} - Iter {game_collection.iteration} - Fitness {game.fitness()} - Max fitness {cur_max_fitness:.2e} - Avg fitness {round(cur_avg_fitness, 2):.2e} - Max eaten {cur_max_apple_eaten} - Longest ever {max_snake_length}")
-
-    # fill the screen with a color to wipe away anything from last frame
-    screen.fill("white")
-
-    if not c.DISPLAY_ALL_POPULATION:
-        for (x, y) in game.snake_body:
-            pygame.draw.circle(screen, "darkolivegreen3", (x * CELL_SIDE + CELL_SIDE / 2, y * CELL_SIDE + CELL_SIDE / 2), CELL_SIDE / 2)
-        (x, y) = game.snake_body[0] # head of the snake
-        pygame.draw.circle(screen, "black", (x * CELL_SIDE + CELL_SIDE / 2, y * CELL_SIDE + CELL_SIDE / 2), CELL_SIDE / 4)
-        (x, y) = game.apple
-        pygame.draw.circle(screen, "brown3", (x * CELL_SIDE + CELL_SIDE / 2, y * CELL_SIDE + CELL_SIDE / 2), CELL_SIDE / 2)
-        # suround the current game with a black rectangle
-        pygame.draw.rect(screen, "black", (BOARD_WIDTH, BOARD_HEIGHT, BOARD_WIDTH, BOARD_HEIGHT), 1)
+    # retrieve the new game
+    if c.DISPLAY_LARGEST_SNAKE:
+        game, current_snake = game_collection.longest_snake() # to see the longest snake
     else:
-        # draw all games of the game collection in one big table and each game has coordinate and use a square matrix of sqrt(NUMBER_GAMES) x sqrt(NUMBER_GAMES)
-        # Iterate over each game in the collection
-        for i, game in enumerate(game_collection.games):
-            # Calculate the row and column of the current game in the table
-            row = i // games_per_side
-            col = i % games_per_side
+        game, current_snake = game_collection.snake_to_display()
 
-            # if game is lost change the color of the rectangle to red
-            if game.lost:
-                pygame.draw.rect(screen, "red", (col * GAME_WIDTH, row * GAME_HEIGHT, GAME_WIDTH, GAME_HEIGHT)) 
+    # display game iteration and fitness of the game (generation) as window title
+    info = f"Gen {game_collection.generation} - Iter {game_collection.iteration} - Fitness {game.fitness():.2e} - Max fitness {cur_max_fitness:.2e} - Avg fitness {round(cur_avg_fitness, 2):.2e} - Max eaten {cur_max_apple_eaten} - Longest ever {max_snake_length}"
+    
+    if c.DISPLAY_GRAPHICS:
+        # poll for events
+        # pygame.QUIT event means the user clicked X to close your window
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+        # fill the screen with a color to wipe away anything from last frame
+        screen.fill("white")
 
-            # do a case switch to change the color of the rectangle depending on the death reason
-            if game.death_reason == "Wall":
-                pygame.draw.rect(screen, "orange", (col * GAME_WIDTH, row * GAME_HEIGHT, GAME_WIDTH, GAME_HEIGHT))
-            elif game.death_reason == "Body":
-                pygame.draw.rect(screen, "blue", (col * GAME_WIDTH, row * GAME_HEIGHT, GAME_WIDTH, GAME_HEIGHT))
-            elif game.death_reason == "Life":
-                pygame.draw.rect(screen, "green", (col * GAME_WIDTH, row * GAME_HEIGHT, GAME_WIDTH, GAME_HEIGHT))
+        pygame.display.set_caption(info)
 
+        if not c.DISPLAY_ALL_POPULATION:
+            for (x, y) in game.snake_body:
+                pygame.draw.circle(screen, "darkolivegreen3", (x * CELL_SIDE + CELL_SIDE / 2, y * CELL_SIDE + CELL_SIDE / 2), CELL_SIDE / 2)
+            (x, y) = game.snake_body[0] # head of the snake
+            pygame.draw.circle(screen, "black", (x * CELL_SIDE + CELL_SIDE / 2, y * CELL_SIDE + CELL_SIDE / 2), CELL_SIDE / 4)
+            (x, y) = game.apple
+            pygame.draw.circle(screen, "brown3", (x * CELL_SIDE + CELL_SIDE / 2, y * CELL_SIDE + CELL_SIDE / 2), CELL_SIDE / 2)
             # suround the current game with a black rectangle
-            pygame.draw.rect(screen, "black", (col * GAME_WIDTH, row * GAME_HEIGHT, GAME_WIDTH, GAME_HEIGHT), 1)
+            pygame.draw.rect(screen, "black", (BOARD_WIDTH, BOARD_HEIGHT, BOARD_WIDTH, BOARD_HEIGHT), 1)
+        else:
+            # draw all games of the game collection in one big table and each game has coordinate and use a square matrix of sqrt(POPULATION) x sqrt(POPULATION)
+            # Iterate over each game in the collection
+            for i, game in enumerate(game_collection.games):
+                # Calculate the row and column of the current game in the table
+                row = i // games_per_side
+                col = i % games_per_side
 
-            # Calculate the position of the game cell on the screen
+                # if game is lost change the color of the rectangle to red
+                if game.lost:
+                    pygame.draw.rect(screen, "red", (col * GAME_WIDTH, row * GAME_HEIGHT, GAME_WIDTH, GAME_HEIGHT)) 
+
+                # do a case switch to change the color of the rectangle depending on the death reason
+                if game.death_reason == "Wall":
+                    pygame.draw.rect(screen, "orange", (col * GAME_WIDTH, row * GAME_HEIGHT, GAME_WIDTH, GAME_HEIGHT))
+                elif game.death_reason == "Body":
+                    pygame.draw.rect(screen, "blue", (col * GAME_WIDTH, row * GAME_HEIGHT, GAME_WIDTH, GAME_HEIGHT))
+                elif game.death_reason == "Life":
+                    pygame.draw.rect(screen, "green", (col * GAME_WIDTH, row * GAME_HEIGHT, GAME_WIDTH, GAME_HEIGHT))
+
+                # suround the current game with a black rectangle
+                pygame.draw.rect(screen, "black", (col * GAME_WIDTH, row * GAME_HEIGHT, GAME_WIDTH, GAME_HEIGHT), 1)
+
+                # Calculate the position of the game cell on the screen
+                cell_x = col * GAME_WIDTH
+                cell_y = row * GAME_HEIGHT
+
+                # Draw the game on the screen at the calculated position
+                for (x, y) in game.snake_body:
+                    pygame.draw.circle(screen, "darkolivegreen3", (cell_x + x * CELL_SIDE + CELL_SIDE / 2, cell_y + y * CELL_SIDE + CELL_SIDE / 2), CELL_SIDE / 2)
+                (x, y) = game.snake_body[0]
+                pygame.draw.circle(screen, "black", (cell_x + x * CELL_SIDE + CELL_SIDE / 2, cell_y + y * CELL_SIDE + CELL_SIDE / 2), CELL_SIDE / 4)
+                (x, y) = game.apple
+                pygame.draw.circle(screen, "brown3", (cell_x + x * CELL_SIDE + CELL_SIDE / 2, cell_y + y * CELL_SIDE + CELL_SIDE / 2), CELL_SIDE / 2)
+
+            # zoom on longest snake
+            game, current_snake = game_collection.longest_snake() # to see the longest snake
+            row = current_snake // games_per_side
+            col = current_snake % games_per_side
             cell_x = col * GAME_WIDTH
             cell_y = row * GAME_HEIGHT
-
-            # Draw the game on the screen at the calculated position
+            # draw a white rectangle centered on (cell_x, cell_y) with a width of c.ZOOM_FACTOR * WIDTH + CELL_SIDE and a height of c.ZOOM_FACTOR * HEIGHT + CELL_SIDE
+            pygame.draw.rect(screen, "yellow", (cell_x, cell_y, c.ZOOM_FACTOR * GAME_WIDTH, c.ZOOM_FACTOR * GAME_HEIGHT))
             for (x, y) in game.snake_body:
-                pygame.draw.circle(screen, "darkolivegreen3", (cell_x + x * CELL_SIDE + CELL_SIDE / 2, cell_y + y * CELL_SIDE + CELL_SIDE / 2), CELL_SIDE / 2)
+                pygame.draw.circle(screen, "darkolivegreen3", (cell_x + c.ZOOM_FACTOR * (x + CELL_SIDE + CELL_SIDE / 2), cell_y + c.ZOOM_FACTOR * (y * CELL_SIDE + CELL_SIDE / 2)), c.ZOOM_FACTOR * CELL_SIDE / 2)
             (x, y) = game.snake_body[0]
-            pygame.draw.circle(screen, "black", (cell_x + x * CELL_SIDE + CELL_SIDE / 2, cell_y + y * CELL_SIDE + CELL_SIDE / 2), CELL_SIDE / 4)
+            pygame.draw.circle(screen, "black", (cell_x + c.ZOOM_FACTOR * (x + CELL_SIDE + CELL_SIDE / 2), cell_y + c.ZOOM_FACTOR * (y * CELL_SIDE + CELL_SIDE / 2)), c.ZOOM_FACTOR * CELL_SIDE / 4)
             (x, y) = game.apple
-            pygame.draw.circle(screen, "brown3", (cell_x + x * CELL_SIDE + CELL_SIDE / 2, cell_y + y * CELL_SIDE + CELL_SIDE / 2), CELL_SIDE / 2)
-
-        # zoom on longest snake
-        game, current_snake = game_collection.longest_snake() # to see the longest snake
-        row = current_snake // games_per_side
-        col = current_snake % games_per_side
-        cell_x = col * GAME_WIDTH
-        cell_y = row * GAME_HEIGHT
-        # draw a white rectangle centered on (cell_x, cell_y) with a width of c.ZOOM_FACTOR * WIDTH + CELL_SIDE and a height of c.ZOOM_FACTOR * HEIGHT + CELL_SIDE
-        pygame.draw.rect(screen, "white", (cell_x, cell_y, c.ZOOM_FACTOR * GAME_WIDTH, c.ZOOM_FACTOR * GAME_HEIGHT))
-        for (x, y) in game.snake_body:
-            pygame.draw.circle(screen, "darkolivegreen3", (cell_x + c.ZOOM_FACTOR * (x + CELL_SIDE + CELL_SIDE / 2), cell_y + c.ZOOM_FACTOR * (y * CELL_SIDE + CELL_SIDE / 2)), c.ZOOM_FACTOR * CELL_SIDE / 2)
-        (x, y) = game.snake_body[0]
-        pygame.draw.circle(screen, "black", (cell_x + c.ZOOM_FACTOR * (x + CELL_SIDE + CELL_SIDE / 2), cell_y + c.ZOOM_FACTOR * (y * CELL_SIDE + CELL_SIDE / 2)), c.ZOOM_FACTOR * CELL_SIDE / 4)
-        (x, y) = game.apple
-        pygame.draw.circle(screen, "brown3", (cell_x + c.ZOOM_FACTOR * (x + CELL_SIDE + CELL_SIDE / 2), cell_y + c.ZOOM_FACTOR * (y * CELL_SIDE + CELL_SIDE / 2)), c.ZOOM_FACTOR * CELL_SIDE / 2)
+            pygame.draw.circle(screen, "brown3", (cell_x + c.ZOOM_FACTOR * (x + CELL_SIDE + CELL_SIDE / 2), cell_y + c.ZOOM_FACTOR * (y * CELL_SIDE + CELL_SIDE / 2)), c.ZOOM_FACTOR * CELL_SIDE / 2)
+    else:
+        print(info)
 
 
     # update your game state here
@@ -153,10 +157,11 @@ while running:
         if iteration >= c.MAX_ITERATION:
             break
 
-    # flip() the display to put your work on screen
-    pygame.display.flip()
+    if c.DISPLAY_GRAPHICS:
+        # flip() the display to put your work on screen
+        pygame.display.flip()
 
-    clock.tick(500)
+        clock.tick(500)
 
 game_collection.save_brains(c.BRAINS_FILE)
 
@@ -182,12 +187,18 @@ fig, ax1 = plt.subplots()
 color = 'tab:blue'
 ax1.set_xlabel('Iteration')
 ax1.set_ylabel('Max Fitness', color=color)
+#x_new = np.linspace(0, len(max_fitness), 300)
+#spl = make_interp_spline(range(len(max_fitness)), max_fitness, k=3)
+#max_fitness_smooth = spl(x_new)
+#ax1.plot(x_new, max_fitness_smooth, color=color)
+ax1.set_yscale('log')
 ax1.plot(range(len(max_fitness)), max_fitness, color=color)
 ax1.tick_params(axis='y', labelcolor=color)
 
 ax2 = ax1.twinx()  
 color = 'tab:red'
 ax2.set_ylabel('Average Fitness', color=color)
+ax2.set_yscale('log')
 ax2.plot(range(len(avg_fitness)), avg_fitness, color=color)
 ax2.tick_params(axis='y', labelcolor=color)
 
