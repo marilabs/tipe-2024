@@ -5,7 +5,7 @@ from typing import List, Tuple
 import copy
 
 class GeneticAlgorithm:
-    
+
     def __init__(self, save_bests: int = 10, k: int = 5, mut_chance: float = 0.5, coeff: float = 0.5) -> None:
         self.save_bests = save_bests
         self.k = k
@@ -40,7 +40,7 @@ class GeneticAlgorithm:
                 child.append(parent_a[i])
             else:
                 child.append(parent_b[i])
-        return child    
+        return child
 
     def mutate(self, genome: List[float]) -> None:
         """
@@ -72,4 +72,4 @@ class GeneticAlgorithm:
                 self.mutate(child)
                 new_population.append(NeuralNetwork.from_genome(child, population[i][0].layers_sizes))
         return new_population
-    
+
