@@ -31,7 +31,7 @@ class GameCollection:
                 index = i
         return self.games[index], index
 
-    def step(self) -> bool:
+    def step(self, life_time: bool) -> bool:
 
         self.iteration += 1
 
@@ -40,7 +40,7 @@ class GameCollection:
         for game in self.games:
             if not game.lost:
                 one_game_not_lost = True
-                game.step()
+                game.step(life_time)
 
         # if all games are lost, evolve
         if not one_game_not_lost:

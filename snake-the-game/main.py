@@ -43,7 +43,8 @@ running = True
 dt = 0
 
 def save_and_exit(signal, frame):
-    game_collection.save_brains(c.BRAINS_FILE)
+    if c.SAVE:
+        game_collection.save_brains(c.BRAINS_FILE)
     sys.exit(0)
 
 # save program state in case of interruption
@@ -56,7 +57,6 @@ avg_fitness = []
 max_apple_eaten = []
 max_snake_length = 0
 
-#? VERIFIED
 while running:
 
     cur_max_fitness = game_collection.best_fitness()
@@ -148,7 +148,7 @@ while running:
 
 
     # update your game state here
-    if not game_collection.step(): # all sakes in collection dead go next iteration
+    if not game_collection.step(c.LIFE_TIME): # all sakes in collection dead go next iteration
         max_fitness.append(cur_max_fitness)
         avg_fitness.append(cur_avg_fitness)
         max_apple_eaten.append(cur_max_apple_eaten)
@@ -163,7 +163,8 @@ while running:
 
         clock.tick(500)
 
-game_collection.save_brains(c.BRAINS_FILE)
+if c.SAVE:
+    game_collection.save_brains(c.BRAINS_FILE)
 
 print(max_fitness)
 

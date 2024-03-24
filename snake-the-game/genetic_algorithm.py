@@ -57,7 +57,6 @@ class GeneticAlgorithm:
                 amplitude = np.random.random()
                 genome[i] += sign * amplitude * self.coeff
 
-    #? VERIFIED genetic_algorithm/src/libs.rs
     def evolve(self, population: Tuple[NeuralNetwork, int]) -> list:
         assert(len(population) != 0)
         new_population = []
@@ -72,4 +71,3 @@ class GeneticAlgorithm:
                 self.mutate(child)
                 new_population.append(NeuralNetwork.from_genome(child, population[i][0].layers_sizes))
         return new_population
-

@@ -4,12 +4,12 @@ from random import randrange
 from neural_network import NeuralNetwork
 from numpy import argmax
 import collections
-import config
+import config as c
 from typing import Tuple, List
 
 class Game:
 
-    def __init__(self, width: int = 10, height: int = 10, max_life_points: int = 50, apple_lifetime_gain: int = 50) -> None:
+    def __init__(self, width: int = 10, height: int = 10, max_life_points: int = 50, apple_lifetime_gain: int = 500) -> None:
         self.width = width
         self.height = height
         self.max_life_points = max_life_points
@@ -35,9 +35,9 @@ class Game:
         #self.direction = (-1, 0) # default direction is left for first move
         self.direction = (randrange(-1, 2), randrange(-1, 2)) # make first move random
         self.snake_body = [ # snake starts at the center and has 3 bits
-            (int(width / 2), int(height / 2)) 
+            (int(width / 2), int(height / 2))
             ]
-        if config.ORIGINAL_SIZE_THREE:
+        if c.ORIGINAL_SIZE_THREE:
             self.snake_body.append((int(width / 2) + 1, int(height / 2)))
             self.snake_body.append((int(width / 2) + 2, int(height / 2))
             )
@@ -46,7 +46,7 @@ class Game:
         self.died_bc_no_apple = 0
         self.death_reason = "None"
 
-    def step(self) -> bool:
+    def step(self, life_time: bool) -> bool:
         # process the vision output through the neural network and output activation
         #! change vision
         activation = self.brain.feedforward(self.process_vision())
@@ -55,18 +55,17 @@ class Game:
 
         match index:
             case 0:
-                self.direction = config.right
+                self.direction = c.right
             case 1:
-                self.direction = config.up
+                self.direction = c.up
             case 2:
-                self.direction = config.left
+                self.direction = c.left
             case 3:
-                self.direction = config.down
+                self.direction = c.down
 
-        return self.move_snake(self.direction)
+        return self.move_snake(self.direction, life_time)
 
-    #? VERIFIED libs/game/src/libs.rs 
-    def move_snake(self, incrementer: Tuple[int, int]) -> bool:
+    def move_snake(self, incrementer: Tuple[int, int], life_time: bool) -> bool:
         moved_head = (self.snake_body[0][0] + incrementer[0], self.snake_body[0][1] + incrementer[1])
 
         # vérification de la présence de la tête dans la grille
@@ -99,22 +98,22 @@ class Game:
             self.snake_body.append(end_tail) # agrandir le serpent avec la queue précédente
             self.apple = (randrange(0, self.width), randrange(0, self.height)) # nouvelle pomme
             self.apples_eaten += 1
-            self.life_points = self.apple_lifetime_gain # on réinitialise la durée de vie conformément au commentaire en dessous:
+            self.life_points += self.apple_lifetime_gain # on réinitialise la durée de vie conformément au commentaire en dessous:
 
             """
-            The genetic algorithm was run many different times with many different fitness functions. 
+            The genetic algorithm was run many different times with many different fitness functions.
             Formulaically, the first fitness function was:
             ((score^3)*(frame_score)
-            Score is equivalent to the length of the snake minus 1 (since the snake always starts at length 1), 
-            and frame_score is the amount of frames that the snake was alive. However, originally this fitness 
-            function resulted in many snakes that looped in circles endlessly without eating any fruit to maximize 
-            the frame_score component of the function. Thus, the training was modified such that all snakes are 
-            killed off if they do not eat a fruit in 50 frames. Also, if a snake died due to not eating any fruit 
+            Score is equivalent to the length of the snake minus 1 (since the snake always starts at length 1),
+            and frame_score is the amount of frames that the snake was alive. However, originally this fitness
+            function resulted in many snakes that looped in circles endlessly without eating any fruit to maximize
+            the frame_score component of the function. Thus, the training was modified such that all snakes are
+            killed off if they do not eat a fruit in 50 frames. Also, if a snake died due to not eating any fruit
             for 50 frames, 50 points were subtracted from the frame_score to discourage the behaviour.
             """
 
         # vérification de la durée de vie
-        if self.life_points <= 0:
+        if life_time and self.life_points <= 0:
             self.death_reason = "Life"
             self.lost = True
             self.died_bc_no_apple = 1
@@ -122,11 +121,10 @@ class Game:
 
         return True
 
-    #? VERIFIED libs/eye.rs
     def process_vision(self) -> List[float]:
         vision = [0 for _ in range(3*8)]
 
-        for (i, incrementer) in enumerate(config.eight_directions):
+        for (i, incrementer) in enumerate(c.eight_directions):
             apple_distance = -1
             wall_distance = -1
             tail_distance = -1
@@ -164,9 +162,8 @@ class Game:
         # neural network input contains free space in all directions, distance to apple in all directions, and number of apples eaten (size of snake)
         # 9 inputs in total
         neural_network_input = []
-        #! apply normalization constant? /20?
         constant = 20
-        for direction in config.four_directions:
+        for direction in c.four_directions:
             (dx, dy) = direction
             (hx, hy) = self.snake_body[0] # head of the snake body
             neural_network_input.append(self.count_free_moving_spaces(hx + dx, hy + dy) / constant)
@@ -183,7 +180,7 @@ class Game:
     def get_possible_moves(self, cur):
         (x, y) = cur
         moves = []
-        for direction in config.eight_directions:
+        for direction in c.eight_directions:
             (i, j) = direction
             if self.is_possible_move(x + i, y + j):
                 moves.append((x + i, y + j))
@@ -211,7 +208,6 @@ class Game:
     def manhattan_distance_to_apple(self, head):
         return abs(self.apple[0] - head[0]) + abs(self.apple[1] - head[1])
 
-    #? VERIFIED libs/snake.rs
     def fitness(self):
         return pow(3, self.apples_eaten) * (self.age - 50 * self.died_bc_no_apple)
         #return (self.age * self.age) * pow(2, self.apples_eaten) * (100 * self.apples_eaten + 1)
