@@ -43,9 +43,6 @@ class Game:
             self.brain = NeuralNetwork([25, 18, 18, 4])
             self.vision_strategy = self.process_vision4
 
-        self.apple = (randrange(0, width), randrange(0, height))
-        while self.apple in self.snake_body:
-            self.apple = (randrange(0, width), randrange(0, height))
         self.age = 0
         self.lost = False
         self.apples_eaten = 0
@@ -59,6 +56,9 @@ class Game:
             self.snake_body.append((int(width / 2) + 2, int(height / 2))
             )
         self.original_size = len(self.snake_body)
+        self.apple = (randrange(0, width), randrange(0, height))
+        while self.apple in self.snake_body:
+            self.apple = (randrange(0, width), randrange(0, height))
         self.life_points = self.max_life_points
         self.died_bc_no_apple = 0
         self.death_reason = "None"
