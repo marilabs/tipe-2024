@@ -2,23 +2,19 @@ import pygame
 import os
 import signal
 import sys
-
 from game_collection import GameCollection
 import math
-
 import matplotlib.pyplot as plt
 import numpy as np
-
 import config as c
 from scipy.interpolate import make_interp_spline
+import pickle
+import sys
 
 game_collection = GameCollection(c.POPULATION, c.WIDTH, c.HEIGHT)
 
 if c.RESTORE and os.path.exists(c.BRAINS_FILE):
     game_collection.restore_brains(c.BRAINS_FILE)
-
-# pygame setup
-pygame.init()
 
 # board with all populations has games_per_side games per side
 # each game has WIDTH x HEIGHT cells
@@ -36,32 +32,51 @@ BOARD_HEIGHT = games_per_side * GAME_HEIGHT
 
 print(f"CELL_SIDE: {CELL_SIDE}, GAME_WIDTH: {GAME_WIDTH}, GAME_HEIGHT: {GAME_HEIGHT}, BOARD_WIDTH: {BOARD_WIDTH}, BOARD_HEIGHT: {BOARD_HEIGHT}")
 
-screen = pygame.display.set_mode((BOARD_WIDTH, BOARD_HEIGHT))
+if c.DISPLAY_GRAPHICS:
+    # pygame setup
+    pygame.init()
+    screen = pygame.display.set_mode((BOARD_WIDTH, BOARD_HEIGHT))
+    clock = pygame.time.Clock()
 
-clock = pygame.time.Clock()
 running = True
 dt = 0
+
+iteration = 0
+
+max_fitness = []
+min_fitness = []
+avg_fitness = []
+max_apple_eaten = []
+min_apple_eaten = []
+avg_apple_eaten = []
+max_snake_length = 0
+
+def save_curves(filename):
+    with open(filename, 'wb') as f:
+        pickle.dump((max_fitness, min_fitness, avg_fitness, max_apple_eaten, min_apple_eaten, avg_apple_eaten, max_snake_length), f)
+
+def restore_curves(filename):
+    with open(filename, 'rb') as f:
+        (max_fitness, min_fitness, avg_fitness, max_apple_eaten, min_apple_eaten, avg_apple_eaten, max_snake_length) = pickle.load(f)
 
 def save_and_exit(signal, frame):
     if c.SAVE:
         game_collection.save_brains(c.BRAINS_FILE)
+        save_curves(c.CURVES_FILES)
     sys.exit(0)
 
 # save program state in case of interruption
 signal.signal(signal.SIGINT, save_and_exit)
 
-iteration = 0
-
-max_fitness = []
-avg_fitness = []
-max_apple_eaten = []
-max_snake_length = 0
-
 while running:
 
     cur_max_fitness = game_collection.best_fitness()
+    cur_min_fitness = game_collection.worst_fitness()
     cur_avg_fitness = game_collection.average_fitness()
     cur_max_apple_eaten = game_collection.max_apple_eaten()
+    cur_min_apple_eaten = game_collection.min_apple_eaten()
+    cur_avg_apple_eaten = game_collection.average_apple_eaten()
+
     if cur_max_apple_eaten >= max_snake_length:
         max_snake_length = cur_max_apple_eaten + 1
 
@@ -72,7 +87,8 @@ while running:
         game, current_snake = game_collection.snake_to_display()
 
     # display game iteration and fitness of the game (generation) as window title
-    info = f"Gen {game_collection.generation} - Iter {game_collection.iteration} - Fitness {game.fitness():.2e} - Max fitness {cur_max_fitness:.2e} - Avg fitness {round(cur_avg_fitness, 2):.2e} - Max eaten {cur_max_apple_eaten} - Longest ever {max_snake_length}"
+    #info = f"Gen {game_collection.generation} - Iter {game_collection.iteration} - Fitness {game.fitness():.2e} - Max fitness {cur_max_fitness:.2e} - Avg fitness {round(cur_avg_fitness, 2):.2e} - Max eaten {cur_max_apple_eaten} - Longest ever {max_snake_length}"
+    info = f"Gen {game_collection.generation} - Iter {game_collection.iteration} - Fitness ({cur_min_fitness:.1e}:{cur_avg_fitness:.1e}:{cur_max_fitness:.1e}) - Apple ({cur_min_apple_eaten}:{round(cur_avg_apple_eaten, 1)}:{cur_max_apple_eaten}) - Best snake {max_snake_length}"
 
     if c.DISPLAY_GRAPHICS:
         # poll for events
@@ -150,8 +166,11 @@ while running:
     # update your game state here
     if not game_collection.step(c.LIFE_TIME): # all sakes in collection dead go next iteration
         max_fitness.append(cur_max_fitness)
+        min_fitness.append(cur_min_fitness)
         avg_fitness.append(cur_avg_fitness)
         max_apple_eaten.append(cur_max_apple_eaten)
+        min_apple_eaten.append(cur_min_apple_eaten)
+        avg_apple_eaten.append(cur_avg_apple_eaten)
         # plot max_fitness as function of 0:interation
         iteration += 1
         if iteration >= c.MAX_ITERATION:
@@ -165,6 +184,7 @@ while running:
 
 if c.SAVE:
     game_collection.save_brains(c.BRAINS_FILE)
+    save_curves(c.CURVES_FILES)
 
 print(max_fitness)
 
@@ -232,4 +252,5 @@ plt.grid(True)
 plt.show()
 """
 
-pygame.quit()
+if c.DISPLAY_GRAPHICS:
+    pygame.quit()

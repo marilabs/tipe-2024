@@ -1,10 +1,10 @@
-* replay best brain
-* change number of selected with 25% bests? --> biblio
+* biblio: change selected population (10%?)
 * biblio: number of neurons in hidden layers
 * document tries
-* verify vision2
 * smooth plots (logs + average)
-* make vision function a parameter
-* make neural network layers a parameter
-* make import config only on top functions not the other ones
 * try the n+n method
+
+* modify vision to say which direction among the 8 is the good one (closest)
+* distribution of snake length
+
+* BUG: new apple can be in body!

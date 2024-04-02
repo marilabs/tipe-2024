@@ -6,29 +6,46 @@ from numpy import argmax
 import collections
 import config as c
 from typing import Tuple, List
+import math
 
 class Game:
 
-    def __init__(self, width: int = 10, height: int = 10, max_life_points: int = 50, apple_lifetime_gain: int = 500) -> None:
+    vision = []
+
+    def __init__(self, width: int = 10, height: int = 10, max_life_points: int = 50, apple_lifetime_gain: int = 500, strategy: int = 2, num_fitness: int = 1) -> None:
         self.width = width
         self.height = height
         self.max_life_points = max_life_points
         self.apple_lifetime_gain = apple_lifetime_gain
+        self.strategy = strategy
 
-        # The number of hidden neurons should be between the size of the input layer and the size of the output layer.
-        # The number of hidden neurons should be 2/3 the size of the input layer, plus the size of the output layer.
-        # The number of hidden neurons should be less than twice the size of the input layer.
+        """
+        Various rules to create a neural network:
+        * The number of hidden neurons should be between the size of the input layer and the size of the output layer.
+        * The number of hidden neurons should be 2/3 the size of the input layer, plus the size of the output layer.
+        * The number of hidden neurons should be less than twice the size of the input layer.
+        * The number of hidden neurons should be between the size of the input layer and the output layer.
+        * The most appropriate number of hidden neurons is sqrt(input layer nodes * output layer nodes)
+        """
 
-        # The number of hidden neurons should be between the size of the input layer and the output layer.
-        # The most appropriate number of hidden neurons is sqrt(input layer nodes * output layer nodes)
-
-        # Neural network composed of 4 layers, input layer has 24 neurons, 2 hidden layers each with 18 neurons, output layer has 4 neurons (4 directions)
-        # in total it has 24 + 18 + 18 + 4 = 64 neurons.
-        # for process_vision() the input is 24 neurons, for process_vision2() the input is 8 neurons (3*8 = 24 neurons)
-        self.brain = NeuralNetwork([24, 18, 18, 4]) # hidden layer 24/3+4 = 12 neurons
-        #self.brain = NeuralNetwork([9, 10, 10, 4]) # hidden layer 9/3+4 = 7 neurons
+        if strategy == 1:
+            # Neural network composed of 4 layers, input layer has 24 neurons, 2 hidden layers each with 18 neurons, output layer has 4 neurons (4 directions)
+            # in total it has 24 + 18 + 18 + 4 = 64 neurons.
+            self.brain = NeuralNetwork([24, 18, 18, 4])
+            self.vision_strategy = self.process_vision
+        elif strategy == 2:
+            self.brain = NeuralNetwork([9, 10, 10, 4])
+            self.vision_strategy = self.process_vision2
+        elif strategy == 3:
+            self.brain = NeuralNetwork([13, 12, 12, 4])
+            self.vision_strategy = self.process_vision3
+        elif strategy == 4:
+            self.brain = NeuralNetwork([25, 18, 18, 4])
+            self.vision_strategy = self.process_vision4
 
         self.apple = (randrange(0, width), randrange(0, height))
+        while self.apple in self.snake_body:
+            self.apple = (randrange(0, width), randrange(0, height))
         self.age = 0
         self.lost = False
         self.apples_eaten = 0
@@ -45,11 +62,27 @@ class Game:
         self.life_points = self.max_life_points
         self.died_bc_no_apple = 0
         self.death_reason = "None"
+        if c.NORMALIZE_BOARD:
+            self.norm_constant_diag = math.sqrt(width ** 2 + height ** 2)
+            self.norm_constant_board = width * height / 10.0
+        else:
+            self.norm_constant_diag = 1
+            self.norm_constant_board = 20.0
+
+        if num_fitness == 1:
+            self.fitness = self.fitness1
+        elif num_fitness == 2:
+            self.fitness = self.fitness2
+        elif num_fitness == 3:
+            self.fitness = self.fitness3
+        elif num_fitness == 4:
+            self.fitness = self.fitness4
+        elif num_fitness == 5:
+            self.fitness = self.fitness5
 
     def step(self, life_time: bool) -> bool:
         # process the vision output through the neural network and output activation
-        #! change vision
-        activation = self.brain.feedforward(self.process_vision())
+        activation = self.brain.feedforward(self.vision_strategy())
         # take the highest activation index for the direction to take
         index = argmax(activation)
 
@@ -98,7 +131,10 @@ class Game:
             self.snake_body.append(end_tail) # agrandir le serpent avec la queue précédente
             self.apple = (randrange(0, self.width), randrange(0, self.height)) # nouvelle pomme
             self.apples_eaten += 1
-            self.life_points += self.apple_lifetime_gain # on réinitialise la durée de vie conformément au commentaire en dessous:
+            if c.RESET_LIFETIME:
+                self.life_points = self.max_life_points # on réinitialise la durée de vie au max
+            else:
+                self.life_points += self.apple_lifetime_gain # on réinitialise la durée de vie conformément au commentaire en dessous:
 
             """
             The genetic algorithm was run many different times with many different fitness functions.
@@ -154,7 +190,79 @@ class Game:
             vision[3*i + 1] = 1 / wall_distance
             vision[3*i + 2] = tail_distance if tail_distance != -1 else 0
 
+        self.vision = vision
         return vision
+
+    def process_vision3(self) -> List[float]:
+        vision = []
+
+        for (i, incrementer) in enumerate(c.four_directions):
+            apple_distance = -1
+            wall_distance = -1
+            tail_distance = -1
+
+            (x, y) = self.snake_body[0]
+            distance = 0
+
+            vision.append(self.manhattan_distance_to_apple((x + incrementer[0], y + incrementer[1])))
+
+            while True:
+                x += incrementer[0]
+                y += incrementer[1]
+                distance += 1
+
+                # sortie de grille
+                if not self.is_on_board(x, y):
+                    wall_distance = distance
+                    break
+
+                # sur la queue
+                if (x, y) in self.snake_body and tail_distance == -1:
+                    tail_distance = distance
+
+            vision.append(1.0 / wall_distance)
+            vision.append(tail_distance if tail_distance != -1 else 0)
+
+        vision.append(self.apples_eaten + self.original_size)
+
+        self.vision = vision
+        return vision
+
+    def process_vision4(self) -> List[float]:
+        vision = []
+
+        min_distance_index = min(range(len(c.eight_directions)), key=lambda i: self.manhattan_distance_to_apple((self.snake_body[0][0] + c.eight_directions[i][0], self.snake_body[0][1] + c.eight_directions[i][1])))
+
+        for (i, incrementer) in enumerate(c.eight_directions):
+            apple_distance = -1
+            wall_distance = -1
+            tail_distance = -1
+
+            (x, y) = self.snake_body[0]
+            distance = 0
+
+            while True:
+                x += incrementer[0]
+                y += incrementer[1]
+                distance += 1
+
+                # sortie de grille
+                if not self.is_on_board(x, y):
+                    wall_distance = distance
+                    break
+
+                # sur la queue
+                if (x, y) in self.snake_body and tail_distance == -1:
+                    tail_distance = distance
+
+            vision.append(1 if i == min_distance_index else 0)
+            vision.append(1 / wall_distance)
+            vision.append(tail_distance if tail_distance != -1 else 0)
+
+        vision.append(self.apples_eaten + self.original_size)
+        self.vision = vision
+        return vision
+
 
     #? weights 8 bits vs. float? normalization?
 
@@ -162,20 +270,22 @@ class Game:
         # neural network input contains free space in all directions, distance to apple in all directions, and number of apples eaten (size of snake)
         # 9 inputs in total
         neural_network_input = []
-        constant = 20
+        (hx, hy) = self.snake_body[0] # head of the snake body
         for direction in c.four_directions:
             (dx, dy) = direction
-            (hx, hy) = self.snake_body[0] # head of the snake body
-            neural_network_input.append(self.count_free_moving_spaces(hx + dx, hy + dy) / constant)
-            neural_network_input.append(self.manhattan_distance_to_apple((hx + dx, hy + dy)))
+            (cnx, cny) = (hx + dx, hy + dy)
+            neural_network_input.append(self.count_free_moving_spaces(cnx, cny) / self.norm_constant_board)
+            neural_network_input.append(self.manhattan_distance_to_apple((cnx, cny)) / self.norm_constant_diag)
         neural_network_input.append(self.apples_eaten + self.original_size)
+        self.vision = neural_network_input
         return neural_network_input
 
     def is_on_board(self, x, y) -> bool:
         return 0 <= x < self.width and 0 <= y < self.height
 
     def is_possible_move(self, x, y) -> bool:
-        return self.is_on_board(x, y) and (x, y) not in self.snake_body
+        # check if the move is on the board and not on the snake body except for the tail (since it has moved)
+        return self.is_on_board(x, y) and (x, y) not in self.snake_body[:-1]
 
     def get_possible_moves(self, cur):
         (x, y) = cur
@@ -183,34 +293,53 @@ class Game:
         for direction in c.eight_directions:
             (i, j) = direction
             if self.is_possible_move(x + i, y + j):
-                moves.append((x + i, y + j))
+                moves.append(direction)
         return moves
 
     def count_free_moving_spaces(self, x, y) -> int:
-        if not self.is_possible_move(x, y):
+        # Breadth-First Search, BFS, snake heads moves to (x, y) and tail's end is no more
+        if not self.is_possible_move(x, y): # does not check snake's tail
             return 0
-
         space = 0
         visited = set([x, y])
         queue = collections.deque([(x, y)]) # efficient for pop(0) and append
-
         while (len(queue) > 0):
             cur = queue.popleft()
             space += 1
             for direction in self.get_possible_moves(cur):
                 (i, j) = direction
-                if (x + i, y + j) not in visited and self.is_possible_move(x + i, y + j):
-                    queue.append((x + i, y + j))
-                    visited.add((x + i, y + j))
-
+                (cx, cy) = cur
+                cn = (cx + i, cy + j)
+                (cnx, cny) = cn
+                if cn not in visited and self.is_possible_move(cnx, cny): # does not check snake's tail
+                    queue.append(cn)
+                    visited.add(cn)
         return space
 
     def manhattan_distance_to_apple(self, head):
         return abs(self.apple[0] - head[0]) + abs(self.apple[1] - head[1])
 
-    def fitness(self):
+    def fitness1(self):
         return pow(3, self.apples_eaten) * (self.age - 50 * self.died_bc_no_apple)
-        #return (self.age * self.age) * pow(2, self.apples_eaten) * (100 * self.apples_eaten + 1)
-        #return ((self.apples_eaten * 2) ** 2) * (self.age ** 1.5)
-        #return (self.age * self.age * self.age * self.age) * pow(2, self.apples_eaten) * (500 * self.apples_eaten + 1)
-    # age to the power of 4 vs 3 vs 2
+
+    def fitness2(self):
+        return (self.apples_eaten ** 3) * (self.age - 50 * self.died_bc_no_apple)
+
+    def fitness3(self):
+        return ((self.apples_eaten * 2) ** 2) * ((self.age - 50 * self.died_bc_no_apple) ** 1.5)
+
+    def fitness4(self):
+        return (self.age * self.age) * pow(2, self.apples_eaten) * (100 * self.apples_eaten + 1)
+
+    def fitness5(self):
+        return (self.age * self.age * self.age * self.age) * pow(2, self.apples_eaten) * (500 * self.apples_eaten + 1)
+
+    # age^2*2^apple*(coeff*apple+1)
+    # age^2*2^10*(apple-9)*(coeff*10)
+
+    # score = self.apples_eaten, frame_score = self.age
+    # ((score^3)*(frame_score)
+    # ((score*2)^2)*(frame_score^1.5)
+
+    # remarks
+    # * 3^apple*(age): pow(3, self.apples_eaten) * (self.age - 50 * self.died_bc_no_apple) trains faster

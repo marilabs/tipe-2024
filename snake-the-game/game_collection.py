@@ -14,7 +14,7 @@ class GameCollection:
     generation = 1
 
     def __init__(self, number_games:int, width:int, height:int) -> None:
-        self.games = [Game(width, height, c.MAX_LIFE_POINTS, c.APPLE_LIFETIME_GAIN) for _ in range(number_games)]
+        self.games = [Game(width, height, c.MAX_LIFE_POINTS, c.APPLE_LIFETIME_GAIN, c.GAME_STRATEGY, c.FITNESS_STRATEGY) for _ in range(number_games)]
 
     def snake_to_display(self) -> Tuple[Game, int]:
         for i in range(len(self.games)):
@@ -47,7 +47,6 @@ class GameCollection:
             self.evolve()
         return one_game_not_lost
 
-
     def evolve(self):
 
         new_population = self.ga.evolve([
@@ -58,7 +57,7 @@ class GameCollection:
         width, height = self.games[0].width, self.games[0].height
 
         for i in range(len(new_population)):
-            g = Game(width, height, c.MAX_LIFE_POINTS, c.APPLE_LIFETIME_GAIN) # create new game
+            g = Game(width, height, c.MAX_LIFE_POINTS, c.APPLE_LIFETIME_GAIN, c.GAME_STRATEGY, c.FITNESS_STRATEGY) # create new game
             g.brain = new_population[i] # inject brain in game
             self.games[i] = g # replace current game with new one
 
@@ -101,8 +100,17 @@ class GameCollection:
     def best_fitness(self):
         return max(game.fitness() for game in self.games)
 
+    def worst_fitness(self):
+        return min(game.fitness() for game in self.games)
+
     def average_fitness(self):
         return sum(game.fitness() for game in self.games) / len(self.games)
 
     def max_apple_eaten(self):
         return max(game.apples_eaten for game in self.games)
+
+    def min_apple_eaten(self):
+        return min(game.apples_eaten for game in self.games)
+
+    def average_apple_eaten(self):
+        return sum(game.apples_eaten for game in self.games) / len(self.games)

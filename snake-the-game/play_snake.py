@@ -13,7 +13,7 @@ from neural_network import NeuralNetwork
 def restore_snake(brain_number: int) -> Game:
     # restore brain from file and inject it into the snake
     assert(os.path.exists(c.BRAINS_FILE))
-    game = Game(c.WIDTH, c.HEIGHT, c.MAX_LIFE_POINTS, c.APPLE_LIFETIME_GAIN)
+    game = Game(c.WIDTH, c.HEIGHT, c.MAX_LIFE_POINTS, c.APPLE_LIFETIME_GAIN, c.GAME_STRATEGY, c.FITNESS_STRATEGY)
     with open(c.BRAINS_FILE, 'rb') as f:
         game_brains = pickle.load(f)
         game.brain = game_brains[brain_number]
@@ -63,6 +63,11 @@ while running:
             running = False
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("white")
+    # draw grid
+    for x in range(0, GAME_WIDTH, CELL_SIDE):
+        pygame.draw.line(screen, "gray", (x, 0), (x, GAME_HEIGHT))
+    for y in range(0, GAME_HEIGHT, CELL_SIDE):
+        pygame.draw.line(screen, "gray", (0, y), (GAME_WIDTH, y))
 
     pygame.display.set_caption(info)
 
