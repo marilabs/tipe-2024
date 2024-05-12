@@ -1,15 +1,13 @@
 \documentclass[10pt]{beamer}
 \usetheme{Goettingen}
 
-
-
-\usepackage[french]{babel}
+\usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
+\usepackage[french]{babel}
 
-\usepackage{amsmath}
-\usepackage{algpseudocode}
+%\usepackage{algpseudocode}
 
-\usepackage{algorithm}
+%\usepackage{algorithm}
 %\usepackage{algorithmic}
 \newcommand{\kw}[1]{\textrm{#1}}
 
@@ -22,15 +20,17 @@
 
 \usepackage{xcolor}
 \usepackage{graphicx} 
-\usepackage{amsmath} 
+\usepackage{amsmath}
+\usepackage{amssymb} % pour les ensembles NN
+\usepackage{mathrsfs} % pour les hypothèses de récurrences \PP
 \setlength{\unitlength}{1mm}
 %\usepackage{enumitem}
 \usepackage{cancel}
-\usepackage{amssymb} % pour les ensembles NN
-\usepackage{mathrsfs} % pour les hypothèses de récurrences \PP
+
+\usepackage{neuralnetwork}
+
 %\usepackage{fancyhdr}
 \usepackage{multicol}
-
 
 \usepackage{booktabs}
 \usepackage{tabularx}
@@ -46,7 +46,7 @@
 \renewcommand\tabularxcolumn[1]{m{#1}}% for vertical centering text in X column
 
 \usepackage{tikz}
-\usetikzlibrary{calc, shapes}
+\usetikzlibrary{calc, shapes, shadows}
 
 \usepackage{tkz-graph}
 \tikzset{EdgeStyle/.append style = {->}}
@@ -54,8 +54,44 @@
 fill = white,
 text = black}}
 
+\newcommand*\keystroke[1]{%
+  \tikz[baseline=(key.base)]
+    \node[%
+      draw,
+      fill=white,
+      drop shadow={shadow xshift=0.25ex,shadow yshift=-0.25ex,fill=black,opacity=0.75},
+      rectangle,
+      rounded corners=2pt,
+      inner sep=1pt,
+      line width=0.5pt,
+      font=\scriptsize\sffamily
+    ](key) {#1\strut}
+  ;
+}
+
 \newcommand*\circled[1]{\tikz[baseline=(char.base)]{
             \node[shape=circle,draw,inner sep=1pt] (char) {#1};}}
+            
+\usepackage{etoolbox} % for \ifnumcomp
+\usepackage{listofitems} % for \readlist to create arrays
+
+\tikzset{>=latex} % for LaTeX arrow head
+\colorlet{myred}{red!80!black}
+\colorlet{myblue}{blue!80!black}
+\colorlet{mygreen}{green!60!black}
+\colorlet{mydarkred}{myred!40!black}
+\colorlet{mydarkblue}{myblue!40!black}
+\colorlet{mydarkgreen}{mygreen!40!black}
+\tikzstyle{node}=[very thick,circle,draw=myblue,minimum size=22,inner sep=0.5,outer sep=0.6]
+\tikzstyle{connect}=[->,thick,mydarkblue,shorten >=1]
+\tikzset{ % node styles, numbered for easy mapping with \nstyle
+  node 1/.style={node,mydarkgreen,draw=mygreen,fill=mygreen!25},
+  node 2/.style={node,mydarkblue,draw=myblue,fill=myblue!20},
+  node 3/.style={node,mydarkred,draw=myred,fill=myred!20},
+}
+\def\nstyle{int(\lay<\Nnodlen?min(2,\lay):3)} % map layer number onto 1, 2, or 3
+
+
 
 % ensembles N,Z,Q,D,R,C
 \DeclareMathOperator{\NN}{\mathbb{N}}
@@ -114,27 +150,55 @@ qui s'inspire de l'évolution naturelle.
 
 
 \begin{frame}
-  \frametitle{Le jeu de Snake}
-  \framesubtitle{Présentation et brève histoire du jeu}
+\frametitle{Le jeu de Snake}
+\framesubtitle{Brève histoire et règles du jeu}
+  
+\begin{columns}[T]
+\begin{column}{0.70\textwidth}
+\small
+\textbf{Origines:} borne d'arcade \textit{Blockade}, créée par Gremlin en 1976, popularisé par Nokia en 1997 sur mobile $\rightarrow$ jeu culte
 
-  \begin{itemize}
+\textbf{Règles du jeu:}  
 
-    \item \textbf{Aux origines:} \textit{Blockade} (1976), sur arcade
-    
-    \item \textbf{Vague de popularité:} grâce à Nokia en 1998
-    
-    \item \textbf{Aujourd'hui:} de nombreuses versions existent, un jeu culte
+\begin{itemize}
+\scriptsize
+\item Le serpent débute avec une longueur initiale sur un échiquier entouré d'un mur et contenant une pomme.
+\item L'objectif est de le faire grandir en mangeant des pommes.
+\item Chaque pomme consommée augmente sa longueur d'une unité et en fait apparaître une nouvelle à un emplacement aléatoire.
+\item Le joueur dirige le serpent à l'aide des touches directionnelles du clavier \keystroke{$\leftarrow$}\keystroke{$\uparrow$}\keystroke{$\downarrow$}\keystroke{$\rightarrow$}.
+\item Le jeu se termine si le serpent heurte un mur ou son propre corps.
+\item Le score du joueur est égal au nombre de pommes mangées.
+\end{itemize}
+\vspace{-1cm}\hspace{-0.2cm}
+\begin{figure}
+\centering
+\includegraphics[width=0.35\textwidth]{snake_nokia.png}
+\end{figure}
 
-  \end{itemize}
+\end{column}
+\begin{column}{0.25\textwidth}
+\begin{figure}
+\centering
+\vspace{-1cm}\hspace{-0.76cm}
+\includegraphics[width=1.3\textwidth]{blockade.jpg}
+\end{figure}
 
-  \end{frame}
+\begin{figure}
+\vspace{-0.5cm}\hspace{-0.55cm}
+\includegraphics[width=1.2\textwidth]{snake_game.png}
+\end{figure}
+
+
+\end{column}
+\end{columns}
+\end{frame}
 
 \subsection{L'algorithme génétique}
 
 \begin{frame}
   \frametitle{Le principe de l'algorithme génétique}
-  \framesubtitle{Histoire, fonctionnement et applications de l'algorithme}
-
+  \framesubtitle{Histoire, fonctionnement et applications de l'algorithme}    
+  
   \begin{itemize}
 
     \item \textbf{Origines:} développé par John Holland dans les années 1970
@@ -152,6 +216,16 @@ qui s'inspire de l'évolution naturelle.
 
   \end{itemize}  
   \end{frame}
+  
+  \begin{frame}
+  
+% check https://tex.stackexchange.com/questions/153957/drawing-neural-network-with-tikz
+% check https://tex.stackexchange.com/questions/153957/drawing-neural-network-with-tikz
+
+% incompatibility to be treated by https://tex.stackexchange.com/questions/420448/error-illegal-parameter-number-in-definition-of-iterate i.e. replace # by ####
+	
+  \end{frame}
+
 
 \subsection{Les réseaux neuronnaux}
 
