@@ -224,7 +224,7 @@ class Game:
         self.vision = vision
         return vision
 
-    # vision strategy: 8 directions, 3 informations per direction
+    # vision strategy: 4 directions, 3 informations per direction
     # (manhattan distance to apple, 1 / wall_distance in direction of move, tail_distance in direction of move) + apples_eaten + original_size
     def process_vision3(self) -> List[float]:
         vision = []
@@ -265,7 +265,7 @@ class Game:
         self.vision = vision
         return vision
 
-    # vision strategy: 8 directions, 3 informations per direction
+    # vision strategy: 4 directions, 3 informations per direction
     # (1 if direction is the closest to the apple, 1 / wall_distance in direction of move, tail_distance in direction of move) + apples_eaten + original_size
     def process_vision4(self) -> List[float]:
         vision = []

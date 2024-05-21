@@ -15,7 +15,6 @@ game_collection = GameCollection(c.POPULATION, c.WIDTH, c.HEIGHT)
 
 if c.RESTORE and os.path.exists(c.BRAINS_FILE):
     game_collection.restore_brains(c.BRAINS_FILE)
-
 # board with all populations has games_per_side games per side
 # each game has WIDTH x HEIGHT cells
 
@@ -151,7 +150,7 @@ while running:
             col = current_snake % games_per_side
             cell_x = col * GAME_WIDTH
             cell_y = row * GAME_HEIGHT
-            # draw a white rectangle centered on (cell_x, cell_y) with a width of c.ZOOM_FACTOR * WIDTH + CELL_SIDE and a height of c.ZOOM_FACTOR * HEIGHT + CELL_SIDE
+            # draw a white rectangle centred on (cell_x, cell_y) with a width of c.ZOOM_FACTOR * WIDTH + CELL_SIDE and a height of c.ZOOM_FACTOR * HEIGHT + CELL_SIDE
             pygame.draw.rect(screen, "yellow", (cell_x, cell_y, c.ZOOM_FACTOR * GAME_WIDTH, c.ZOOM_FACTOR * GAME_HEIGHT))
             for (x, y) in game.snake_body:
                 pygame.draw.circle(screen, "darkolivegreen3", (cell_x + c.ZOOM_FACTOR * (x + CELL_SIDE + CELL_SIDE / 2), cell_y + c.ZOOM_FACTOR * (y * CELL_SIDE + CELL_SIDE / 2)), c.ZOOM_FACTOR * CELL_SIDE / 2)
@@ -171,7 +170,7 @@ while running:
         max_apple_eaten.append(cur_max_apple_eaten)
         min_apple_eaten.append(cur_min_apple_eaten)
         avg_apple_eaten.append(cur_avg_apple_eaten)
-        # plot max_fitness as function of 0:interation
+        # plot max_fitness as function of 0:iteration
         iteration += 1
         if iteration >= c.MAX_ITERATION:
             break
@@ -228,7 +227,7 @@ plt.title('Max and Average Fitness vs Iteration')
 plt.grid(True)
 plt.show()
 
-"""
+
 fig, ax1 = plt.subplots()
 
 color1 = 'tab:blue'
@@ -250,7 +249,7 @@ fig.tight_layout()
 plt.title('Fitness vs Iteration')
 plt.grid(True)
 plt.show()
-"""
+
 
 if c.DISPLAY_GRAPHICS:
     pygame.quit()

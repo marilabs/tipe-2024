@@ -4,5 +4,5 @@
         "randn",
         "Rosenblatt"
     ],
-    "editor.renderWhitespace": "all"
+    "editor.renderWhitespace": "none"
 }

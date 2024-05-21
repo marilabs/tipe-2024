@@ -4,7 +4,7 @@ DISPLAY_ALL_POPULATION = True
 
 DISPLAY_LARGEST_SNAKE = False
 
-DISPLAY_GRAPHICS = False
+DISPLAY_GRAPHICS = True
 
 # number of cells for the snake to move in each game
 WIDTH = 10
@@ -12,7 +12,7 @@ HEIGHT = 10
 
 BOARD_SIDE = 880 # indication of largest board side (for max of WIDTH and HEIGHT)
 POPULATION = 22**2 # 484 population of snakes or number of games in the collection
-ZOOM_FACTOR = 2 # zoom factor for the longuest snake
+ZOOM_FACTOR = 2 # zoom factor for the longest snake
 
 # game strategy, 1:24,18,18,4; 2:9,10,10,4
 GAME_STRATEGY = 5
