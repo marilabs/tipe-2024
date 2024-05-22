@@ -16,34 +16,36 @@
 \headcommand {\beamer@subsectionentry {0}{2}{2}{4}{L'algorithme génétique}}
 \headcommand {\slideentry {2}{2}{1}{4/4}{L'algorithme génétique}{0}}
 \headcommand {\beamer@framepages {4}{4}}
-\headcommand {\beamer@subsectionpages {4}{4}}
-\headcommand {\beamer@subsectionentry {0}{2}{3}{5}{Les réseaux neuronnaux}}
-\headcommand {\slideentry {2}{3}{1}{5/5}{Les réseaux neuronnaux}{0}}
+\headcommand {\slideentry {2}{2}{2}{5/5}{L'algorithme génétique}{0}}
 \headcommand {\beamer@framepages {5}{5}}
-\headcommand {\beamer@sectionpages {3}{5}}
-\headcommand {\beamer@subsectionpages {5}{5}}
-\headcommand {\sectionentry {3}{L'algorithme appliqué au jeu de Snake}{6}{L'algorithme appliqué au jeu de Snake}{0}}
-\headcommand {\slideentry {3}{0}{1}{6/6}{}{0}}
+\headcommand {\beamer@subsectionpages {4}{5}}
+\headcommand {\beamer@subsectionentry {0}{2}{3}{6}{Les réseaux neuronnaux}}
+\headcommand {\slideentry {2}{3}{1}{6/6}{Les réseaux neuronnaux}{0}}
 \headcommand {\beamer@framepages {6}{6}}
-\headcommand {\beamer@sectionpages {6}{6}}
+\headcommand {\beamer@sectionpages {3}{6}}
 \headcommand {\beamer@subsectionpages {6}{6}}
-\headcommand {\sectionentry {4}{La théorie}{7}{La théorie}{0}}
-\headcommand {\slideentry {4}{0}{1}{7/7}{}{0}}
+\headcommand {\sectionentry {3}{L'algorithme appliqué au jeu de Snake}{7}{L'algorithme appliqué au jeu de Snake}{0}}
+\headcommand {\slideentry {3}{0}{1}{7/7}{}{0}}
 \headcommand {\beamer@framepages {7}{7}}
+\headcommand {\beamer@sectionpages {7}{7}}
 \headcommand {\beamer@subsectionpages {7}{7}}
-\headcommand {\beamer@subsectionentry {0}{4}{1}{8}{L'algorithme génétique}}
-\headcommand {\slideentry {4}{1}{1}{8/8}{L'algorithme génétique}{0}}
+\headcommand {\sectionentry {4}{La théorie}{8}{La théorie}{0}}
+\headcommand {\slideentry {4}{0}{1}{8/8}{}{0}}
 \headcommand {\beamer@framepages {8}{8}}
-\headcommand {\beamer@subsubsectionentry {0}{4}{1}{1}{9}{Les réseaux neuronnaux}}
-\headcommand {\slideentry {4}{1}{2}{9/9}{L'algorithme génétique}{0}}
+\headcommand {\beamer@subsectionpages {8}{8}}
+\headcommand {\beamer@subsectionentry {0}{4}{1}{9}{L'algorithme génétique}}
+\headcommand {\slideentry {4}{1}{1}{9/9}{L'algorithme génétique}{0}}
 \headcommand {\beamer@framepages {9}{9}}
-\headcommand {\beamer@sectionpages {7}{9}}
-\headcommand {\beamer@subsectionpages {8}{9}}
-\headcommand {\sectionentry {5}{Conclusion}{10}{Conclusion}{0}}
-\headcommand {\slideentry {5}{0}{1}{10/10}{}{0}}
+\headcommand {\beamer@subsubsectionentry {0}{4}{1}{1}{10}{Les réseaux neuronnaux}}
+\headcommand {\slideentry {4}{1}{2}{10/10}{L'algorithme génétique}{0}}
 \headcommand {\beamer@framepages {10}{10}}
-\headcommand {\beamer@partpages {1}{10}}
-\headcommand {\beamer@subsectionpages {10}{10}}
-\headcommand {\beamer@sectionpages {10}{10}}
-\headcommand {\beamer@documentpages {10}}
-\headcommand {\gdef \inserttotalframenumber {10}}
+\headcommand {\beamer@sectionpages {8}{10}}
+\headcommand {\beamer@subsectionpages {9}{10}}
+\headcommand {\sectionentry {5}{Conclusion}{11}{Conclusion}{0}}
+\headcommand {\slideentry {5}{0}{1}{11/11}{}{0}}
+\headcommand {\beamer@framepages {11}{11}}
+\headcommand {\beamer@partpages {1}{11}}
+\headcommand {\beamer@subsectionpages {11}{11}}
+\headcommand {\beamer@sectionpages {11}{11}}
+\headcommand {\beamer@documentpages {11}}
+\headcommand {\gdef \inserttotalframenumber {11}}

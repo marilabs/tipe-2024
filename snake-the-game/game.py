@@ -169,7 +169,7 @@ class Game:
                 if moved_head in self.last_visited: # adapt last_visited and last_space
                     self.last_visited.remove(moved_head) # only head is to be removed since tail not moved with apple eaten
                     self.last_space -= 1
-                    # check if end_tail is connex to last_visited elements (can be visited) since it has moved and leaves an empty space
+                    # check if end_tail is connected to last_visited elements (can be visited) since it has moved and leaves an empty space
                     if any(abs(end_tail[0] - x) == 1 ^ abs(end_tail[1] - y) == 1 for (x, y) in self.last_visited):
                         self.last_visited.add((end_tail[0], end_tail[1]))
                         self.last_space += 1
