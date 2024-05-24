@@ -16,36 +16,45 @@
 \headcommand {\beamer@subsectionentry {0}{2}{2}{4}{L'algorithme génétique}}
 \headcommand {\slideentry {2}{2}{1}{4/4}{L'algorithme génétique}{0}}
 \headcommand {\beamer@framepages {4}{4}}
-\headcommand {\slideentry {2}{2}{2}{5/5}{L'algorithme génétique}{0}}
+\headcommand {\beamer@subsectionpages {4}{4}}
+\headcommand {\beamer@subsectionentry {0}{2}{3}{5}{Les réseaux neuronaux}}
+\headcommand {\slideentry {2}{3}{1}{5/5}{Les réseaux neuronaux}{0}}
 \headcommand {\beamer@framepages {5}{5}}
-\headcommand {\beamer@subsectionpages {4}{5}}
-\headcommand {\beamer@subsectionentry {0}{2}{3}{6}{Les réseaux neuronnaux}}
-\headcommand {\slideentry {2}{3}{1}{6/6}{Les réseaux neuronnaux}{0}}
+\headcommand {\beamer@sectionpages {3}{5}}
+\headcommand {\beamer@subsectionpages {5}{5}}
+\headcommand {\sectionentry {3}{La théorie}{6}{La théorie}{0}}
+\headcommand {\beamer@subsectionpages {6}{5}}
+\headcommand {\beamer@subsectionentry {0}{3}{1}{6}{L'algorithme génétique}}
+\headcommand {\slideentry {3}{1}{1}{6/6}{L'algorithme génétique}{0}}
 \headcommand {\beamer@framepages {6}{6}}
-\headcommand {\beamer@sectionpages {3}{6}}
-\headcommand {\beamer@subsectionpages {6}{6}}
-\headcommand {\sectionentry {3}{L'algorithme appliqué au jeu de Snake}{7}{L'algorithme appliqué au jeu de Snake}{0}}
-\headcommand {\slideentry {3}{0}{1}{7/7}{}{0}}
+\headcommand {\slideentry {3}{1}{2}{7/7}{L'algorithme génétique}{0}}
 \headcommand {\beamer@framepages {7}{7}}
-\headcommand {\beamer@sectionpages {7}{7}}
-\headcommand {\beamer@subsectionpages {7}{7}}
-\headcommand {\sectionentry {4}{La théorie}{8}{La théorie}{0}}
-\headcommand {\slideentry {4}{0}{1}{8/8}{}{0}}
+\headcommand {\beamer@subsectionpages {6}{7}}
+\headcommand {\beamer@subsectionentry {0}{3}{2}{8}{Les réseaux neuronaux}}
+\headcommand {\slideentry {3}{2}{1}{8/8}{Les réseaux neuronaux}{0}}
 \headcommand {\beamer@framepages {8}{8}}
+\headcommand {\beamer@sectionpages {6}{8}}
 \headcommand {\beamer@subsectionpages {8}{8}}
-\headcommand {\beamer@subsectionentry {0}{4}{1}{9}{L'algorithme génétique}}
-\headcommand {\slideentry {4}{1}{1}{9/9}{L'algorithme génétique}{0}}
+\headcommand {\sectionentry {4}{L'algorithme appliqué au jeu de Snake}{9}{L'algorithme appliqué au jeu de Snake}{0}}
+\headcommand {\beamer@subsectionpages {9}{8}}
+\headcommand {\beamer@subsectionentry {0}{4}{1}{9}{Relation algorithme génétique et réseaux de neurones}}
+\headcommand {\slideentry {4}{1}{1}{9/9}{Relation algorithme génétique et réseaux de neurones}{0}}
 \headcommand {\beamer@framepages {9}{9}}
-\headcommand {\beamer@subsubsectionentry {0}{4}{1}{1}{10}{Les réseaux neuronnaux}}
-\headcommand {\slideentry {4}{1}{2}{10/10}{L'algorithme génétique}{0}}
+\headcommand {\beamer@subsectionpages {9}{9}}
+\headcommand {\beamer@subsectionentry {0}{4}{2}{10}{L'importance d'une fonction de fitness: trouver la bonne stratégie}}
+\headcommand {\slideentry {4}{2}{1}{10/10}{L'importance d'une fonction de fitness: trouver la bonne stratégie}{0}}
 \headcommand {\beamer@framepages {10}{10}}
-\headcommand {\beamer@sectionpages {8}{10}}
-\headcommand {\beamer@subsectionpages {9}{10}}
-\headcommand {\sectionentry {5}{Conclusion}{11}{Conclusion}{0}}
-\headcommand {\slideentry {5}{0}{1}{11/11}{}{0}}
+\headcommand {\beamer@subsectionpages {10}{10}}
+\headcommand {\beamer@subsectionentry {0}{4}{3}{11}{Les résultats}}
+\headcommand {\slideentry {4}{3}{1}{11/11}{Les résultats}{0}}
 \headcommand {\beamer@framepages {11}{11}}
-\headcommand {\beamer@partpages {1}{11}}
+\headcommand {\beamer@sectionpages {9}{11}}
 \headcommand {\beamer@subsectionpages {11}{11}}
-\headcommand {\beamer@sectionpages {11}{11}}
-\headcommand {\beamer@documentpages {11}}
-\headcommand {\gdef \inserttotalframenumber {11}}
+\headcommand {\sectionentry {5}{Conclusion}{12}{Conclusion}{0}}
+\headcommand {\slideentry {5}{0}{1}{12/12}{}{0}}
+\headcommand {\beamer@framepages {12}{12}}
+\headcommand {\beamer@partpages {1}{12}}
+\headcommand {\beamer@subsectionpages {12}{12}}
+\headcommand {\beamer@sectionpages {12}{12}}
+\headcommand {\beamer@documentpages {12}}
+\headcommand {\gdef \inserttotalframenumber {12}}
