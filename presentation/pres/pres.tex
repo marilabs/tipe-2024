@@ -53,7 +53,7 @@
 \usepackage{graphicx} % for \resizebox
 
 \usepackage{tikz}
-\usetikzlibrary{matrix,chains,positioning,decorations.pathreplacing,arrows,shapes, calc,shadows}
+\usetikzlibrary{matrix,chains,positioning,decorations.pathreplacing,arrows,shapes, calc,shadows,arrows.meta}
 
 \usepackage{tkz-graph}
 \tikzset{EdgeStyle/.append style = {->}}
@@ -106,6 +106,10 @@ text = black}}
 \DeclareMathOperator{\RR}{\mathbb{R}}
 \DeclareMathOperator{\CC}{\mathbb{C}}
 \DeclareMathOperator*{\argmax}{\arg\!\max}
+
+\newcommand*\colvec[3][]{
+    \begin{pmatrix}\ifx\relax#1\relax\else#1\\\fi#2\\#3\end{pmatrix}
+}
 
 \title{TIPE 2024}
 \subtitle{Apprendre à une intelligence artificielle à jouer à Snake en utilisant un algorithme génétique}
@@ -184,7 +188,6 @@ qui s'inspire de l'évolution naturelle.
 \end{frame}
 
 \begin{frame}
-
 \begin{columns}[T]
 \begin{column}{0.70\textwidth}
 \frametitle{Algorithme du jeu}
@@ -223,7 +226,7 @@ qui s'inspire de l'évolution naturelle.
 \centering
 \vspace{-1cm}\hspace{-0.6cm}
 % NEURAL NETWORK
-\resizebox{1.0\textwidth}{!}{ % Scale the TikZ picture by 1/2
+\resizebox{\textwidth}{!}{
 \begin{tikzpicture}[x=5.4cm,y=1.2cm]
   \readlist\Nnod{13,12,12,4}
   \readlist\Nstr{13,12,4} % array of string number of nodes per layer
@@ -273,14 +276,29 @@ qui s'inspire de l'évolution naturelle.
 \end{frame}
 
 \begin{frame}
-\frametitle{Le fonctionnement des réseaux de neurones}
-  
+\frametitle{Réseaux de neurones}
+\framesubtitle{Fonctionnement et modélisation}   
+
 % check https://tex.stackexchange.com/questions/153957/drawing-neural-network-with-tikz
 % check https://tex.stackexchange.com/questions/153957/drawing-neural-network-with-tikz 
 % incompatibility to be treated by https://tex.stackexchange.com/questions/420448/error-illegal-parameter-number-in-definition-of-iterate i.e. replace # by ####
 
+TODO dire feedforward
+
+\begin{columns}[T]
+\begin{column}{0.70\textwidth}
+\footnotesize
+\textbf{Neurone:} somme pondérée des entrées par un poids synaptique
+
+\begin{align*}
+  \mathbf{x} & = \colvec[x_1]{\vdots}{x_n}, \mathbf{h} = \colvec[h_1]{\vdots}{h_n} \\
+             y & = \sigma\left(\mathbf{h}^\intercal \mathbf{x} + b\right)  \\
+\end{align*}
+
+\vspace{0.5cm}
+\textbf{Généralisation à un réseau multicouches:} modélisation matricielle avec fonction vectorielle $\sigma$
 \begin{equation*}
-\resizebox{0.5\textwidth}{!}{ % Scale the TikZ picture by 1/2
+\resizebox{\textwidth}{!}{
 $\begin{pmatrix}
   y_{1} \\[0.3em]
   y_{2} \\
@@ -327,7 +345,18 @@ $\begin{pmatrix}
 $}
 \end{equation*}
 
-% Listing 2: Tex for neural network pipeline
+TODO: vocabulaire, utilité du biais et de la fonction d'activation
+
+TODO: choix en design du réseau de neurones 
+
+ICI: max des sorties donne la direction
+\end{column}
+\begin{column}{0.4\textwidth}
+\begin{figure}
+\centering
+\vspace{-1cm}\hspace{-0.6cm}
+\resizebox{\textwidth}{!}{
+% neural network pipeline
 \begin{tikzpicture}[
     % define styles    
     init/.style={ 
@@ -345,12 +374,12 @@ $}
 % Top chain x1 to w1
 \begin{scope}[start chain=1]
     \node[on chain=1] at (0,1.5cm)  (x1) {$x_1$};
-    \node[on chain=1,join=by o-latex] (w1) {$w_1$};
+    \node[on chain=1,join=by o-latex] (w1) {$h_1$};
 \end{scope}
 % Middle chain x2 to output
 \begin{scope}[start chain=2]
     \node[on chain=2] (x2) {$x_2$};
-    \node[on chain=2,join=by o-latex] {$w_2$};
+    \node[on chain=2,join=by o-latex] {$h_2$};
     \node[on chain=2,init] (sigma) {$\displaystyle\Sigma$};
     \node[on chain=2,squa,label=above:{\parbox{2cm}{\centering fonction \\ d'activation}}]   {$\sigma$};
     \node[on chain=2,squa,label=above:Sortie,join=by -latex] {$y$};
@@ -358,22 +387,26 @@ $}
 % Bottom chain x3 to w3
 \begin{scope}[start chain=3]
     \node[on chain=3] at (0,-1.5cm) 
-    (x3) {$x_3$};
+    (x3) {$x_n$};
     \node[on chain=3,label=below:Poids,join=by o-latex]
-    (w3) {$w_3$};
+    (w3) {$h_n$};
 \end{scope}
 % Bias
-\node[label=above:\parbox{2cm}{\centering Bias \\ $b$}] at (sigma|-w1) (b) {};
+\node[label=above:\parbox{2cm}{\centering Biais \\ $b$}] at (sigma|-w1) (b) {};
 % Arrows joining w1, w3 and b to sigma
 \draw[-latex] (w1) -- (sigma);
 \draw[-latex] (w3) -- (sigma);
 \draw[o-latex] (b) -- (sigma);
 % left hand side brace
 \draw[decorate,decoration={brace,mirror}] (x1.north west) -- node[left=10pt] {Entrées} (x3.south west);
-
 \end{tikzpicture}
-
-\resizebox{0.5\textwidth}{!}{ % Scale the TikZ picture by 1/2
+}
+\caption*{\tiny Fonctionnement d'un neurone}
+\end{figure}
+\begin{figure}
+\centering
+\vspace{-1cm}\hspace{-0.6cm}
+\resizebox{\textwidth}{!}{
 \begin{tikzpicture}
     \begin{axis}[
     	legend pos=north west,
@@ -400,16 +433,290 @@ $}
         enlargelimits=false]
       % plot the function
       \addplot[domain=-50:50, blue, ultra thick, samples=500] {1/(1+exp(-x))};
-      \addlegendentry{$f(x)=\frac{1}{1+e^{-x}}$}
+      \addlegendentry{$\sigma(x)=\frac{1}{1+e^{-x}}$}
     \end{axis}
 \end{tikzpicture}
 } % End of \resizebox
+\caption*{\tiny Fonction d'activation sigmoide}
+\end{figure}
+\begin{figure}
+\vspace{-2cm}
+\resizebox{\textwidth}{!}{
+% NEURAL NETWORK
+\begin{tikzpicture}[x=2.4cm,y=1.2cm]
+%  \readlist\Nnod{4,3,2} % array of number of nodes per layer
+  \readlist\Nnod{5,4,4,3}
+  \readlist\Nstr{n,m,k} % array of string number of nodes per layer
+  \readlist\Cstr{x,h^{(\prev)},y} % array of coefficient symbol per layer
+  \def\yshift{0.55} % shift last node for dots
+  
+  % LOOP over LAYERS
+  \foreachitem \N \in \Nnod{
+    \def\lay{\Ncnt} % alias of index of current layer
+    \pgfmathsetmacro\prev{int(\Ncnt-1)} % number of previous layer
+    \foreach \i [evaluate={\c=int(\i==\N); \y=\N/2-\i-\c*\yshift;
+                 \x=\lay; \n=\nstyle;
+                 \index=(\i<\N?int(\i):"\Nstr[\n]");}] in {1,...,\N}{ % loop over nodes
+      % NODES
+      \node[node \n] (N\lay-\i) at (\x,\y) {$\strut\Cstr[\n]_{\index}$};
+      
+      % CONNECTIONS
+      \ifnumcomp{\lay}{>}{1}{ % connect to previous layer
+        \foreach \j in {1,...,\Nnod[\prev]}{ % loop over nodes in previous layer
+          \draw[white,line width=1.2,shorten >=1] (N\prev-\j) -- (N\lay-\i);
+          \draw[connect] (N\prev-\j) -- (N\lay-\i);
+        }
+        \ifnum \lay=\Nnodlen
+          \draw[connect] (N\lay-\i) --++ (0.5,0); % arrows out
+        \fi
+      }{
+        \draw[connect] (0.5,\y) -- (N\lay-\i); % arrows in
+      }
+      
+    }
+    \path (N\lay-\N) --++ (0,1+\yshift) node[midway,scale=1.6] {$\vdots$}; % dots
+  }
+  
+  % LABELS
+  \node[above=1,align=center,mydarkgreen] at (N1-1.90) {Input\\[-0.2em]layer};
+  \node[above=1,align=center,mydarkblue] at (N2-1.90) {Hidden\\[-0.2em]layers};
+    \node[above=1,align=center,mydarkblue] at (N3-1.90) {Hidden\\[-0.2em]layers};
+  \node[above=1,align=center,mydarkred] at (N\Nnodlen-1.90) {Output\\[-0.2em]layer};
+  
+\end{tikzpicture}
+}
+\caption*{\tiny Réseau de neurones multicouches}
+\end{figure}
+\end{column}
+\end{columns}
+\end{frame}
 
+\begin{frame}
+TODO
+Normalement Minimiser erreur quadratique moyenne, mais sorties non déterministes et séquence.
+Descente de gradient.
+Trop de possibilités.
+Là pas possible.
+Reenforcement learning.
+Choix Algo génétique.
+\end{frame}
+
+\begin{frame}
+\frametitle{Algorithme d'apprentissage}
+\framesubtitle{Optimisation par algorithme génétique}   
+\begin{columns}[T]
+\begin{column}{0.60\textwidth}
+\footnotesize
+\textbf{Principe:} faire évoluer une population de réseaux de neurones identiques en sélectionnant les meilleurs éléments au sens d'une fonction de fitness
+
+\textbf{Phase de sélection:} sélection des meilleurs serpents pour qu'ils transmettent leurs gènes à la génération suivante. Deux paires d'individus (parents) sont sélectionnées en fonction de leurs scores de fitness. Les individus ayant un fitness élevé ont plus de chances d'être sélectionnés pour la reproduction.
+
+\begin{itemize}
+  \item Sélection
+    \begin{itemize}
+      \item Sélection des individus les plus adaptés pour transmettre leurs gènes à la génération suivante.
+      \item Deux paires d'individus (parents) sont choisis en fonction de leurs scores de fitness.
+      \item Les individus avec un fitness élevé ont plus de chances d'être sélectionnés pour la reproduction.
+    \end{itemize}
+  
+  \item Croisement
+    \begin{itemize}
+      \item Choix d'un pourcentage de la population actuelle avec la meilleure valeur de fitness pour effectuer un croisement entre eux, afin de produire le reste de la nouvelle population.
+      \item Les meilleurs sont directement inclus dans la nouvelle population.
+      \item Utilisation de la technique de croisement uniforme, où un gène est pris au hasard chez l'un des parents et donné au nouvel enfant.
+    \end{itemize}
+  
+  \item Mutation
+    \begin{itemize}
+      \item Ajustement aléatoire mineur dans le chromosome pour obtenir une nouvelle solution.
+      \item Utilisée pour maintenir et introduire de la diversité dans la population génétique.
+      \item Appliquée avec une faible probabilité (pm) pour éviter une recherche aléatoire.
+      \item La mutation est essentielle à la convergence de l'algorithme génétique, contrairement au croisement.
+    \end{itemize}
+\end{itemize}
+\vspace{0.5cm}
+\textbf{Point:}  
+\begin{itemize}
+\footnotesize
+\item toto
+\item tutu
+\end{itemize}
+\end{column}
+
+\begin{column}{0.40\textwidth}
+
+\begin{figure}
+\centering
+\vspace{-1cm}\hspace{-0.6cm}
+\resizebox{\textwidth}{!}{
+\tikzset{
+  frame/.style={
+    rectangle, draw, 
+    text width=6em, text centered,
+    minimum height=4em,drop shadow,fill=lime!40,
+    rounded corners,
+  },
+  line/.style={
+    draw, -latex',rounded corners=3mm,
+  }
+}
+\begin{tikzpicture}[font=\small\sffamily\bfseries,very thick,node distance = 4cm]
+\node [frame] (pop) {Population};
+\node [above=2cm, left of=pop] (init) {Initialisation};
+\node [below=2cm, left of=pop] (term) {Fin};
+\node [frame, above=2cm, right of=pop] (parents)  {Parents};
+\node [frame, below=2cm, right of=pop] (off)  {Enfants};
+
+\path [line] (parents)
+ -- node[right,align=left,pos=.5] {Croisement\\[3mm]Mutation}
+ (off);
+\path [line] (init) |- (pop.170);
+\path [line] (pop.190) -| (term);
+\path [line] (off) -| node[below,pos=.25, align=center] {Sélection\\ survivants}(pop);
+\path [line] (pop) |- node[above,pos=.75, align=center] {Sélection\\ parents}(parents);
+\end{tikzpicture}
+}	
+\caption*{\tiny Processus itératif}
+\end{figure}
+
+\begin{figure}
+\centering
+\vspace{-1cm}\hspace{-0.6cm}
+%\resizebox{\textwidth}{!}{
+\begin{tikzpicture}[node distance=4mm,
+  MTRX/.style={matrix of nodes,
+               nodes={draw, minimum size=5.6mm, anchor=center,
+                      inner sep=0pt, outer sep=0pt},
+               column sep=-\pgflinewidth,
+               row sep=2mm},
+  CR/.style={fill=red},  % fill Color Red
+  CY/.style={fill=yellow} % fill Color Yellow
+]
+
+% left table
+\matrix (m1) [MTRX,
+              row 1/.append style={nodes={CR}},
+              row 2/.append style={nodes={CY}},
+              label=below:chromosomes des parents
+             ]
+{
+0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 \\
+5 & 8 & 9 & 4 & 2 & 3 & 5 & 7 & 5 & 8 \\
+};
+
+% right table
+\matrix (m2) [MTRX, right=of m1,
+              label=below:chromosomes des enfants
+             ]
+{
+ |[CR]| 0 & |[CR]| 1 & |[CY]| 2 & |[CY]| 3 & |[CY]| 4 &
+ |[CY]| 5 & |[CY]| 6 & |[CR]| 7 & |[CR]| 8 & |[CR]| 9 \\
+ |[CY]| 5 & |[CY]| 8 & |[CR]| 9 & |[CR]| 4 & |[CR]| 2 &
+ |[CR]| 3 & |[CR]| 5 & |[CY]| 7 & |[CY]| 5 & |[CY]| 8 \\
+};
+
+\draw[very thick, blue] ([yshift=2mm]m1-1-2.north east) -- ([yshift=-2mm]m1-2-2.south east);
+\draw[very thick, blue] ([yshift=2mm]m1-1-7.north east) -- ([yshift=-2mm]m1-2-7.south east);
+\draw[double, -{Implies[]}, semithick] (m1.east) -- (m2.west);
+
+\end{tikzpicture}
+%}
+\caption*{\tiny Croisement (crossover)}
+\end{figure}
+
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\end{frame}
+
+\begin{frame}
+\end{frame}
+
+\begin{frame}
+Soit $p_m=0.1$ la probabilité de mutation et $c_m=0.1$ le coefficient de mutation, pour tout poids $h_i(t)$ du réseau de neurone à l'itération $t$, on tire $U \sim \mathcal{U}(0, 1)$ et $C \sim \mathcal{U}(-1, 1)$. Si $U<p_m$, $h_i(t+1)=h_i(t)+C\times c_m$ sinon $h_i(t+1)=h_i(t)$.
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Différentes stratégies de visions et de fitness}
+\begin{tikzpicture}
+    \begin{axis}[
+        width=10cm,
+        view={60}{30},
+        xlabel={\shortstack{pommes \\ mangées}},
+        ylabel={age},
+        zlabel={fitness},
+        colormap/cool,
+        colorbar,
+    ]
+        \addplot3[
+            surf,
+            domain=0:100,
+            domain y=0:5000,
+        ]
+        {x^3 * y};
+    \end{axis}
+\end{tikzpicture}
+
+\begin{tikzpicture}
+    \begin{axis}[
+        width=10cm,
+        view={60}{30},
+        xlabel={\shortstack{pommes \\ mangées}},
+        ylabel={age},
+        zlabel={fitness},
+        colormap/cool,
+        colorbar,
+    ]
+        \addplot3[
+            surf,
+            domain=0:100,
+            domain y=0:5000,
+        ]
+        {(x*2)^2 * (y^1.5)};
+    \end{axis}
+\end{tikzpicture}
+\end{frame}
+
+\begin{frame}
+\frametitle{Résultats de convergences}
+\end{frame}
+
+\begin{frame}
+	
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Titre}
+\framesubtitle{Sous-titre}   
+\begin{columns}[T]
+\begin{column}{0.70\textwidth}
+\footnotesize
+\textbf{Point:} blah 
+\vspace{0.5cm}
+\textbf{Point:}  
+\begin{itemize}
+\footnotesize
+\item toto
+\item tutu
+\end{itemize}
+\end{column}
+\begin{column}{0.24\textwidth}
+\begin{figure}
+\centering
+\vspace{-1cm}\hspace{-0.6cm}
+\includegraphics[width=1\textwidth]{blockade.jpg}
+\caption*{\tiny toto}
+\end{figure}
+\end{column}
+\end{columns}
 \end{frame}
 
 
 \subsection{L'algorithme génétique}
-
 \begin{frame}
 \frametitle{Le principe de l'algorithme génétique}
 \framesubtitle{Histoire, fonctionnement et applications de l'algorithme}      
@@ -423,18 +730,6 @@ $}
     
 \item \textbf{Ici:} application ludique, on applique cet algorithme à un réseau neuronal pour qu'il joue à Snake
 \end{itemize}  
-\end{frame}
-  
-\begin{frame}
-Normalement Minimiser erreur quadratique moyenne, mais sorties non déterministes et séquence.
-Descente de gradient.
-Trop de possibilités.
-Là pas possible.
-Reenforcement learning.
-Choix Algo génétique.
-\end{frame}
-
-\begin{frame}
 \end{frame}
 
 \subsection{Les réseaux neuronaux}
