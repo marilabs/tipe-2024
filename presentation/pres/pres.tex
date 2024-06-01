@@ -3,9 +3,14 @@
 
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage[french]{babel}
+% clashes with neural net figure
+%\usepackage[french]{babel}
+
+\usepackage{pgfplots}
 
 %\usepackage{algpseudocode}
+
+\usepackage{caption}
 
 %\usepackage{algorithm}
 %\usepackage{algorithmic}
@@ -45,8 +50,10 @@
 %\newcolumntype{L}{>{\collectcell\AddLabel}r<{\endcollectcell}}
 \renewcommand\tabularxcolumn[1]{m{#1}}% for vertical centering text in X column
 
+\usepackage{graphicx} % for \resizebox
+
 \usepackage{tikz}
-\usetikzlibrary{calc, shapes, shadows}
+\usetikzlibrary{matrix,chains,positioning,decorations.pathreplacing,arrows,shapes, calc,shadows}
 
 \usepackage{tkz-graph}
 \tikzset{EdgeStyle/.append style = {->}}
@@ -91,8 +98,6 @@ text = black}}
 }
 \def\nstyle{int(\lay<\Nnodlen?min(2,\lay):3)} % map layer number onto 1, 2, or 3
 
-
-
 % ensembles N,Z,Q,D,R,C
 \DeclareMathOperator{\NN}{\mathbb{N}}
 \DeclareMathOperator{\ZZ}{\mathbb{Z}}
@@ -110,7 +115,6 @@ text = black}}
 
 \setbeamertemplate{footline}[frame number]
 
-
 \begin{document}
  
 \begin{frame}
@@ -127,41 +131,30 @@ text = black}}
 \begin{frame}
 \frametitle{Introduction}
 \framesubtitle{Problématique et pertinence au regard du thème de l'année}
-
 \begin{itemize}
-
 \item \textbf{Le jeu de Snake:} piloter un serpent sur une grille dans le but de
 manger des pommes, sans rentrer dans les murs ni se replier sur 
 soi-même.
-
 \item \textbf{Objectif:} mettre en place une intelligence
 artificielle pouvant jouer au jeu de Snake, apprenant de manière autonome.
-
 \item \textbf{Le moyen d'y parvenir:} utiliser un algorithme génétique,
 qui s'inspire de l'évolution naturelle.
-
 \end{itemize}
-
 \end{frame}
 
 \section{Le principe}
 
 \subsection{Le jeu de Snake}
 
-
 \begin{frame}
 \frametitle{Le jeu de Snake}
 \framesubtitle{Brève histoire et règles du jeu}
-
 \begin{columns}[T]
 \begin{column}{0.70\textwidth}
 \footnotesize
 \textbf{Origines:} borne d'arcade \textit{Blockade}, créée par Gremlin en 1976, popularisé par Nokia en 1997 sur mobile 
-
 \vspace{0.5cm}
-
 \textbf{Règles du jeu:}  
-
 \begin{itemize}
 \footnotesize
 \item Le serpent débute avec une longueur initiale sur un échiquier entouré d'un mur et contenant une pomme.
@@ -171,8 +164,6 @@ qui s'inspire de l'évolution naturelle.
 \item Le jeu se termine si le serpent heurte un mur ou son propre corps.
 \item Le score du joueur est égal au nombre de pommes mangées.
 \end{itemize}
-
-
 \end{column}
 \begin{column}{0.24\textwidth}
 \begin{figure}
@@ -180,47 +171,271 @@ qui s'inspire de l'évolution naturelle.
 \vspace{-1cm}\hspace{-0.6cm}
 \includegraphics[width=1\textwidth]{blockade.jpg}
 \end{figure}
-
 \begin{figure}
 \vspace{-0.8cm}\hspace{-0.6cm}
 \includegraphics[width=0.97\textwidth]{snake_nokia.png}
 \end{figure}  
-
 \begin{figure}
 \vspace{-1.1cm}\hspace{-0.6cm}
 \includegraphics[width=1\textwidth]{snake_game.png}
 \end{figure}
+\end{column}
+\end{columns}
+\end{frame}
 
+\begin{frame}
 
+\begin{columns}[T]
+\begin{column}{0.70\textwidth}
+\frametitle{Algorithme du jeu}
+\footnotesize
+\textbf{Principe:}
+\begin{itemize}
+\footnotesize
+\item On part d'une large population composée de $880=22^2$ serpents.
+\item Chaque serpent évolue sur son propre plateau de jeu.
+\item Le cerveau de chaque serpent est un réseau de neurones dont les entrées sont des paramètres de visions et dont les sorties fournissent les 4 décisions de directions \keystroke{$\leftarrow$}\keystroke{$\uparrow$}\keystroke{$\downarrow$}\keystroke{$\rightarrow$}.
+\end{itemize}
+\textbf{\'Etapes de l'algorithme:}  
+\begin{itemize}
+\footnotesize
+\item Initialisation: Initialement tous les réseaux de neurones sont initialisés avec des poids aléatoires.
+\item Itération: Tous les serpents de la population évoluent dans le jeu jusqu'à ce qu'ils meurent en heurtant un mur, mangeant leur queue ou s'il n'ont pas manger de pomme pendant un nombre donné d'itérations (pour éviter les boucles infinies).
+\item Mesure: \`A tout jeu on associe un "score" ou fonction de fitness dépendant de sa taille et du nombre de mouvements total effectués sans mourir
+\item Sélection: seul un pourcentage des meilleurs serpents sont retenus (ici $10\%$) au sens du score de fitness.
+\item \'Evolution: ces meilleurs serpents sont utilisés pour reconstituer la population totale par croisement et mutation entre deux des meilleurs serpents tirés au hasard.
+\end{itemize}
+\end{column}
+\begin{column}{0.24\textwidth}
+\begin{figure}
+\centering
+\vspace{-1cm}\hspace{-0.6cm}
+\includegraphics[width=1\textwidth]{snake_population.png}
+\caption*{\tiny Population de serpents}
+\end{figure}
+\begin{figure}
+\centering
+\vspace{-1cm}\hspace{-0.6cm}
+\includegraphics[width=1\textwidth]{snake_game.png}
+\caption*{\tiny Le jeu pour un serpent}
+\end{figure}
+\begin{figure}
+\centering
+\vspace{-1cm}\hspace{-0.6cm}
+% NEURAL NETWORK
+\resizebox{1.0\textwidth}{!}{ % Scale the TikZ picture by 1/2
+\begin{tikzpicture}[x=5.4cm,y=1.2cm]
+  \readlist\Nnod{13,12,12,4}
+  \readlist\Nstr{13,12,4} % array of string number of nodes per layer
+  \readlist\Cstr{x,h^{(\prev)},y} % array of coefficient symbol per layer
+  \def\yshift{0.55} % shift last node for dots
+  % Calculate the maximum number of nodes in any layer
+  \def\maxN{0}
+  \foreachitem \X \in \Nnod{
+    \ifnum\X>\maxN
+      \xdef\maxN{\X}
+    \fi
+  }
+  % LOOP over LAYERS
+  \foreachitem \N \in \Nnod{
+    \def\lay{\Ncnt} % alias of index of current layer
+    \pgfmathsetmacro\prev{int(\Ncnt-1)} % number of previous layer
+    \pgfmathsetmacro\midY{(\N-1)/2} % midpoint of the current layer
+    \foreach \i [evaluate={\c=int(\i==\N); \y=\midY-\i; % Adjusted \y calculation
+                 \x=\lay; \n=\nstyle;
+                 \index=(\i<\N?int(\i):"\Nstr[\n]");}] in {1,...,\N}{ % loop over nodes
+      % NODES
+      \node[node \n] (N\lay-\i) at (\x,\y) {$\strut\Cstr[\n]_{\index}$};
+      
+      % CONNECTIONS
+      \ifnumcomp{\lay}{>}{1}{ % connect to previous layer
+        \foreach \j in {1,...,\Nnod[\prev]}{ % loop over nodes in previous layer
+          \draw[white,line width=1.2,shorten >=1] (N\prev-\j) -- (N\lay-\i);
+          \draw[connect] (N\prev-\j) -- (N\lay-\i);
+        }
+      }{
+        \draw[connect] (0.5,\y) -- (N\lay-\i); % arrows in
+      }
+    }
+  }  
+  % LABELS
+  \node[above=3,align=center,mydarkgreen] at (N1-1.north) {Input\\[-0.2em]layer};
+  \node[above=2,align=center,mydarkblue] at (N2-1.north) {Hidden\\[-0.2em]layers};
+  \node[above=2,align=center,mydarkblue] at (N3-1.north) {Hidden\\[-0.2em]layers};
+  \node[above=3,align=center,mydarkred] at (N4-1.north) {Output\\[-0.2em]layer};
+\end{tikzpicture}
+} % End of \resizebox
+\caption*{\tiny Cerveau du serpent}
+\end{figure}
 
 \end{column}
 \end{columns}
 \end{frame}
 
+\begin{frame}
+\frametitle{Le fonctionnement des réseaux de neurones}
+  
+% check https://tex.stackexchange.com/questions/153957/drawing-neural-network-with-tikz
+% check https://tex.stackexchange.com/questions/153957/drawing-neural-network-with-tikz 
+% incompatibility to be treated by https://tex.stackexchange.com/questions/420448/error-illegal-parameter-number-in-definition-of-iterate i.e. replace # by ####
+
+\begin{equation*}
+\resizebox{0.5\textwidth}{!}{ % Scale the TikZ picture by 1/2
+$\begin{pmatrix}
+  y_{1} \\[0.3em]
+  y_{2} \\
+  \vdots \\
+  y_{m}
+\end{pmatrix}
+  =
+  \sigma\left[
+  \begin{pmatrix}
+  h^{(2)}_{1,1} & h^{(2)}_{1,2} & \ldots & h^{(2)}_{1,k} \\
+  h^{(2)}_{2,1} & h^{(2)}_{2,2} & \ldots & h^{(2)}_{2,k} \\
+  \vdots & \vdots & \ddots & \vdots \\
+  h^{(2)}_{m,1} & h^{(2)}_{m,2} & \ldots & h^{(2)}_{m,k}
+  \end{pmatrix}
+  \sigma\left(
+\begin{pmatrix}
+  h^{(1)}_{1,1} & h^{(1)}_{1,2} & \ldots & h^{(1)}_{1,n} \\
+  h^{(1)}_{2,1} & h^{(1)}_{2,2} & \ldots & h^{(1)}_{2,n} \\
+  \vdots & \vdots & \ddots & \vdots \\
+  h^{(1)}_{k,1} & h^{(1)}_{k,2} & \ldots & h^{(1)}_{k,n}
+  \end{pmatrix}
+  \begin{pmatrix}
+  x_{1} \\[0.3em]
+  x_{2} \\
+  \vdots \\
+  x_{n}
+  \end{pmatrix}
+  +
+  \begin{pmatrix}
+  b_{1}^{(1)} \\[0.3em]
+  b_{2}^{(1)} \\
+  \vdots \\
+  b_{k}^{(1)}
+  \end{pmatrix}
+  \right)
+  +
+  \begin{pmatrix}
+  b_{1}^{(2)} \\[0.3em]
+  b_{2}^{(2)} \\
+  \vdots \\
+  b_{m}^{(2)}
+  \end{pmatrix}
+  \right] 
+$}
+\end{equation*}
+
+% Listing 2: Tex for neural network pipeline
+\begin{tikzpicture}[
+    % define styles    
+    init/.style={ 
+         draw, 
+         circle, 
+         inner sep=2pt,
+         font=\Huge,
+         join = by -latex
+    },
+    squa/.style={ 
+        font=\Large,
+        join = by -latex
+    }
+]
+% Top chain x1 to w1
+\begin{scope}[start chain=1]
+    \node[on chain=1] at (0,1.5cm)  (x1) {$x_1$};
+    \node[on chain=1,join=by o-latex] (w1) {$w_1$};
+\end{scope}
+% Middle chain x2 to output
+\begin{scope}[start chain=2]
+    \node[on chain=2] (x2) {$x_2$};
+    \node[on chain=2,join=by o-latex] {$w_2$};
+    \node[on chain=2,init] (sigma) {$\displaystyle\Sigma$};
+    \node[on chain=2,squa,label=above:{\parbox{2cm}{\centering fonction \\ d'activation}}]   {$\sigma$};
+    \node[on chain=2,squa,label=above:Sortie,join=by -latex] {$y$};
+\end{scope}
+% Bottom chain x3 to w3
+\begin{scope}[start chain=3]
+    \node[on chain=3] at (0,-1.5cm) 
+    (x3) {$x_3$};
+    \node[on chain=3,label=below:Poids,join=by o-latex]
+    (w3) {$w_3$};
+\end{scope}
+% Bias
+\node[label=above:\parbox{2cm}{\centering Bias \\ $b$}] at (sigma|-w1) (b) {};
+% Arrows joining w1, w3 and b to sigma
+\draw[-latex] (w1) -- (sigma);
+\draw[-latex] (w3) -- (sigma);
+\draw[o-latex] (b) -- (sigma);
+% left hand side brace
+\draw[decorate,decoration={brace,mirror}] (x1.north west) -- node[left=10pt] {Entrées} (x3.south west);
+
+\end{tikzpicture}
+
+\resizebox{0.5\textwidth}{!}{ % Scale the TikZ picture by 1/2
+\begin{tikzpicture}
+    \begin{axis}[
+    	legend pos=north west,
+        axis x line=middle,
+        axis y line=middle,
+        x tick label style={/pgf/number format/fixed,
+                            /pgf/number format/fixed zerofill,
+                            /pgf/number format/precision=1},
+        y tick label style={/pgf/number format/fixed,
+                            /pgf/number format/fixed zerofill,
+                            /pgf/number format/precision=1},
+        grid = major,
+        width=16cm,
+        height=8cm,
+        grid style={dashed, gray!30},
+        xmin=-10,     % start the diagram at this x-coordinate
+        xmax= 10,    % end   the diagram at this x-coordinate
+        ymin= 0,     % start the diagram at this y-coordinate
+        ymax= 1,   % end   the diagram at this y-coordinate
+        %axis background/.style={fill=white},
+        xlabel=x,
+        ylabel=y,
+        tick align=outside,
+        enlargelimits=false]
+      % plot the function
+      \addplot[domain=-50:50, blue, ultra thick, samples=500] {1/(1+exp(-x))};
+      \addlegendentry{$f(x)=\frac{1}{1+e^{-x}}$}
+    \end{axis}
+\end{tikzpicture}
+} % End of \resizebox
+
+\end{frame}
+
+
 \subsection{L'algorithme génétique}
 
 \begin{frame}
-  \frametitle{Le principe de l'algorithme génétique}
-  \framesubtitle{Histoire, fonctionnement et applications de l'algorithme}    
-  
-  \begin{itemize}
-
-    \item \textbf{Origines:} développé par John Holland dans les années 1970
-
-    \item \textbf{Principe:} s'inspirer de l'évolution naturelle pour
+\frametitle{Le principe de l'algorithme génétique}
+\framesubtitle{Histoire, fonctionnement et applications de l'algorithme}      
+\begin{itemize}
+\item \textbf{Origines:} développé par John Holland dans les années 1970
+\item \textbf{Principe:} s'inspirer de l'évolution naturelle pour
     résoudre des problèmes d'optimisation
-
-    \item \textbf{Fonctionnement:} on part d'une population aléatoire, on les fait évoluer en appliquant des opérateurs
+\item \textbf{Fonctionnement:} on part d'une population aléatoire, on les fait évoluer en appliquant des opérateurs
     génétiques (sélection, crossover, mutation)
-
-    \item \textbf{Applications:} problème du voyageur de commerce, problèmes de décision (optimisation dans les banques), NASA et Sony pour des déplacements de robots, automatisation des tests d'application par Motorola
+\item \textbf{Applications:} problème du voyageur de commerce, problèmes de décision (optimisation dans les banques), NASA et Sony pour des déplacements de robots, automatisation des tests d'application par Motorola
     
-    \item \textbf{Ici:} application ludique, on applique cet algorithme à un réseau neuronal pour qu'il joue à Snake
-   
-
-  \end{itemize}  
-  \end{frame}
+\item \textbf{Ici:} application ludique, on applique cet algorithme à un réseau neuronal pour qu'il joue à Snake
+\end{itemize}  
+\end{frame}
   
+\begin{frame}
+Normalement Minimiser erreur quadratique moyenne, mais sorties non déterministes et séquence.
+Descente de gradient.
+Trop de possibilités.
+Là pas possible.
+Reenforcement learning.
+Choix Algo génétique.
+\end{frame}
+
+\begin{frame}
+\end{frame}
 
 \subsection{Les réseaux neuronaux}
 
@@ -258,16 +473,6 @@ qui s'inspire de l'évolution naturelle.
   
   \subsection{Les réseaux neuronaux}
   
-  \begin{frame}
-    \frametitle{Le fonctionnement des réseaux de neurones}
-  
-    % check https://tex.stackexchange.com/questions/153957/drawing-neural-network-with-tikz
-    % check https://tex.stackexchange.com/questions/153957/drawing-neural-network-with-tikz
-  
-    % incompatibility to be treated by https://tex.stackexchange.com/questions/420448/error-illegal-parameter-number-in-definition-of-iterate i.e. replace # by ####
-    
-  
-  \end{frame}
 
 \section{L'algorithme appliqué au jeu de Snake}
 
@@ -275,6 +480,7 @@ qui s'inspire de l'évolution naturelle.
 
 \begin{frame}
   \frametitle{Comment algorithme génétique et réseaux de neurones sont reliés}
+  
 \end{frame}
 
 \subsection{L'importance d'une fonction de fitness: trouver la bonne stratégie}
