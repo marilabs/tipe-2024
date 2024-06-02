@@ -1,10 +1,10 @@
 DEBUG = False
-ORIGINAL_SIZE_THREE = False
+ORIGINAL_SIZE_THREE = True
 DISPLAY_ALL_POPULATION = True
 
 DISPLAY_LARGEST_SNAKE = False
 
-DISPLAY_GRAPHICS = True
+DISPLAY_GRAPHICS = False
 
 # number of cells for the snake to move in each game
 WIDTH = 10
@@ -20,14 +20,14 @@ FITNESS_STRATEGY = 3
 
 MAX_ITERATION = 2000 # number of iterations before stopping the program
 SAVE = True # save the game brains to a file
-RESTORE = True # restore the game brains from a file
+RESTORE = False # restore the game brains from a file
 BRAINS_FILE = 'saved_brains' + '-' + str(POPULATION) + '-' + str(GAME_STRATEGY) + str(FITNESS_STRATEGY) + '.pickle' # name of the file to save the brains
 CURVES_FILES = 'saved_curves' + '-' + str(POPULATION) + '-' + str(GAME_STRATEGY) + str(FITNESS_STRATEGY) + '.pickle' # name of the file to save the curves
 
-NUMBER_CROSSOVER_POINTS = 1 # number of crossover points for the genetic algorithm
-MUTATION_CHANCE = 0.1 # chance of mutation for the genetic algorithm
-MUTATION_COEFF = 0.1 # coefficient for the mutation
-PORTION_BESTS = 10 # percentage of bests brains to keep for the genetic algorithm
+NUMBER_CROSSOVER_POINTS = 2 # number of crossover points for the genetic algorithm
+MUTATION_CHANCE = 0.4 # chance of mutation for the genetic algorithm
+MUTATION_COEFF = 0.4 # coefficient for the mutation
+PORTION_BESTS = 20 # percentage of bests brains to keep for the genetic algorithm
 
 # antoine libs/game/lib.rs and game_wasm/src/lib.rs
 # k=1 KPointsCrossover
