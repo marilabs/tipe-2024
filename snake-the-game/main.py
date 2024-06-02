@@ -223,9 +223,9 @@ ax2.set_yscale('log')
 ax2.plot(range(len(avg_fitness)), avg_fitness, color=color)
 ax2.tick_params(axis='y', labelcolor=color)
 
-fig.tight_layout()
 plt.title('Max and Average Fitness vs Iteration')
 plt.grid(True)
+fig.tight_layout()
 plt.show()
 
 
@@ -246,9 +246,9 @@ ax2.tick_params(axis='y', labelcolor=color2)
 color3 = 'tab:green'
 ax1.plot(range(len(max_apple_eaten)), max_apple_eaten, color=color3, linestyle='dashed', label='Max Apples Eaten')
 
-fig.tight_layout()
 plt.title('Fitness vs Iteration')
 plt.grid(True)
+fig.tight_layout()
 plt.show()
 
 
