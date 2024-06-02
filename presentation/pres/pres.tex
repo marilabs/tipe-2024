@@ -37,6 +37,18 @@
 %\usepackage{fancyhdr}
 \usepackage{multicol}
 
+\usepackage{multicol}
+\usepackage{minted}
+\setminted{
+    %linenos=true,
+    breaklines=true,
+    %breakanywhere=true,
+    encoding=utf8,
+    fontseries=heiti,
+    % autogobble=true,
+    %frame=lines
+}
+
 \usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{array,collcell}
@@ -195,7 +207,7 @@ qui s'inspire de l'évolution naturelle.
 \textbf{Principe:}
 \begin{itemize}
 \footnotesize
-\item On part d'une large population composée de $880=22^2$ serpents.
+\item On part d'une large population composée de $484=22^2$ serpents.
 \item Chaque serpent évolue sur son propre plateau de jeu.
 \item Le cerveau de chaque serpent est un réseau de neurones dont les entrées sont des paramètres de visions et dont les sorties fournissent les 4 décisions de directions \keystroke{$\leftarrow$}\keystroke{$\uparrow$}\keystroke{$\downarrow$}\keystroke{$\rightarrow$}.
 \end{itemize}
@@ -503,6 +515,10 @@ Choix Algo génétique.
 Se déplacer grace à un réseau de neurones.
 Déplacements régis par un réseau de neurones
 Optimiser le déplacement grace à un algorithme génétique.
+
+Serpent point de vie, age et taille
+
+Eviter les boucle infinie: décrémenter les points de vies, restaurer les points de vie dès qu'on mange une pomme, appliquer une pénalité au score en décrémentant age par 50 si mort de vieillesse
 \end{frame}
 
 \begin{frame}
@@ -539,12 +555,7 @@ Optimiser le déplacement grace à un algorithme génétique.
     \end{itemize}
 \end{itemize}
 \vspace{0.5cm}
-\textbf{Point:}  
-\begin{itemize}
-\footnotesize
-\item toto
-\item tutu
-\end{itemize}
+\textbf{Mutation:} soit $p_m=0.1$ la probabilité de mutation et $c_m=0.1$ le coefficient de mutation, pour tout poids $h_i(t)$ du réseau de neurone à l'itération $t$, on tire $U \sim \mathcal{U}(0, 1)$ et $C \sim \mathcal{U}(-1, 1)$. Si $U<p_m$, $h_i(t+1)=h_i(t)+C\times c_m$ sinon $h_i(t+1)=h_i(t)$.
 \end{column}
 
 \begin{column}{0.40\textwidth}
@@ -632,19 +643,26 @@ Optimiser le déplacement grace à un algorithme génétique.
 \end{columns}
 \end{frame}
 
-\begin{frame}
-\end{frame}
-
-\begin{frame}
-\end{frame}
-
-\begin{frame}
-Soit $p_m=0.1$ la probabilité de mutation et $c_m=0.1$ le coefficient de mutation, pour tout poids $h_i(t)$ du réseau de neurone à l'itération $t$, on tire $U \sim \mathcal{U}(0, 1)$ et $C \sim \mathcal{U}(-1, 1)$. Si $U<p_m$, $h_i(t+1)=h_i(t)+C\times c_m$ sinon $h_i(t+1)=h_i(t)$.
-\end{frame}
-
 
 \begin{frame}
 \frametitle{Différentes stratégies de visions et de fitness}
+\begin{columns}[T]
+\begin{column}{0.70\textwidth}
+\footnotesize
+\textbf{Point:} blah 
+\vspace{0.5cm}
+\textbf{Point:}  
+\begin{itemize}
+\footnotesize
+\item toto
+\item tutu
+\end{itemize}
+\end{column}
+\begin{column}{0.24\textwidth}
+\begin{figure}
+\centering
+\vspace{-1cm}\hspace{-0.6cm}
+\resizebox{\textwidth}{!}{
 \begin{tikzpicture}
     \begin{axis}[
         width=10cm,
@@ -663,7 +681,14 @@ Soit $p_m=0.1$ la probabilité de mutation et $c_m=0.1$ le coefficient de mutati
         {x^3 * y};
     \end{axis}
 \end{tikzpicture}
+}
+\caption*{\tiny fitness $f(\text{taille}, \text{age})=\text{taille}^3\times \text{age}$}
+\end{figure}
 
+\begin{figure}
+\centering
+\vspace{-1cm}\hspace{-0.6cm}
+\resizebox{\textwidth}{!}{
 \begin{tikzpicture}
     \begin{axis}[
         width=10cm,
@@ -682,16 +707,33 @@ Soit $p_m=0.1$ la probabilité de mutation et $c_m=0.1$ le coefficient de mutati
         {(x*2)^2 * (y^1.5)};
     \end{axis}
 \end{tikzpicture}
+}
+\caption*{\tiny fitness $f(\text{taille}, \text{age})=(2\times\text{taille})^2\times \text{age}^{1.5}$}
+\end{figure}
+
+\begin{figure}
+\vspace{-0.8cm}\hspace{-0.6cm}
+\includegraphics[width=0.97\textwidth]{snake_vision_illustration.png}
+\end{figure}  
+
+\begin{figure}
+\vspace{-1.1cm}\hspace{-0.6cm}
+\includegraphics[width=1\textwidth]{snake_vision_illustration2.png}
+\end{figure}
+
+
+\end{column}
+\end{columns}
 \end{frame}
 
 \begin{frame}
 \frametitle{Résultats de convergences}
-\end{frame}
+\begin{figure}
+\vspace{-1.1cm}\hspace{-0.6cm}
+\includegraphics[width=1\textwidth]{curve_compare_cv.eps}
+\end{figure}
 
-\begin{frame}
-	
 \end{frame}
-
 
 \begin{frame}
 \frametitle{Titre}
@@ -798,6 +840,60 @@ Soit $p_m=0.1$ la probabilité de mutation et $c_m=0.1$ le coefficient de mutati
 
 \begin{frame}
   \frametitle{Conclusion}
+\end{frame}
+
+\section{Annexe I: \textbf{Snake game: code en python}}
+
+\begin{frame}[t,allowframebreaks]{Configuration}{config.py}
+\scriptsize
+\inputminted[mathescape]{python}{../../snake-the-game/config.py}
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Un jeu}{game.py}
+\scriptsize
+\inputminted[mathescape]{python}{../../snake-the-game/game.py}
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{La population: collection de jeux}{game_collection.py}
+\scriptsize
+\inputminted[mathescape]{python}{../../snake-the-game/game_collection.py}
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Algorithme génétique}{genetic_algorithm.py}
+\scriptsize
+\inputminted[mathescape]{python}{../../snake-the-game/genetic_algorithm.py}
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Réseau de neurones}{neural_network.py}
+\scriptsize
+\inputminted[mathescape]{python}{../../snake-the-game/neural_network.py}
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Programme principal}{main.py}
+\scriptsize
+\inputminted[mathescape]{python}{../../snake-the-game/main.py}
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Rejouer le meilleur serpent sauvé}{play_snake.py}
+\scriptsize
+\inputminted[mathescape]{python}{../../snake-the-game/play_snake.py}
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Courbes de convergence}{plot_compare_convergences.py}
+\scriptsize
+\inputminted[mathescape]{python}{../../snake-the-game/plot_compare_convergences.py}
+\end{frame}
+
+\section{Annexe II: \textbf{Snake game: jeu jouable par l'utilisateur}}
+
+\begin{frame}[t,allowframebreaks]{Jeu intéractif}{playable_game.py}
+\scriptsize
+\inputminted[mathescape]{python}{../../snake-the-game/playable-snake/playable_game.py}
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Programme principal du jeu intéractif}{playable_main.py}
+\scriptsize
+\inputminted[mathescape]{python}{../../snake-the-game/playable-snake/playable_main.py}
 \end{frame}
 
 \end{document}
