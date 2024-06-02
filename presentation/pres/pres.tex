@@ -499,6 +499,10 @@ Trop de possibilités.
 Là pas possible.
 Reenforcement learning.
 Choix Algo génétique.
+
+Se déplacer grace à un réseau de neurones.
+Déplacements régis par un réseau de neurones
+Optimiser le déplacement grace à un algorithme génétique.
 \end{frame}
 
 \begin{frame}
@@ -582,15 +586,16 @@ Choix Algo génétique.
 \begin{figure}
 \centering
 \vspace{-1cm}\hspace{-0.6cm}
-%\resizebox{\textwidth}{!}{
-\begin{tikzpicture}[node distance=4mm,
+\resizebox{\textwidth}{!}{
+\begin{tikzpicture}[ampersand replacement=\&,  % <-- Add this line for Beamer compatibility
+  node distance=4mm,
   MTRX/.style={matrix of nodes,
                nodes={draw, minimum size=5.6mm, anchor=center,
                       inner sep=0pt, outer sep=0pt},
                column sep=-\pgflinewidth,
                row sep=2mm},
-  CR/.style={fill=red},  % fill Color Red
-  CY/.style={fill=yellow} % fill Color Yellow
+  CR/.style={fill=red},
+  CY/.style={fill=yellow}
 ]
 
 % left table
@@ -600,8 +605,8 @@ Choix Algo génétique.
               label=below:chromosomes des parents
              ]
 {
-0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 \\
-5 & 8 & 9 & 4 & 2 & 3 & 5 & 7 & 5 & 8 \\
+0 \& 1 \& 2 \& 3 \& 4 \& 5 \& 6 \& 7 \& 8 \& 9 \\
+5 \& 8 \& 9 \& 4 \& 2 \& 3 \& 5 \& 7 \& 5 \& 8 \\
 };
 
 % right table
@@ -609,19 +614,18 @@ Choix Algo génétique.
               label=below:chromosomes des enfants
              ]
 {
- |[CR]| 0 & |[CR]| 1 & |[CY]| 2 & |[CY]| 3 & |[CY]| 4 &
- |[CY]| 5 & |[CY]| 6 & |[CR]| 7 & |[CR]| 8 & |[CR]| 9 \\
- |[CY]| 5 & |[CY]| 8 & |[CR]| 9 & |[CR]| 4 & |[CR]| 2 &
- |[CR]| 3 & |[CR]| 5 & |[CY]| 7 & |[CY]| 5 & |[CY]| 8 \\
+ |[CR]| 0 \& |[CR]| 1 \& |[CY]| 2 \& |[CY]| 3 \& |[CY]| 4 \&
+ |[CY]| 5 \& |[CY]| 6 \& |[CR]| 7 \& |[CR]| 8 \& |[CR]| 9 \\
+ |[CY]| 5 \& |[CY]| 8 \& |[CR]| 9 \& |[CR]| 4 \& |[CR]| 2 \&
+ |[CR]| 3 \& |[CR]| 5 \& |[CY]| 7 \& |[CY]| 5 \& |[CY]| 8 \\
 };
 
 \draw[very thick, blue] ([yshift=2mm]m1-1-2.north east) -- ([yshift=-2mm]m1-2-2.south east);
 \draw[very thick, blue] ([yshift=2mm]m1-1-7.north east) -- ([yshift=-2mm]m1-2-7.south east);
 \draw[double, -{Implies[]}, semithick] (m1.east) -- (m2.west);
-
 \end{tikzpicture}
-%}
-\caption*{\tiny Croisement (crossover)}
+}
+\caption*{\tiny Croisement 2 points (2 points crossover)}
 \end{figure}
 
 \end{column}
