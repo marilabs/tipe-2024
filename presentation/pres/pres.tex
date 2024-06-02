@@ -24,7 +24,7 @@
 \usefonttheme[onlymath]{serif}
 
 \usepackage{xcolor}
-\usepackage{graphicx} 
+\usepackage{graphicx}
 \usepackage{amsmath}
 \usepackage{amssymb} % pour les ensembles NN
 \usepackage{mathrsfs} % pour les hypothèses de récurrences \PP
@@ -90,7 +90,7 @@ text = black}}
 
 \newcommand*\circled[1]{\tikz[baseline=(char.base)]{
             \node[shape=circle,draw,inner sep=1pt] (char) {#1};}}
-            
+
 \usepackage{etoolbox} % for \ifnumcomp
 \usepackage{listofitems} % for \readlist to create arrays
 
@@ -123,6 +123,10 @@ text = black}}
     \begin{pmatrix}\ifx\relax#1\relax\else#1\\\fi#2\\#3\end{pmatrix}
 }
 
+\newcommand*\linvec[3][]{
+    \left(\ifx\relax#1\relax\else#1,\fi#2, #3\right)
+}
+
 \title{TIPE 2024}
 \subtitle{Apprendre à une intelligence artificielle à jouer à Snake en utilisant un algorithme génétique}
 \author{Marilou Bernard de Courville}
@@ -132,7 +136,7 @@ text = black}}
 \setbeamertemplate{footline}[frame number]
 
 \begin{document}
- 
+
 \begin{frame}
     \titlepage
 \end{frame}
@@ -149,7 +153,7 @@ text = black}}
 \framesubtitle{Problématique et pertinence au regard du thème de l'année}
 \begin{itemize}
 \item \textbf{Le jeu de Snake:} piloter un serpent sur une grille dans le but de
-manger des pommes, sans rentrer dans les murs ni se replier sur 
+manger des pommes, sans rentrer dans les murs ni se replier sur
 soi-même.
 \item \textbf{Objectif:} mettre en place une intelligence
 artificielle pouvant jouer au jeu de Snake, apprenant de manière autonome.
@@ -168,9 +172,9 @@ qui s'inspire de l'évolution naturelle.
 \begin{columns}[T]
 \begin{column}{0.70\textwidth}
 \footnotesize
-\textbf{Origines:} borne d'arcade \textit{Blockade}, créée par Gremlin en 1976, popularisé par Nokia en 1997 sur mobile 
+\textbf{Origines:} borne d'arcade \textit{Blockade}, créée par Gremlin en 1976, popularisé par Nokia en 1997 sur mobile
 \vspace{0.5cm}
-\textbf{Règles du jeu:}  
+\textbf{Règles du jeu:}
 \begin{itemize}
 \footnotesize
 \item Le serpent débute avec une longueur initiale sur un échiquier entouré d'un mur et contenant une pomme.
@@ -181,18 +185,23 @@ qui s'inspire de l'évolution naturelle.
 \item Le score du joueur est égal au nombre de pommes mangées.
 \end{itemize}
 \end{column}
-\begin{column}{0.24\textwidth}
+\begin{column}{0.26\textwidth}
 \begin{figure}
 \centering
-\vspace{-1cm}\hspace{-0.6cm}
+\vspace{-1.7cm}
+%\hspace{-0.6cm}
 \includegraphics[width=1\textwidth]{blockade.jpg}
 \end{figure}
+
 \begin{figure}
-\vspace{-0.8cm}\hspace{-0.6cm}
+\vspace{-0.4cm}
+%\hspace{-0.6cm}
 \includegraphics[width=0.97\textwidth]{snake_nokia.png}
-\end{figure}  
+\end{figure}
+
 \begin{figure}
-\vspace{-1.1cm}\hspace{-0.6cm}
+\vspace{-0.4cm}
+%\hspace{-0.6cm}
 \includegraphics[width=1\textwidth]{snake_game.png}
 \end{figure}
 \end{column}
@@ -211,7 +220,7 @@ qui s'inspire de l'évolution naturelle.
 \item Chaque serpent évolue sur son propre plateau de jeu.
 \item Le cerveau de chaque serpent est un réseau de neurones dont les entrées sont des paramètres de visions et dont les sorties fournissent les 4 décisions de directions \keystroke{$\leftarrow$}\keystroke{$\uparrow$}\keystroke{$\downarrow$}\keystroke{$\rightarrow$}.
 \end{itemize}
-\textbf{\'Etapes de l'algorithme:}  
+\textbf{\'Etapes de l'algorithme:}
 \begin{itemize}
 \footnotesize
 \item Initialisation: Initialement tous les réseaux de neurones sont initialisés avec des poids aléatoires.
@@ -221,22 +230,29 @@ qui s'inspire de l'évolution naturelle.
 \item \'Evolution: ces meilleurs serpents sont utilisés pour reconstituer la population totale par croisement et mutation entre deux des meilleurs serpents tirés au hasard.
 \end{itemize}
 \end{column}
-\begin{column}{0.24\textwidth}
+\begin{column}{0.26\textwidth}
 \begin{figure}
 \centering
-\vspace{-1cm}\hspace{-0.6cm}
+\vspace{-1.2cm}
+%\hspace{-0.6cm}
 \includegraphics[width=1\textwidth]{snake_population.png}
+\vspace{-0.7cm}
 \caption*{\tiny Population de serpents}
 \end{figure}
+
 \begin{figure}
 \centering
-\vspace{-1cm}\hspace{-0.6cm}
+\vspace{-0.6cm}
+%\hspace{-0.6cm}
 \includegraphics[width=1\textwidth]{snake_game.png}
+\vspace{-0.7cm}
 \caption*{\tiny Le jeu pour un serpent}
 \end{figure}
+
 \begin{figure}
 \centering
-\vspace{-1cm}\hspace{-0.6cm}
+\vspace{-0.6cm}
+%\hspace{-0.6cm}
 % NEURAL NETWORK
 \resizebox{\textwidth}{!}{
 \begin{tikzpicture}[x=5.4cm,y=1.2cm]
@@ -261,7 +277,7 @@ qui s'inspire de l'évolution naturelle.
                  \index=(\i<\N?int(\i):"\Nstr[\n]");}] in {1,...,\N}{ % loop over nodes
       % NODES
       \node[node \n] (N\lay-\i) at (\x,\y) {$\strut\Cstr[\n]_{\index}$};
-      
+
       % CONNECTIONS
       \ifnumcomp{\lay}{>}{1}{ % connect to previous layer
         \foreach \j in {1,...,\Nnod[\prev]}{ % loop over nodes in previous layer
@@ -272,14 +288,15 @@ qui s'inspire de l'évolution naturelle.
         \draw[connect] (0.5,\y) -- (N\lay-\i); % arrows in
       }
     }
-  }  
+  }
   % LABELS
-  \node[above=3,align=center,mydarkgreen] at (N1-1.north) {Input\\[-0.2em]layer};
-  \node[above=2,align=center,mydarkblue] at (N2-1.north) {Hidden\\[-0.2em]layers};
-  \node[above=2,align=center,mydarkblue] at (N3-1.north) {Hidden\\[-0.2em]layers};
-  \node[above=3,align=center,mydarkred] at (N4-1.north) {Output\\[-0.2em]layer};
+  \node[above=0.5,align=center,mydarkgreen] at (N1-1.north) {Input\\[-0.2em]layer};
+  \node[above=0.8,align=center,mydarkblue] at (N2-1.north) {Hidden\\[-0.2em]layers};
+  \node[above=0.8,align=center,mydarkblue] at (N3-1.north) {Hidden\\[-0.2em]layers};
+  \node[above=1.2,align=center,mydarkred] at (N4-1.north) {Output\\[-0.2em]layer};
 \end{tikzpicture}
 } % End of \resizebox
+\vspace{-0.7cm}
 \caption*{\tiny Cerveau du serpent}
 \end{figure}
 
@@ -288,223 +305,265 @@ qui s'inspire de l'évolution naturelle.
 \end{frame}
 
 \begin{frame}
-\frametitle{Réseaux de neurones}
-\framesubtitle{Fonctionnement et modélisation}   
+  \frametitle{Déplacer le serpent grace à un réseau de neurones}
+  \framesubtitle{Réseau de neurones: fonctionnement et modélisation}
 
-% check https://tex.stackexchange.com/questions/153957/drawing-neural-network-with-tikz
-% check https://tex.stackexchange.com/questions/153957/drawing-neural-network-with-tikz 
-% incompatibility to be treated by https://tex.stackexchange.com/questions/420448/error-illegal-parameter-number-in-definition-of-iterate i.e. replace # by ####
+  \begin{columns}[T]
+  \begin{column}{0.60\textwidth}
+  \footnotesize
 
-TODO dire feedforward
+  \textbf{Idée:} utiliser un réseau de neurones multicouches à propagation avant pour déterminer le mouvement du serpent. Entrées: paramètres de vision. Sorties: les directions \keystroke{$\leftarrow$}\keystroke{$\uparrow$}\keystroke{$\downarrow$}\keystroke{$\rightarrow$}.
 
-\begin{columns}[T]
-\begin{column}{0.70\textwidth}
-\footnotesize
-\textbf{Neurone:} somme pondérée des entrées par un poids synaptique
+  \vspace{0.2cm}
+  \textbf{Modélisation d'un neurone individuel:} effectue la somme pondérée des entrés par un poids synaptique auquel on ajoute un biais. Une fonction d'activation non linéaire est appliquée pour générer la sortie.
+  \begin{align*}
+    %\mathbf{x} & = \colvec[x_1]{\vdots}{x_n}, \mathbf{h} = \colvec[h_1]{\vdots}{h_n} \\
+    \mathbf{x} & = \linvec[x_1]{\cdots}{x_n}^\intercal, \mathbf{h} = \linvec[h_1]{\cdots}{h_n}^\intercal \\
+               y & = \sigma\left(\mathbf{h}^\intercal \mathbf{x} + b\right)  \\
+  \end{align*}
+  \textbf{Généralisation à un réseau multicouches:} modélisation matricielle avec fonction vectorielle $\sigma$
+  \begin{equation*}
+  \resizebox{\textwidth}{!}{
+  $\begin{pmatrix}
+    y_{1} \\[0.3em]
+    y_{2} \\
+    \vdots \\
+    y_{m}
+  \end{pmatrix}
+    =
+    \sigma\left[
+    \begin{pmatrix}
+    h^{(2)}_{1,1} & h^{(2)}_{1,2} & \ldots & h^{(2)}_{1,k} \\
+    h^{(2)}_{2,1} & h^{(2)}_{2,2} & \ldots & h^{(2)}_{2,k} \\
+    \vdots & \vdots & \ddots & \vdots \\
+    h^{(2)}_{m,1} & h^{(2)}_{m,2} & \ldots & h^{(2)}_{m,k}
+    \end{pmatrix}
+    \sigma\left(
+  \begin{pmatrix}
+    h^{(1)}_{1,1} & h^{(1)}_{1,2} & \ldots & h^{(1)}_{1,n} \\
+    h^{(1)}_{2,1} & h^{(1)}_{2,2} & \ldots & h^{(1)}_{2,n} \\
+    \vdots & \vdots & \ddots & \vdots \\
+    h^{(1)}_{k,1} & h^{(1)}_{k,2} & \ldots & h^{(1)}_{k,n}
+    \end{pmatrix}
+    \begin{pmatrix}
+    x_{1} \\[0.3em]
+    x_{2} \\
+    \vdots \\
+    x_{n}
+    \end{pmatrix}
+    +
+    \begin{pmatrix}
+    b_{1}^{(1)} \\[0.3em]
+    b_{2}^{(1)} \\
+    \vdots \\
+    b_{k}^{(1)}
+    \end{pmatrix}
+    \right)
+    +
+    \begin{pmatrix}
+    b_{1}^{(2)} \\[0.3em]
+    b_{2}^{(2)} \\
+    \vdots \\
+    b_{m}^{(2)}
+    \end{pmatrix}
+    \right] 
+  $}
+  \end{equation*}
+  \textbf{Décision de direction:} la direction choisie est celle qui a la plus grande valeur de sortie.
 
-\begin{align*}
-  \mathbf{x} & = \colvec[x_1]{\vdots}{x_n}, \mathbf{h} = \colvec[h_1]{\vdots}{h_n} \\
-             y & = \sigma\left(\mathbf{h}^\intercal \mathbf{x} + b\right)  \\
-\end{align*}
-
-\vspace{0.5cm}
-\textbf{Généralisation à un réseau multicouches:} modélisation matricielle avec fonction vectorielle $\sigma$
-\begin{equation*}
-\resizebox{\textwidth}{!}{
-$\begin{pmatrix}
-  y_{1} \\[0.3em]
-  y_{2} \\
-  \vdots \\
-  y_{m}
-\end{pmatrix}
-  =
-  \sigma\left[
-  \begin{pmatrix}
-  h^{(2)}_{1,1} & h^{(2)}_{1,2} & \ldots & h^{(2)}_{1,k} \\
-  h^{(2)}_{2,1} & h^{(2)}_{2,2} & \ldots & h^{(2)}_{2,k} \\
-  \vdots & \vdots & \ddots & \vdots \\
-  h^{(2)}_{m,1} & h^{(2)}_{m,2} & \ldots & h^{(2)}_{m,k}
-  \end{pmatrix}
-  \sigma\left(
-\begin{pmatrix}
-  h^{(1)}_{1,1} & h^{(1)}_{1,2} & \ldots & h^{(1)}_{1,n} \\
-  h^{(1)}_{2,1} & h^{(1)}_{2,2} & \ldots & h^{(1)}_{2,n} \\
-  \vdots & \vdots & \ddots & \vdots \\
-  h^{(1)}_{k,1} & h^{(1)}_{k,2} & \ldots & h^{(1)}_{k,n}
-  \end{pmatrix}
-  \begin{pmatrix}
-  x_{1} \\[0.3em]
-  x_{2} \\
-  \vdots \\
-  x_{n}
-  \end{pmatrix}
-  +
-  \begin{pmatrix}
-  b_{1}^{(1)} \\[0.3em]
-  b_{2}^{(1)} \\
-  \vdots \\
-  b_{k}^{(1)}
-  \end{pmatrix}
-  \right)
-  +
-  \begin{pmatrix}
-  b_{1}^{(2)} \\[0.3em]
-  b_{2}^{(2)} \\
-  \vdots \\
-  b_{m}^{(2)}
-  \end{pmatrix}
-  \right] 
-$}
-\end{equation*}
-
-TODO: vocabulaire, utilité du biais et de la fonction d'activation
-
-TODO: choix en design du réseau de neurones 
-
-ICI: max des sorties donne la direction
-\end{column}
-\begin{column}{0.4\textwidth}
-\begin{figure}
-\centering
-\vspace{-1cm}\hspace{-0.6cm}
-\resizebox{\textwidth}{!}{
-% neural network pipeline
-\begin{tikzpicture}[
-    % define styles    
-    init/.style={ 
-         draw, 
-         circle, 
-         inner sep=2pt,
-         font=\Huge,
-         join = by -latex
-    },
-    squa/.style={ 
-        font=\Large,
-        join = by -latex
-    }
-]
-% Top chain x1 to w1
-\begin{scope}[start chain=1]
-    \node[on chain=1] at (0,1.5cm)  (x1) {$x_1$};
-    \node[on chain=1,join=by o-latex] (w1) {$h_1$};
-\end{scope}
-% Middle chain x2 to output
-\begin{scope}[start chain=2]
-    \node[on chain=2] (x2) {$x_2$};
-    \node[on chain=2,join=by o-latex] {$h_2$};
-    \node[on chain=2,init] (sigma) {$\displaystyle\Sigma$};
-    \node[on chain=2,squa,label=above:{\parbox{2cm}{\centering fonction \\ d'activation}}]   {$\sigma$};
-    \node[on chain=2,squa,label=above:Sortie,join=by -latex] {$y$};
-\end{scope}
-% Bottom chain x3 to w3
-\begin{scope}[start chain=3]
-    \node[on chain=3] at (0,-1.5cm) 
-    (x3) {$x_n$};
-    \node[on chain=3,label=below:Poids,join=by o-latex]
-    (w3) {$h_n$};
-\end{scope}
-% Bias
-\node[label=above:\parbox{2cm}{\centering Biais \\ $b$}] at (sigma|-w1) (b) {};
-% Arrows joining w1, w3 and b to sigma
-\draw[-latex] (w1) -- (sigma);
-\draw[-latex] (w3) -- (sigma);
-\draw[o-latex] (b) -- (sigma);
-% left hand side brace
-\draw[decorate,decoration={brace,mirror}] (x1.north west) -- node[left=10pt] {Entrées} (x3.south west);
-\end{tikzpicture}
-}
-\caption*{\tiny Fonctionnement d'un neurone}
-\end{figure}
-\begin{figure}
-\centering
-\vspace{-1cm}\hspace{-0.6cm}
-\resizebox{\textwidth}{!}{
-\begin{tikzpicture}
-    \begin{axis}[
-    	legend pos=north west,
-        axis x line=middle,
-        axis y line=middle,
-        x tick label style={/pgf/number format/fixed,
-                            /pgf/number format/fixed zerofill,
-                            /pgf/number format/precision=1},
-        y tick label style={/pgf/number format/fixed,
-                            /pgf/number format/fixed zerofill,
-                            /pgf/number format/precision=1},
-        grid = major,
-        width=16cm,
-        height=8cm,
-        grid style={dashed, gray!30},
-        xmin=-10,     % start the diagram at this x-coordinate
-        xmax= 10,    % end   the diagram at this x-coordinate
-        ymin= 0,     % start the diagram at this y-coordinate
-        ymax= 1,   % end   the diagram at this y-coordinate
-        %axis background/.style={fill=white},
-        xlabel=x,
-        ylabel=y,
-        tick align=outside,
-        enlargelimits=false]
-      % plot the function
-      \addplot[domain=-50:50, blue, ultra thick, samples=500] {1/(1+exp(-x))};
-      \addlegendentry{$\sigma(x)=\frac{1}{1+e^{-x}}$}
-    \end{axis}
-\end{tikzpicture}
-} % End of \resizebox
-\caption*{\tiny Fonction d'activation sigmoide}
-\end{figure}
-\begin{figure}
-\vspace{-2cm}
-\resizebox{\textwidth}{!}{
-% NEURAL NETWORK
-\begin{tikzpicture}[x=2.4cm,y=1.2cm]
-%  \readlist\Nnod{4,3,2} % array of number of nodes per layer
-  \readlist\Nnod{5,4,4,3}
-  \readlist\Nstr{n,m,k} % array of string number of nodes per layer
-  \readlist\Cstr{x,h^{(\prev)},y} % array of coefficient symbol per layer
-  \def\yshift{0.55} % shift last node for dots
-  
-  % LOOP over LAYERS
-  \foreachitem \N \in \Nnod{
-    \def\lay{\Ncnt} % alias of index of current layer
-    \pgfmathsetmacro\prev{int(\Ncnt-1)} % number of previous layer
-    \foreach \i [evaluate={\c=int(\i==\N); \y=\N/2-\i-\c*\yshift;
-                 \x=\lay; \n=\nstyle;
-                 \index=(\i<\N?int(\i):"\Nstr[\n]");}] in {1,...,\N}{ % loop over nodes
-      % NODES
-      \node[node \n] (N\lay-\i) at (\x,\y) {$\strut\Cstr[\n]_{\index}$};
-      
-      % CONNECTIONS
-      \ifnumcomp{\lay}{>}{1}{ % connect to previous layer
-        \foreach \j in {1,...,\Nnod[\prev]}{ % loop over nodes in previous layer
-          \draw[white,line width=1.2,shorten >=1] (N\prev-\j) -- (N\lay-\i);
-          \draw[connect] (N\prev-\j) -- (N\lay-\i);
-        }
-        \ifnum \lay=\Nnodlen
-          \draw[connect] (N\lay-\i) --++ (0.5,0); % arrows out
-        \fi
-      }{
-        \draw[connect] (0.5,\y) -- (N\lay-\i); % arrows in
+  \end{column}
+  \begin{column}{0.4\textwidth}
+  \begin{figure}
+  \vspace{-1cm}\hspace{-0.6cm}
+  \centering
+  \resizebox{\textwidth}{!}{
+  % neural network pipeline
+  \begin{tikzpicture}[
+      % define styles
+      init/.style={
+           draw,
+           circle,
+           inner sep=2pt,
+           font=\Huge,
+           join = by -latex
+      },
+      squa/.style={
+          font=\Large,
+          join = by -latex
       }
-      
-    }
-    \path (N\lay-\N) --++ (0,1+\yshift) node[midway,scale=1.6] {$\vdots$}; % dots
+  ]
+  % Top chain x1 to w1
+  \begin{scope}[start chain=1]
+      \node[on chain=1] at (0,1.5cm)  (x1) {$x_1$};
+      \node[on chain=1,join=by o-latex] (w1) {$h_1$};
+  \end{scope}
+  % Middle chain x2 to output
+  \begin{scope}[start chain=2]
+      \node[on chain=2] (x2) {$x_2$};
+      \node[on chain=2,join=by o-latex] {$h_2$};
+      \node[on chain=2,init] (sigma) {$\displaystyle\Sigma$};
+      \node[on chain=2,squa,label=above:{\parbox{2cm}{\centering fonction \\ d'activation}}]   {$\sigma$};
+      \node[on chain=2,squa,label=above:Sortie,join=by -latex] {$y$};
+  \end{scope}
+  % Bottom chain x3 to w3
+  \begin{scope}[start chain=3]
+      \node[on chain=3] at (0,-1.5cm)
+      (x3) {$x_n$};
+      \node[on chain=3,label=below:Poids,join=by o-latex]
+      (w3) {$h_n$};
+  \end{scope}
+  % Bias
+  \node[label=above:\parbox{2cm}{\centering Biais \\ $b$}] at (sigma|-w1) (b) {};
+  % Arrows joining w1, w3 and b to sigma
+  \draw[-latex] (w1) -- (sigma);
+  \draw[-latex] (w3) -- (sigma);
+  \draw[o-latex] (b) -- (sigma);
+  % left hand side brace
+  \draw[decorate,decoration={brace,mirror}] (x1.north west) -- node[left=10pt] {Entrées} (x3.south west);
+  \end{tikzpicture}
   }
-  
-  % LABELS
-  \node[above=1,align=center,mydarkgreen] at (N1-1.90) {Input\\[-0.2em]layer};
-  \node[above=1,align=center,mydarkblue] at (N2-1.90) {Hidden\\[-0.2em]layers};
-    \node[above=1,align=center,mydarkblue] at (N3-1.90) {Hidden\\[-0.2em]layers};
-  \node[above=1,align=center,mydarkred] at (N\Nnodlen-1.90) {Output\\[-0.2em]layer};
-  
-\end{tikzpicture}
-}
-\caption*{\tiny Réseau de neurones multicouches}
+  \vspace{-0.2cm}
+  \caption*{\tiny Fonctionnement d'un neurone}
+  \end{figure}
+
+  \begin{figure}
+  \vspace{-0.8cm}\hspace{-0.6cm}
+  \centering
+  \resizebox{\textwidth}{!}{
+  \begin{tikzpicture}
+      \begin{axis}[
+        legend pos=north west,
+          axis x line=middle,
+          axis y line=middle,
+          x tick label style={/pgf/number format/fixed,
+                              /pgf/number format/fixed zerofill,
+                              /pgf/number format/precision=1},
+          y tick label style={/pgf/number format/fixed,
+                              /pgf/number format/fixed zerofill,
+                              /pgf/number format/precision=1},
+          grid = major,
+          width=16cm,
+          height=8cm,
+          grid style={dashed, gray!30},
+          xmin=-10,     % start the diagram at this x-coordinate
+          xmax= 10,    % end   the diagram at this x-coordinate
+          ymin= 0,     % start the diagram at this y-coordinate
+          ymax= 1,   % end   the diagram at this y-coordinate
+          %axis background/.style={fill=white},
+          xlabel=x,
+          ylabel=y,
+          tick align=outside,
+          enlargelimits=false]
+        % plot the function
+        \addplot[domain=-50:50, blue, ultra thick, samples=500] {1/(1+exp(-x))};
+        \addlegendentry{$\sigma(x)=\frac{1}{1+e^{-x}}$}
+      \end{axis}
+  \end{tikzpicture}
+  } % End of \resizebox
+  \vspace{-0.2cm}
+  \caption*{\tiny Fonction d'activation sigmoide}
+  \end{figure}
+
+  \begin{figure}
+  \vspace{-0.8cm}\hspace{-0.6cm}
+  \centering
+  \resizebox{\textwidth}{!}{
+  % NEURAL NETWORK
+  \begin{tikzpicture}[x=2.4cm,y=1.2cm]
+  %  \readlist\Nnod{4,3,2} % array of number of nodes per layer
+    \readlist\Nnod{5,4,4,3}
+    \readlist\Nstr{n,m,k} % array of string number of nodes per layer
+    \readlist\Cstr{x,h^{(\prev)},y} % array of coefficient symbol per layer
+    \def\yshift{0.55} % shift last node for dots
+
+    % LOOP over LAYERS
+    \foreachitem \N \in \Nnod{
+      \def\lay{\Ncnt} % alias of index of current layer
+      \pgfmathsetmacro\prev{int(\Ncnt-1)} % number of previous layer
+      \foreach \i [evaluate={\c=int(\i==\N); \y=\N/2-\i-\c*\yshift;
+                   \x=\lay; \n=\nstyle;
+                   \index=(\i<\N?int(\i):"\Nstr[\n]");}] in {1,...,\N}{ % loop over nodes
+        % NODES
+        \node[node \n] (N\lay-\i) at (\x,\y) {$\strut\Cstr[\n]_{\index}$};
+
+        % CONNECTIONS
+        \ifnumcomp{\lay}{>}{1}{ % connect to previous layer
+          \foreach \j in {1,...,\Nnod[\prev]}{ % loop over nodes in previous layer
+            \draw[white,line width=1.2,shorten >=1] (N\prev-\j) -- (N\lay-\i);
+            \draw[connect] (N\prev-\j) -- (N\lay-\i);
+          }
+          \ifnum \lay=\Nnodlen
+            \draw[connect] (N\lay-\i) --++ (0.5,0); % arrows out
+          \fi
+        }{
+          \draw[connect] (0.5,\y) -- (N\lay-\i); % arrows in
+        }
+
+      }
+      \path (N\lay-\N) --++ (0,1+\yshift) node[midway,scale=1.6] {$\vdots$}; % dots
+    }
+
+    % LABELS
+    \node[above=0.5,align=center,mydarkgreen] at (N1-1.90) {Input\\[-0.2em]layer};
+    \node[above=0.8,align=center,mydarkblue] at (N2-1.90) {Hidden\\[-0.2em]layers};
+      \node[above=0.8,align=center,mydarkblue] at (N3-1.90) {Hidden\\[-0.2em]layers};
+    \node[above=1.2,align=center,mydarkred] at (N\Nnodlen-1.90) {Output\\[-0.2em]layer};
+
+  \end{tikzpicture}
+  }
+  \vspace{-0.2cm}
+  \caption*{\tiny Réseau de neurones multicouches}
 \end{figure}
 \end{column}
 \end{columns}
 \end{frame}
 
 \begin{frame}
+\frametitle{Stratégies de visions}
+\begin{columns}[T]
+\begin{column}{0.60\textwidth}
+\footnotesize
+\textbf{Paramètres de vision en entrées du réseau de neurones:} plusieurs stratégies ont été évaluées
+\begin{itemize}
+\footnotesize
+\item \textbf{Stratégie de vision n$\textsuperscript{o}$1:} dans les 8 directions de mouvements, 3 informations par direction (distance à la pomme, distance aux murs, distance à la queue), et la taille du serpent $\rightarrow$ réseau $\left[24, 18, 18, 4\right]$.
+\item \textbf{Stratégie de vision n$\textsuperscript{o}$5:} dans les 4 directions de mouvements, 3 informations par direction (espace libre dans la direction du mouvement, distance de Manhattan à la pomme dans la direction du mouvement, la pomme est dans l'espace libre dans cette direction), et la taille du serpent $\rightarrow$ réseau $\left[13, 12, 12, 4\right]$.
+\end{itemize}
+\textbf{Remarque:} l'avantage le la stratégie n$\textsuperscript{o}$5 est d'avoir la connaissance de la position de la pomme et l'espace libre dans les 4 directions de mouvements pour effectuer une décision informée.
+\end{column}
+\begin{column}{0.40\textwidth}
+
+\begin{figure}
+\vspace{-1.2cm}
+%\hspace{-0.6cm}
+\includegraphics[width=1\textwidth]{snake_vision_illustration2.png}
+\vspace{-0.7cm}
+\caption*{\tiny Stratégie de vision n\textsuperscript{o} 1}
+\end{figure}
+
+\begin{figure}
+\vspace{-0.8cm}
+%\hspace{-0.6cm}
+\includegraphics[width=1\textwidth]{snake_vision_illustration.png}
+\vspace{-0.7cm}
+\caption*{\tiny Stratégie de vision n\textsuperscript{o} 5}
+\end{figure}
+
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}
 TODO
+
+TODO: choix en design du réseau de neurones
+
+ICI: max des sorties donne la direction
+
+vocabulaire: génération (itération)
+
+pousser la simulation à 2000 itérations
+
 Normalement Minimiser erreur quadratique moyenne, mais sorties non déterministes et séquence.
 Descente de gradient.
 Trop de possibilités.
@@ -519,14 +578,23 @@ Optimiser le déplacement grace à un algorithme génétique.
 Serpent point de vie, age et taille
 
 Eviter les boucle infinie: décrémenter les points de vies, restaurer les points de vie dès qu'on mange une pomme, appliquer une pénalité au score en décrémentant age par 50 si mort de vieillesse
+
+* The number of hidden neurons should be between the size of the input layer and the size of the output layer.
+* The number of hidden neurons should be 2/3 the size of the input layer, plus the size of the output layer.
+* The number of hidden neurons should be less than twice the size of the input layer.
+* The number of hidden neurons should be between the size of the input layer and the output layer.
+* The most appropriate number of hidden neurons is sqrt(input layer nodes * output layer nodes)
 \end{frame}
 
 \begin{frame}
 \frametitle{Algorithme d'apprentissage}
-\framesubtitle{Optimisation par algorithme génétique}   
+\framesubtitle{Optimisation par algorithme génétique}
 \begin{columns}[T]
 \begin{column}{0.60\textwidth}
 \footnotesize
+
+chromosome
+
 \textbf{Principe:} faire évoluer une population de réseaux de neurones identiques en sélectionnant les meilleurs éléments au sens d'une fonction de fitness
 
 \textbf{Phase de sélection:} sélection des meilleurs serpents pour qu'ils transmettent leurs gènes à la génération suivante. Deux paires d'individus (parents) sont sélectionnées en fonction de leurs scores de fitness. Les individus ayant un fitness élevé ont plus de chances d'être sélectionnés pour la reproduction.
@@ -538,14 +606,14 @@ Eviter les boucle infinie: décrémenter les points de vies, restaurer les point
       \item Deux paires d'individus (parents) sont choisis en fonction de leurs scores de fitness.
       \item Les individus avec un fitness élevé ont plus de chances d'être sélectionnés pour la reproduction.
     \end{itemize}
-  
+
   \item Croisement
     \begin{itemize}
       \item Choix d'un pourcentage de la population actuelle avec la meilleure valeur de fitness pour effectuer un croisement entre eux, afin de produire le reste de la nouvelle population.
       \item Les meilleurs sont directement inclus dans la nouvelle population.
       \item Utilisation de la technique de croisement uniforme, où un gène est pris au hasard chez l'un des parents et donné au nouvel enfant.
     \end{itemize}
-  
+
   \item Mutation
     \begin{itemize}
       \item Ajustement aléatoire mineur dans le chromosome pour obtenir une nouvelle solution.
@@ -566,7 +634,7 @@ Eviter les boucle infinie: décrémenter les points de vies, restaurer les point
 \resizebox{\textwidth}{!}{
 \tikzset{
   frame/.style={
-    rectangle, draw, 
+    rectangle, draw,
     text width=6em, text centered,
     minimum height=4em,drop shadow,fill=lime!40,
     rounded corners,
@@ -590,7 +658,7 @@ Eviter les boucle infinie: décrémenter les points de vies, restaurer les point
 \path [line] (off) -| node[below,pos=.25, align=center] {Sélection\\ survivants}(pop);
 \path [line] (pop) |- node[above,pos=.75, align=center] {Sélection\\ parents}(parents);
 \end{tikzpicture}
-}	
+}
 \caption*{\tiny Processus itératif}
 \end{figure}
 
@@ -643,15 +711,14 @@ Eviter les boucle infinie: décrémenter les points de vies, restaurer les point
 \end{columns}
 \end{frame}
 
-
 \begin{frame}
-\frametitle{Différentes stratégies de visions et de fitness}
+\frametitle{Différentes fonctions de fitness}
 \begin{columns}[T]
 \begin{column}{0.70\textwidth}
 \footnotesize
-\textbf{Point:} blah 
+\textbf{Point:} blah
 \vspace{0.5cm}
-\textbf{Point:}  
+\textbf{Point:}
 \begin{itemize}
 \footnotesize
 \item toto
@@ -711,17 +778,6 @@ Eviter les boucle infinie: décrémenter les points de vies, restaurer les point
 \caption*{\tiny fitness $f(\text{taille}, \text{age})=(2\times\text{taille})^2\times \text{age}^{1.5}$}
 \end{figure}
 
-\begin{figure}
-\vspace{-0.8cm}\hspace{-0.6cm}
-\includegraphics[width=0.97\textwidth]{snake_vision_illustration.png}
-\end{figure}  
-
-\begin{figure}
-\vspace{-1.1cm}\hspace{-0.6cm}
-\includegraphics[width=1\textwidth]{snake_vision_illustration2.png}
-\end{figure}
-
-
 \end{column}
 \end{columns}
 \end{frame}
@@ -737,13 +793,13 @@ Eviter les boucle infinie: décrémenter les points de vies, restaurer les point
 
 \begin{frame}
 \frametitle{Titre}
-\framesubtitle{Sous-titre}   
+\framesubtitle{Sous-titre}
 \begin{columns}[T]
 \begin{column}{0.70\textwidth}
 \footnotesize
-\textbf{Point:} blah 
+\textbf{Point:} blah
 \vspace{0.5cm}
-\textbf{Point:}  
+\textbf{Point:}
 \begin{itemize}
 \footnotesize
 \item toto
@@ -765,7 +821,7 @@ Eviter les boucle infinie: décrémenter les points de vies, restaurer les point
 \subsection{L'algorithme génétique}
 \begin{frame}
 \frametitle{Le principe de l'algorithme génétique}
-\framesubtitle{Histoire, fonctionnement et applications de l'algorithme}      
+\framesubtitle{Histoire, fonctionnement et applications de l'algorithme}
 \begin{itemize}
 \item \textbf{Origines:} développé par John Holland dans les années 1970
 \item \textbf{Principe:} s'inspirer de l'évolution naturelle pour
@@ -773,9 +829,9 @@ Eviter les boucle infinie: décrémenter les points de vies, restaurer les point
 \item \textbf{Fonctionnement:} on part d'une population aléatoire, on les fait évoluer en appliquant des opérateurs
     génétiques (sélection, crossover, mutation)
 \item \textbf{Applications:} problème du voyageur de commerce, problèmes de décision (optimisation dans les banques), NASA et Sony pour des déplacements de robots, automatisation des tests d'application par Motorola
-    
+
 \item \textbf{Ici:} application ludique, on applique cet algorithme à un réseau neuronal pour qu'il joue à Snake
-\end{itemize}  
+\end{itemize}
 \end{frame}
 
 \subsection{Les réseaux neuronaux}
@@ -784,15 +840,15 @@ Eviter les boucle infinie: décrémenter les points de vies, restaurer les point
 
   \frametitle{Le principe des réseaux neuronnaux}
   \framesubtitle{Histoire et principe}
-  
+
   \begin{itemize}
-    
+
     \item \textbf{Origines:} Warren S. McCulloch et Walter Pitts, \textit{A logical calculus of the ideas immanent in nervous activity}, 1943, compare les neurones à seuil binaire à la logique booléenne puis Frank Rosenblatt, \textit{The perceptron: a probabilistic model for information storage and organization in the brain}, 1958, introduit la notion de poids
-    
+
     \item \textbf{Principe:} 3 couches de n\oe uds qui transmettent des informations à la couche suivante suivant s'ils sont activés et leurs poids, s'appuient sur l'entraînement pour être plus précis
-    
+
     \item \textbf{Fonctionnement:} on code des "yeux" au serpent, ie. on prend en compte ce qu'il voit devant lui, et le réseau neuronal va analyser ces données pour que le serpent tourne ou pas.
-    
+
     \item \textbf{Lien avec l'algorithme génétique:} les différents poids associés aux neurones vont être transmis ou non aux enfants
 
   \end{itemize}
@@ -803,17 +859,17 @@ Eviter les boucle infinie: décrémenter les points de vies, restaurer les point
 
 
   \subsection{L'algorithme génétique}
-  
+
   \begin{frame}
     \frametitle{Le fonctionnement de l'algorithme génétique}
   \end{frame}
-  
+
   \begin{frame}
     \frametitle{Le Théorème de Holland}
   \end{frame}
-  
+
   \subsection{Les réseaux neuronaux}
-  
+
 
 \section{L'algorithme appliqué au jeu de Snake}
 
@@ -821,7 +877,7 @@ Eviter les boucle infinie: décrémenter les points de vies, restaurer les point
 
 \begin{frame}
   \frametitle{Comment algorithme génétique et réseaux de neurones sont reliés}
-  
+
 \end{frame}
 
 \subsection{L'importance d'une fonction de fitness: trouver la bonne stratégie}
@@ -842,6 +898,8 @@ Eviter les boucle infinie: décrémenter les points de vies, restaurer les point
   \frametitle{Conclusion}
 \end{frame}
 
+\end{document}
+
 \section{Annexe I: \textbf{Snake game: code en python}}
 
 \begin{frame}[t,allowframebreaks]{Configuration}{config.py}
@@ -854,17 +912,17 @@ Eviter les boucle infinie: décrémenter les points de vies, restaurer les point
 \inputminted[mathescape]{python}{../../snake-the-game/game.py}
 \end{frame}
 
-\begin{frame}[t,allowframebreaks]{La population: collection de jeux}{game_collection.py}
+\begin{frame}[t,allowframebreaks]{La population: collection de jeux}{game\_collection.py}
 \scriptsize
 \inputminted[mathescape]{python}{../../snake-the-game/game_collection.py}
 \end{frame}
 
-\begin{frame}[t,allowframebreaks]{Algorithme génétique}{genetic_algorithm.py}
+\begin{frame}[t,allowframebreaks]{Algorithme génétique}{genetic\_algorithm.py}
 \scriptsize
 \inputminted[mathescape]{python}{../../snake-the-game/genetic_algorithm.py}
 \end{frame}
 
-\begin{frame}[t,allowframebreaks]{Réseau de neurones}{neural_network.py}
+\begin{frame}[t,allowframebreaks]{Réseau de neurones}{neural\_network.py}
 \scriptsize
 \inputminted[mathescape]{python}{../../snake-the-game/neural_network.py}
 \end{frame}
@@ -874,24 +932,24 @@ Eviter les boucle infinie: décrémenter les points de vies, restaurer les point
 \inputminted[mathescape]{python}{../../snake-the-game/main.py}
 \end{frame}
 
-\begin{frame}[t,allowframebreaks]{Rejouer le meilleur serpent sauvé}{play_snake.py}
+\begin{frame}[t,allowframebreaks]{Rejouer le meilleur serpent sauvé}{play\_snake.py}
 \scriptsize
 \inputminted[mathescape]{python}{../../snake-the-game/play_snake.py}
 \end{frame}
 
-\begin{frame}[t,allowframebreaks]{Courbes de convergence}{plot_compare_convergences.py}
+\begin{frame}[t,allowframebreaks]{Courbes de convergence}{plot\_compare\_convergences.py}
 \scriptsize
 \inputminted[mathescape]{python}{../../snake-the-game/plot_compare_convergences.py}
 \end{frame}
 
 \section{Annexe II: \textbf{Snake game: jeu jouable par l'utilisateur}}
 
-\begin{frame}[t,allowframebreaks]{Jeu intéractif}{playable_game.py}
+\begin{frame}[t,allowframebreaks]{Jeu intéractif}{playable\_game.py}
 \scriptsize
 \inputminted[mathescape]{python}{../../snake-the-game/playable-snake/playable_game.py}
 \end{frame}
 
-\begin{frame}[t,allowframebreaks]{Programme principal du jeu intéractif}{playable_main.py}
+\begin{frame}[t,allowframebreaks]{Programme principal du jeu intéractif}{playable\_main.py}
 \scriptsize
 \inputminted[mathescape]{python}{../../snake-the-game/playable-snake/playable_main.py}
 \end{frame}
