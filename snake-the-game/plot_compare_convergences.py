@@ -18,7 +18,7 @@ color2 = 'tab:red'
 color3 = 'tab:green'
 color4 = 'tab:orange'
 
-ax1.set_xlabel('Itération')
+ax1.set_xlabel('Génération')
 ax1.set_ylabel('Fitness maximum', color=color1)
 ax1.set_yscale('log')
 # Key change: Use iterations as the x-axis data
@@ -43,7 +43,7 @@ ax1.grid(axis='x', linestyle='--')  # Gridlines on the x-axis (iterations)
 ax2.grid(axis='y', linestyle='--')  # You need to add it for the second axis too
 
 # Additional styling improvement
-plt.title('Fitness et pommes mangées fct. itération')
+plt.title('Fitness et pommes mangées fct. nombre de générations')
 fig.tight_layout()
 plt.savefig("curve_compare_cv.svg")
 plt.savefig("curve_compare_cv.eps")
