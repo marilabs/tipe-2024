@@ -1,12 +1,7 @@
 import pygame
 import os
-import signal
-import sys
 import pickle
 from game import Game
-import math
-import matplotlib.pyplot as plt
-import numpy as np
 import config as c
 from neural_network import NeuralNetwork
 
