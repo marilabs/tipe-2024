@@ -56,7 +56,8 @@ def save_curves(filename):
 
 def restore_curves(filename):
     with open(filename, 'rb') as f:
-        (max_fitness, min_fitness, avg_fitness, max_apple_eaten, min_apple_eaten, avg_apple_eaten, max_snake_length) = pickle.load(f)
+        data = pickle.load(f)
+    return data
 
 def save_and_exit(signal, frame):
     if c.SAVE:
