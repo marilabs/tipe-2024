@@ -9,6 +9,9 @@
 \usepackage{pgfplots}
 
 %\usepackage{algpseudocode}
+%\usepackage{algorithm2e}
+\usepackage{algorithmicx}
+\usepackage{frpseudocode}
 
 \usepackage{caption}
 
@@ -558,7 +561,8 @@ qui s'inspire de l'évolution naturelle.
 %\vspace{-0.2cm}
 \caption*{\tiny Croisement 2 points (2 points crossover)}
 \end{figure}
-
+\footnotesize
+\textbf{Remarque:} il est garantit que la fitness est améliorée à chaque génération mais pas la convergence vers un optimum global sauf statistiquement.
 \end{column}
 \end{columns}
 \end{frame}
@@ -653,6 +657,9 @@ qui s'inspire de l'évolution naturelle.
   \frametitle{Algorithme d'entrainement résultant}
   \framesubtitle{Entrainement par algorithme générique d'un réseau de neurones pour jouer à Snake}
   \footnotesize
+
+
+
   \textbf{Principe:}
   \begin{itemize}
   \footnotesize
@@ -663,7 +670,7 @@ qui s'inspire de l'évolution naturelle.
   \textbf{\'Etapes de l'algorithme:}
   \begin{itemize}
   \footnotesize
-  \item Initialisation: Initialement tous les réseaux de neurones sont initialisés avec des poids aléatoires.
+  \item Initialisation: tous les réseaux de neurones sont initialisés avec des poids aléatoires.
   \item Itération: Tous les serpents de la population évoluent dans le jeu jusqu'à ce qu'ils meurent en heurtant un mur, mangeant leur queue ou s'il n'ont pas manger de pomme pendant un nombre donné d'itérations (pour éviter les boucles infinies).
   \item Mesure: \`A tout jeu on associe un "score" ou fonction de fitness dépendant de sa taille et du nombre de mouvements total effectués sans mourir
   \item Sélection: seul un pourcentage des meilleurs serpents sont retenus (ici $10\%$) au sens du score de fitness.
@@ -745,7 +752,7 @@ qui s'inspire de l'évolution naturelle.
 \end{frame}
 
 \begin{frame}
-\frametitle{Résultats de convergences}
+\frametitle{Résultats de convergence}
 \begin{figure}
 \vspace{-0.3cm}
 %\hspace{-0.6cm}
@@ -757,7 +764,7 @@ qui s'inspire de l'évolution naturelle.
 \begin{itemize}
 \footnotesize
 \item \textbf{Observations:} la stratégie de vision n$\textsuperscript{o}$5 converge plus rapidement que la stratégie n$\textsuperscript{o}$1, et atteint un score de fitness plus élevé.
-\item \textbf{Interprétation:} la stratégie de vision n$\textsuperscript{o}$5 fournit au serpent des informations plus pertinents pour localiser la pomme et anticiper ses mouvements sans se retrouver prisonier de ses mouvements.
+\item \textbf{Interprétation:} la stratégie de vision n$\textsuperscript{o}$5 fournit au serpent des informations plus pertinentes pour localiser la pomme et anticiper ses mouvements sans s'en retrouver prisonnier.
 \end{itemize}
 
 \end{frame}
@@ -970,3 +977,59 @@ qui s'inspire de l'évolution naturelle.
 \end{frame}
 
 \end{document}
+
+
+\begin{frame}
+  \frametitle{Algorithme d'entrainement résultant}
+  \framesubtitle{Entrainement par algorithme générique d'un réseau de neurones pour jouer à Snake}
+  \footnotesize
+
+  \begin{algorithmic}
+    \State $i \gets 10$
+    \If{$i\geq 5$}
+        \State $i \gets i-1$
+    \Else
+        \If{$i\leq 3$}
+            \State $i \gets i+2$
+        \EndIf
+    \EndIf
+    \end{algorithmic}
+    
+  \textbf{Principe:}
+  \begin{itemize}
+  \footnotesize
+  \item On part d'une large population composée de $484=22^2$ serpents.
+  \item Chaque serpent évolue sur son propre plateau de jeu.
+  \item Le cerveau de chaque serpent est un réseau de neurones dont les entrées sont des paramètres de visions et dont les sorties fournissent les 4 décisions de directions \keystroke{$\leftarrow$}\keystroke{$\uparrow$}\keystroke{$\downarrow$}\keystroke{$\rightarrow$}.
+  \end{itemize}
+  \textbf{\'Etapes de l'algorithme:}
+  \begin{itemize}
+  \footnotesize
+  \item Initialisation: tous les réseaux de neurones sont initialisés avec des poids aléatoires.
+  \item Itération: Tous les serpents de la population évoluent dans le jeu jusqu'à ce qu'ils meurent en heurtant un mur, mangeant leur queue ou s'il n'ont pas manger de pomme pendant un nombre donné d'itérations (pour éviter les boucles infinies).
+  \item Mesure: \`A tout jeu on associe un "score" ou fonction de fitness dépendant de sa taille et du nombre de mouvements total effectués sans mourir
+  \item Sélection: seul un pourcentage des meilleurs serpents sont retenus (ici $10\%$) au sens du score de fitness.
+  \item \'Evolution: ces meilleurs serpents sont utilisés pour reconstituer la population totale par croisement et mutation entre deux des meilleurs serpents tirés au hasard.
+  \end{itemize}}
+\end{frame}
+
+
+\begin{algorithmic}[0]
+  \Require Un graphe $G=(V,A)$, $V$ sommets, $A$ arêtes
+  \Require Un noeud source $s$
+  \Ensure $d$ tableau des plus court chemins de $s$ vers $v\in V$
+  \ForAll {$v \in V[G]$}
+      \State $d[v] \leftarrow +\infty$, $\kw{père}[v] \leftarrow \kw{None}$
+  \EndFor
+  \State $d[s] \leftarrow 0$, $S \leftarrow \kw{$\emptyset$}$, $Q \leftarrow V[G]$
+  \While{$Q \neq \emptyset$}
+      \State $u \leftarrow  \kw{Extrait}_{\kw{Min}}(Q)$
+      \State $S \leftarrow  S \cup \{u\}$
+      \ForAll{arête $(u,v)$ d'origine $u$}
+      \If{$d[u] + w(u,v) < d[v]$}
+          \State $d[v] \leftarrow d[u] + w(u,v)$, $\kw{père}[v] := u$
+      \EndIf
+      \EndFor
+  \EndWhile
+  \end{algorithmic}
+  \end{column}
