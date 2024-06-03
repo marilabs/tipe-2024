@@ -209,102 +209,6 @@ qui s'inspire de l'évolution naturelle.
 \end{frame}
 
 \begin{frame}
-\begin{columns}[T]
-\begin{column}{0.70\textwidth}
-\frametitle{Algorithme du jeu}
-\footnotesize
-\textbf{Principe:}
-\begin{itemize}
-\footnotesize
-\item On part d'une large population composée de $484=22^2$ serpents.
-\item Chaque serpent évolue sur son propre plateau de jeu.
-\item Le cerveau de chaque serpent est un réseau de neurones dont les entrées sont des paramètres de visions et dont les sorties fournissent les 4 décisions de directions \keystroke{$\leftarrow$}\keystroke{$\uparrow$}\keystroke{$\downarrow$}\keystroke{$\rightarrow$}.
-\end{itemize}
-\textbf{\'Etapes de l'algorithme:}
-\begin{itemize}
-\footnotesize
-\item Initialisation: Initialement tous les réseaux de neurones sont initialisés avec des poids aléatoires.
-\item Itération: Tous les serpents de la population évoluent dans le jeu jusqu'à ce qu'ils meurent en heurtant un mur, mangeant leur queue ou s'il n'ont pas manger de pomme pendant un nombre donné d'itérations (pour éviter les boucles infinies).
-\item Mesure: \`A tout jeu on associe un "score" ou fonction de fitness dépendant de sa taille et du nombre de mouvements total effectués sans mourir
-\item Sélection: seul un pourcentage des meilleurs serpents sont retenus (ici $10\%$) au sens du score de fitness.
-\item \'Evolution: ces meilleurs serpents sont utilisés pour reconstituer la population totale par croisement et mutation entre deux des meilleurs serpents tirés au hasard.
-\end{itemize}
-\end{column}
-\begin{column}{0.26\textwidth}
-\begin{figure}
-\centering
-\vspace{-1.2cm}
-%\hspace{-0.6cm}
-\includegraphics[width=1\textwidth]{snake_population.png}
-\vspace{-0.7cm}
-\caption*{\tiny Population de serpents}
-\end{figure}
-
-\begin{figure}
-\centering
-\vspace{-0.6cm}
-%\hspace{-0.6cm}
-\includegraphics[width=1\textwidth]{snake_game.png}
-\vspace{-0.7cm}
-\caption*{\tiny Le jeu pour un serpent}
-\end{figure}
-
-\begin{figure}
-\centering
-\vspace{-0.6cm}
-%\hspace{-0.6cm}
-% NEURAL NETWORK
-\resizebox{\textwidth}{!}{
-\begin{tikzpicture}[x=5.4cm,y=1.2cm]
-  \readlist\Nnod{13,12,12,4}
-  \readlist\Nstr{13,12,4} % array of string number of nodes per layer
-  \readlist\Cstr{x,h^{(\prev)},y} % array of coefficient symbol per layer
-  \def\yshift{0.55} % shift last node for dots
-  % Calculate the maximum number of nodes in any layer
-  \def\maxN{0}
-  \foreachitem \X \in \Nnod{
-    \ifnum\X>\maxN
-      \xdef\maxN{\X}
-    \fi
-  }
-  % LOOP over LAYERS
-  \foreachitem \N \in \Nnod{
-    \def\lay{\Ncnt} % alias of index of current layer
-    \pgfmathsetmacro\prev{int(\Ncnt-1)} % number of previous layer
-    \pgfmathsetmacro\midY{(\N-1)/2} % midpoint of the current layer
-    \foreach \i [evaluate={\c=int(\i==\N); \y=\midY-\i; % Adjusted \y calculation
-                 \x=\lay; \n=\nstyle;
-                 \index=(\i<\N?int(\i):"\Nstr[\n]");}] in {1,...,\N}{ % loop over nodes
-      % NODES
-      \node[node \n] (N\lay-\i) at (\x,\y) {$\strut\Cstr[\n]_{\index}$};
-
-      % CONNECTIONS
-      \ifnumcomp{\lay}{>}{1}{ % connect to previous layer
-        \foreach \j in {1,...,\Nnod[\prev]}{ % loop over nodes in previous layer
-          \draw[white,line width=1.2,shorten >=1] (N\prev-\j) -- (N\lay-\i);
-          \draw[connect] (N\prev-\j) -- (N\lay-\i);
-        }
-      }{
-        \draw[connect] (0.5,\y) -- (N\lay-\i); % arrows in
-      }
-    }
-  }
-  % LABELS
-  \node[above=0.5,align=center,mydarkgreen] at (N1-1.north) {Input\\[-0.2em]layer};
-  \node[above=0.8,align=center,mydarkblue] at (N2-1.north) {Hidden\\[-0.2em]layers};
-  \node[above=0.8,align=center,mydarkblue] at (N3-1.north) {Hidden\\[-0.2em]layers};
-  \node[above=1.2,align=center,mydarkred] at (N4-1.north) {Output\\[-0.2em]layer};
-\end{tikzpicture}
-} % End of \resizebox
-\vspace{-0.7cm}
-\caption*{\tiny Cerveau du serpent}
-\end{figure}
-
-\end{column}
-\end{columns}
-\end{frame}
-
-\begin{frame}
   \frametitle{Déplacer le serpent grace à un réseau de neurones}
   \framesubtitle{Réseau de neurones: fonctionnement et modélisation}
 
@@ -554,83 +458,28 @@ qui s'inspire de l'évolution naturelle.
 \end{frame}
 
 \begin{frame}
-TODO
-
-TODO: choix en design du réseau de neurones
-
-ICI: max des sorties donne la direction
-
-vocabulaire: génération (itération)
-
-pousser la simulation à 2000 itérations
-
-Normalement Minimiser erreur quadratique moyenne, mais sorties non déterministes et séquence.
-Descente de gradient.
-Trop de possibilités.
-Là pas possible.
-Reenforcement learning.
-Choix Algo génétique.
-
-Se déplacer grace à un réseau de neurones.
-Déplacements régis par un réseau de neurones
-Optimiser le déplacement grace à un algorithme génétique.
-
-Serpent point de vie, age et taille
-
-Eviter les boucle infinie: décrémenter les points de vies, restaurer les points de vie dès qu'on mange une pomme, appliquer une pénalité au score en décrémentant age par 50 si mort de vieillesse
-
-* The number of hidden neurons should be between the size of the input layer and the size of the output layer.
-* The number of hidden neurons should be 2/3 the size of the input layer, plus the size of the output layer.
-* The number of hidden neurons should be less than twice the size of the input layer.
-* The number of hidden neurons should be between the size of the input layer and the output layer.
-* The most appropriate number of hidden neurons is sqrt(input layer nodes * output layer nodes)
-\end{frame}
-
-\begin{frame}
-\frametitle{Algorithme d'apprentissage}
-\framesubtitle{Optimisation par algorithme génétique}
+\frametitle{Optimiser les décisions du serpent}
+\framesubtitle{Entrainement par algorithme génétique}
 \begin{columns}[T]
 \begin{column}{0.60\textwidth}
 \footnotesize
 
-chromosome
-
-\textbf{Principe:} faire évoluer une population de réseaux de neurones identiques en sélectionnant les meilleurs éléments au sens d'une fonction de fitness
-
-\textbf{Phase de sélection:} sélection des meilleurs serpents pour qu'ils transmettent leurs gènes à la génération suivante. Deux paires d'individus (parents) sont sélectionnées en fonction de leurs scores de fitness. Les individus ayant un fitness élevé ont plus de chances d'être sélectionnés pour la reproduction.
-
+\textbf{Principe:} approche évolutionniste d'une population de réseaux de neurones par algorithme génétique opérant en 3 phases:
 \begin{itemize}
-  \item Sélection
-    \begin{itemize}
-      \item Sélection des individus les plus adaptés pour transmettre leurs gènes à la génération suivante.
-      \item Deux paires d'individus (parents) sont choisis en fonction de leurs scores de fitness.
-      \item Les individus avec un fitness élevé ont plus de chances d'être sélectionnés pour la reproduction.
-    \end{itemize}
-
-  \item Croisement
-    \begin{itemize}
-      \item Choix d'un pourcentage de la population actuelle avec la meilleure valeur de fitness pour effectuer un croisement entre eux, afin de produire le reste de la nouvelle population.
-      \item Les meilleurs sont directement inclus dans la nouvelle population.
-      \item Utilisation de la technique de croisement uniforme, où un gène est pris au hasard chez l'un des parents et donné au nouvel enfant.
-    \end{itemize}
-
-  \item Mutation
-    \begin{itemize}
-      \item Ajustement aléatoire mineur dans le chromosome pour obtenir une nouvelle solution.
-      \item Utilisée pour maintenir et introduire de la diversité dans la population génétique.
-      \item Appliquée avec une faible probabilité (pm) pour éviter une recherche aléatoire.
-      \item La mutation est essentielle à la convergence de l'algorithme génétique, contrairement au croisement.
-    \end{itemize}
+  \item Sélection: choix d'une portion individus les plus adaptés pour la reproduction, basé sur leur score de fitness (ici $20\%$).
+  \item Croisement: parmis ces serpents sélectionnés, aléatoirement par paires (parents), ils sont recombinés à l'aide d'une technique de croisement en K points (ici K=2) pour recomposer la population totale.
+  \item Mutation: ajustement mineur aléatoire dans le chromosome de chaque serpent pour maintenir la diversité.
 \end{itemize}
-\vspace{0.5cm}
-\textbf{Mutation:} soit $p_m=0.1$ la probabilité de mutation et $c_m=0.1$ le coefficient de mutation, pour tout poids $h_i(t)$ du réseau de neurone à l'itération $t$, on tire $U \sim \mathcal{U}(0, 1)$ et $C \sim \mathcal{U}(-1, 1)$. Si $U<p_m$, $h_i(t+1)=h_i(t)+C\times c_m$ sinon $h_i(t+1)=h_i(t)$.
+
+\textbf{Formalisation de la mutation:} $p_m=0.1$ probabilité de mutation, $c_m=0.1$ le coefficient de mutation, $\forall h_i(t)$ à l'itération $t$, on tire $U \sim \mathcal{U}(0, 1)$ et $C \sim \mathcal{U}(-1, 1)$. Si $U<p_m$, $h_i(t+1)=h_i(t)+C\times c_m$ sinon $h_i(t+1)=h_i(t)$.
 \end{column}
 
 \begin{column}{0.40\textwidth}
 
 \begin{figure}
 \centering
-\vspace{-1cm}\hspace{-0.6cm}
+%\vspace{-1cm}
+%\hspace{-0.6cm}
 \resizebox{\textwidth}{!}{
 \tikzset{
   frame/.style={
@@ -659,12 +508,14 @@ chromosome
 \path [line] (pop) |- node[above,pos=.75, align=center] {Sélection\\ parents}(parents);
 \end{tikzpicture}
 }
+%\vspace{-0.2cm}
 \caption*{\tiny Processus itératif}
 \end{figure}
 
 \begin{figure}
 \centering
-\vspace{-1cm}\hspace{-0.6cm}
+%\vspace{-0.7cm}
+%\hspace{-0.6cm}
 \resizebox{\textwidth}{!}{
 \begin{tikzpicture}[ampersand replacement=\&,  % <-- Add this line for Beamer compatibility
   node distance=4mm,
@@ -704,6 +555,7 @@ chromosome
 \draw[double, -{Implies[]}, semithick] (m1.east) -- (m2.west);
 \end{tikzpicture}
 }
+%\vspace{-0.2cm}
 \caption*{\tiny Croisement 2 points (2 points crossover)}
 \end{figure}
 
@@ -712,23 +564,33 @@ chromosome
 \end{frame}
 
 \begin{frame}
-\frametitle{Différentes fonctions de fitness}
+\frametitle{\'Evaluation de la performance d'un serpent}
+\framesubtitle{Différentes fonctions de fitness}
 \begin{columns}[T]
-\begin{column}{0.70\textwidth}
+\begin{column}{0.60\textwidth}
 \footnotesize
-\textbf{Point:} blah
-\vspace{0.5cm}
-\textbf{Point:}
+\textbf{Objectif:} mesurer la performance d'un serpent pour guider la sélection de l'algorithme génétique.
+
+\vspace{0.1cm}
+\textbf{Paramètres:} taille du serpent (pommes mangées) et âge (mouvements effectués) à la fin du jeu.
+
+\vspace{0.1cm}
+\textbf{Fonction de fitness:} met l'accent sur les paramètres à optimiser $\rightarrow$ $f_1$ et $f_2$ favorisent la croissance et la longétivité des serpents.
 \begin{itemize}
-\footnotesize
-\item toto
-\item tutu
+  \footnotesize
+  \item $f_1(\text{taille}, \text{age})=\text{taille}^3\times \text{age}$
+  \item $f_2(\text{taille}, \text{age})=(2\times\text{taille})^2\times \text{age}^{1.5}$
+  \item \textbf{\'Eviter les boucle infinies:} un nombre de points de vie est attribué à chaque serpent, décrémenté à chaque mouvement et réinitialisé à chaque pomme mangée. \'A 0, le serpent meurt et son âge est pénalisé dans le calcul de la fitness.
+  \item Utilisation de $f_1$ au début du jeu pour favoriser la croissance rapide, puis passage à $f_2$ qui valorise plus la survie du serpent pour manger plus de pommes.
 \end{itemize}
+
 \end{column}
-\begin{column}{0.24\textwidth}
+
+\begin{column}{0.40\textwidth}
 \begin{figure}
 \centering
-\vspace{-1cm}\hspace{-0.6cm}
+\vspace{-0.5cm}
+%\hspace{-0.6cm}
 \resizebox{\textwidth}{!}{
 \begin{tikzpicture}
     \begin{axis}[
@@ -749,12 +611,14 @@ chromosome
     \end{axis}
 \end{tikzpicture}
 }
+\vspace{-0.4cm}
 \caption*{\tiny fitness $f(\text{taille}, \text{age})=\text{taille}^3\times \text{age}$}
 \end{figure}
 
 \begin{figure}
 \centering
-\vspace{-1cm}\hspace{-0.6cm}
+\vspace{-0.5cm}
+%\hspace{-0.6cm}
 \resizebox{\textwidth}{!}{
 \begin{tikzpicture}
     \begin{axis}[
@@ -775,6 +639,7 @@ chromosome
     \end{axis}
 \end{tikzpicture}
 }
+\vspace{-0.4cm}
 \caption*{\tiny fitness $f(\text{taille}, \text{age})=(2\times\text{taille})^2\times \text{age}^{1.5}$}
 \end{figure}
 
@@ -783,12 +648,122 @@ chromosome
 \end{frame}
 
 \begin{frame}
+  \begin{columns}[T]
+  \begin{column}{0.70\textwidth}
+  \frametitle{Algorithme d'entrainement résultant}
+  \framesubtitle{Entrainement par algorithme générique d'un réseau de neurones pour jouer à Snake}
+  \footnotesize
+  \textbf{Principe:}
+  \begin{itemize}
+  \footnotesize
+  \item On part d'une large population composée de $484=22^2$ serpents.
+  \item Chaque serpent évolue sur son propre plateau de jeu.
+  \item Le cerveau de chaque serpent est un réseau de neurones dont les entrées sont des paramètres de visions et dont les sorties fournissent les 4 décisions de directions \keystroke{$\leftarrow$}\keystroke{$\uparrow$}\keystroke{$\downarrow$}\keystroke{$\rightarrow$}.
+  \end{itemize}
+  \textbf{\'Etapes de l'algorithme:}
+  \begin{itemize}
+  \footnotesize
+  \item Initialisation: Initialement tous les réseaux de neurones sont initialisés avec des poids aléatoires.
+  \item Itération: Tous les serpents de la population évoluent dans le jeu jusqu'à ce qu'ils meurent en heurtant un mur, mangeant leur queue ou s'il n'ont pas manger de pomme pendant un nombre donné d'itérations (pour éviter les boucles infinies).
+  \item Mesure: \`A tout jeu on associe un "score" ou fonction de fitness dépendant de sa taille et du nombre de mouvements total effectués sans mourir
+  \item Sélection: seul un pourcentage des meilleurs serpents sont retenus (ici $10\%$) au sens du score de fitness.
+  \item \'Evolution: ces meilleurs serpents sont utilisés pour reconstituer la population totale par croisement et mutation entre deux des meilleurs serpents tirés au hasard.
+  \end{itemize}
+  \end{column}
+  \begin{column}{0.26\textwidth}
+  \begin{figure}
+  \centering
+  \vspace{-1.2cm}
+  %\hspace{-0.6cm}
+  \includegraphics[width=1\textwidth]{snake_population.png}
+  \vspace{-0.7cm}
+  \caption*{\tiny Population de serpents}
+  \end{figure}
+
+  \begin{figure}
+  \centering
+  \vspace{-0.6cm}
+  %\hspace{-0.6cm}
+  \includegraphics[width=1\textwidth]{snake_game.png}
+  \vspace{-0.7cm}
+  \caption*{\tiny Le jeu pour un serpent}
+  \end{figure}
+
+  \begin{figure}
+  \centering
+  \vspace{-0.6cm}
+  %\hspace{-0.6cm}
+  % NEURAL NETWORK
+  \resizebox{\textwidth}{!}{
+  \begin{tikzpicture}[x=5.4cm,y=1.2cm]
+    \readlist\Nnod{13,12,12,4}
+    \readlist\Nstr{13,12,4} % array of string number of nodes per layer
+    \readlist\Cstr{x,h^{(\prev)},y} % array of coefficient symbol per layer
+    \def\yshift{0.55} % shift last node for dots
+    % Calculate the maximum number of nodes in any layer
+    \def\maxN{0}
+    \foreachitem \X \in \Nnod{
+      \ifnum\X>\maxN
+        \xdef\maxN{\X}
+      \fi
+    }
+    % LOOP over LAYERS
+    \foreachitem \N \in \Nnod{
+      \def\lay{\Ncnt} % alias of index of current layer
+      \pgfmathsetmacro\prev{int(\Ncnt-1)} % number of previous layer
+      \pgfmathsetmacro\midY{(\N-1)/2} % midpoint of the current layer
+      \foreach \i [evaluate={\c=int(\i==\N); \y=\midY-\i; % Adjusted \y calculation
+                   \x=\lay; \n=\nstyle;
+                   \index=(\i<\N?int(\i):"\Nstr[\n]");}] in {1,...,\N}{ % loop over nodes
+        % NODES
+        \node[node \n] (N\lay-\i) at (\x,\y) {$\strut\Cstr[\n]_{\index}$};
+
+        % CONNECTIONS
+        \ifnumcomp{\lay}{>}{1}{ % connect to previous layer
+          \foreach \j in {1,...,\Nnod[\prev]}{ % loop over nodes in previous layer
+            \draw[white,line width=1.2,shorten >=1] (N\prev-\j) -- (N\lay-\i);
+            \draw[connect] (N\prev-\j) -- (N\lay-\i);
+          }
+        }{
+          \draw[connect] (0.5,\y) -- (N\lay-\i); % arrows in
+        }
+      }
+    }
+    % LABELS
+    \node[above=0.5,align=center,mydarkgreen] at (N1-1.north) {Input\\[-0.2em]layer};
+    \node[above=0.8,align=center,mydarkblue] at (N2-1.north) {Hidden\\[-0.2em]layers};
+    \node[above=0.8,align=center,mydarkblue] at (N3-1.north) {Hidden\\[-0.2em]layers};
+    \node[above=1.2,align=center,mydarkred] at (N4-1.north) {Output\\[-0.2em]layer};
+  \end{tikzpicture}
+  } % End of \resizebox
+  \vspace{-0.7cm}
+  \caption*{\tiny Cerveau du serpent stratégie n$\textsuperscript{o}$5}
+  \end{figure}
+
+  \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
 \frametitle{Résultats de convergences}
 \begin{figure}
-\vspace{-1.1cm}\hspace{-0.6cm}
-\includegraphics[width=1\textwidth]{curve_compare_cv.eps}
+\vspace{-0.3cm}
+%\hspace{-0.6cm}
+\includegraphics[width=0.8\textwidth]{curve_compare_cv.eps}
+\vspace{-0.4cm}
+\caption*{\tiny Convergence des stratégies de vision n$\textsuperscript{o}$1 et n$\textsuperscript{o}$5}
 \end{figure}
+\vspace{-0.4cm}
+\begin{itemize}
+\footnotesize
+\item \textbf{Observations:} la stratégie de vision n$\textsuperscript{o}$5 converge plus rapidement que la stratégie n$\textsuperscript{o}$1, et atteint un score de fitness plus élevé.
+\item \textbf{Interprétation:} la stratégie de vision n$\textsuperscript{o}$5 fournit au serpent des informations plus pertinents pour localiser la pomme et anticiper ses mouvements sans se retrouver prisonier de ses mouvements.
+\end{itemize}
 
+\end{frame}
+
+\begin{frame}
+\frametitle{Améliorations et astuces}
 \end{frame}
 
 \begin{frame}
@@ -816,6 +791,46 @@ chromosome
 \end{column}
 \end{columns}
 \end{frame}
+
+\begin{frame}
+  TODO
+
+  Breadth-First Search (BFS) algorithm to count free spaces in each direction
+  Optimisation pour recalculer récursivement à chaque itération
+
+  Mutation is necessary to prevent the population from being stuck at a local maximum.
+
+  chrommosome enfant
+
+  TODO: choix en design du réseau de neurones
+
+  ICI: max des sorties donne la direction
+
+  vocabulaire: génération (itération)
+
+  pousser la simulation à 2000 itérations
+
+  Normalement Minimiser erreur quadratique moyenne, mais sorties non déterministes et séquence.
+  Descente de gradient.
+  Trop de possibilités.
+  Là pas possible.
+  Reenforcement learning.
+  Choix Algo génétique.
+
+  Se déplacer grace à un réseau de neurones.
+  Déplacements régis par un réseau de neurones
+  Optimiser le déplacement grace à un algorithme génétique.
+
+  Serpent point de vie, age et taille
+
+  Eviter les boucle infinie: décrémenter les points de vies, restaurer les points de vie dès qu'on mange une pomme, appliquer une pénalité au score en décrémentant age par 50 si mort de vieillesse
+
+  * The number of hidden neurons should be between the size of the input layer and the size of the output layer.
+  * The number of hidden neurons should be 2/3 the size of the input layer, plus the size of the output layer.
+  * The number of hidden neurons should be less than twice the size of the input layer.
+  * The number of hidden neurons should be between the size of the input layer and the output layer.
+  * The most appropriate number of hidden neurons is sqrt(input layer nodes * output layer nodes)
+  \end{frame}
 
 
 \subsection{L'algorithme génétique}
