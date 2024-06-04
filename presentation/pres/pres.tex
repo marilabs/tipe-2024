@@ -576,14 +576,20 @@ $\rightarrow$ réseau $\left[13, 12, 12, 4\right]$.
 \begin{column}{0.60\textwidth}
 \footnotesize
 
-\textbf{Principe:} approche évolutionniste d'une population de réseaux de neurones par algorithme génétique opérant en 3 phases:
+\textbf{Principe:} approche évolutionniste d'une population de réseaux de neurones par algorithme génétique
 \begin{itemize}
-  \item \textbf{Sélection:} choix d'une portion individus les plus adaptés pour la reproduction, basé sur leur score de fitness (ici $20\%$).
-  \item \textbf{Croisement:} parmis ces serpents sélectionnés, aléatoirement par paires (parents), ils sont recombinés à l'aide d'une technique de croisement en K points (ici K=2) pour recomposer la population totale.
-  \item \textbf{Mutation:} ajustement mineur aléatoire dans le chromosome de chaque serpent pour maintenir la diversité.
+  \item \textbf{Sélection} des individus les plus adaptés pour la reproduction, basée sur leur score de fitness (ici $20\%$).
+  \item \textbf{Croisement} des serpents sélectionnés par paires aléatoire (parents) en K points (ici K=2) pour recomposer la population totale en générant des enfants.
+  \item \textbf{Mutation} par ajustement mineur aléatoire dans le chromosome de chaque serpent pour maintenir la diversité.
 \end{itemize}
 
-\textbf{Formalisation de la mutation:} $p_m=0.1$ probabilité de mutation, $c_m=0.1$ le coefficient de mutation, $\forall h_i(t)$ à l'itération $t$, on tire $U \sim \mathcal{U}(0, 1)$ et $C \sim \mathcal{U}(-1, 1)$. Si $U<p_m$, $h_i(t+1)=h_i(t)+C\times c_m$ sinon $h_i(t+1)=h_i(t)$.
+\textbf{Formalisation de la mutation:}
+\begin{itemize}
+\item $p_m=0.1$ probabilité de mutation,
+\item $c_m=0.1$ le coefficient de mutation,
+\item $\forall h_i(t)$ à l'itération $t$, on tire $U \sim \mathcal{U}(0, 1)$ et $C \sim \mathcal{U}(-1, 1)$
+\item Si $U<p_m$, $h_i(t+1)=h_i(t)+C\times c_m$ sinon $h_i(t+1)=h_i(t)$.
+\end{itemize}
 \end{column}
 
 \begin{column}{0.40\textwidth}
@@ -671,7 +677,7 @@ $\rightarrow$ réseau $\left[13, 12, 12, 4\right]$.
 \caption*{\tiny Croisement 2 points (2 points crossover)}
 \end{figure}
 \footnotesize
-\textbf{Remarque:} il est garantit que la fitness est améliorée à chaque génération mais pas la convergence vers un optimum global sauf statistiquement.
+\textbf{Remarque:} L'amélioration de la fitness est garantie à chaque génération mais pas la convergence vers un optimum global.
 \end{column}
 \end{columns}
 \end{frame}
@@ -683,8 +689,8 @@ $\rightarrow$ réseau $\left[13, 12, 12, 4\right]$.
 \begin{frame}
   \begin{columns}[T]
   \begin{column}{0.70\textwidth}
-  \frametitle{Algorithme d'entrainement résultant}
-  \framesubtitle{Entrainement par algorithme générique\\ d'un réseau de neurones pour jouer à Snake}
+  \frametitle{Algorithme d'optimisation}
+  \framesubtitle{Entrainement du réseau de neurones\\ par algorithme génétique}
   \begin{algorithmic}
     \tiny
       \State Population $\mathcal{P}$ $\gets 484=22^2$ serpents
@@ -789,7 +795,7 @@ $\rightarrow$ réseau $\left[13, 12, 12, 4\right]$.
   \end{tikzpicture}
   } % End of \resizebox
   \vspace{-0.7cm}
-  \caption*{\tiny Cerveau du serpent stratégie n$\textsuperscript{o}$5}
+  \caption*{\tiny Cerveau du serpent stratégie n$\textsuperscript{o}$2}
   \end{figure}
 
   \end{column}
@@ -805,13 +811,13 @@ $\rightarrow$ réseau $\left[13, 12, 12, 4\right]$.
 %\hspace{-0.6cm}
 \includegraphics[width=0.8\textwidth]{curve_compare_cv.eps}
 \vspace{-0.4cm}
-\caption*{\tiny Convergence des stratégies de vision n$\textsuperscript{o}$1 et n$\textsuperscript{o}$5}
+\caption*{\tiny Convergence des stratégies de vision n$\textsuperscript{o}$1 et n$\textsuperscript{o}$2}
 \end{figure}
 \vspace{-0.4cm}
 \begin{itemize}
 \footnotesize
-\item \textbf{Observations:} la stratégie de vision n$\textsuperscript{o}$5 converge plus rapidement que la stratégie n$\textsuperscript{o}$1, et atteint un score de fitness plus élevé.
-\item \textbf{Interprétation:} la stratégie de vision n$\textsuperscript{o}$5 fournit au serpent des informations plus pertinentes pour localiser la pomme et anticiper ses mouvements sans s'en retrouver prisonnier.
+\item \textbf{Observation:} la stratégie de vision n$\textsuperscript{o}$2 converge plus rapidement que la stratégie n$\textsuperscript{o}$1, et atteint un score de fitness plus élevé.
+\item \textbf{Interprétation:} la stratégie de vision n$\textsuperscript{o}$2 fournit au serpent des informations plus pertinentes pour localiser et atteindre la pomme.
 \end{itemize}
 
 \end{frame}
@@ -822,14 +828,17 @@ $\rightarrow$ réseau $\left[13, 12, 12, 4\right]$.
 \frametitle{Conclusion}
 \footnotesize
 \begin{itemize}
-\item Deux outils mathématiques de modélisation et d'optimisation mis en \oe{}uvre pour résoudre le problème de jeu de Snake:
+\footnotesize
+\item Deux outils mathématiques de modélisation et d'optimisation sont mis en \oe{}uvre pour jouer de manière autonome au jeu de Snake:
   \begin{itemize}
-  \item des réseaux de neurones afin de prendre des décisions de mouvements dont les entrées sont des informations visuelles du serpent sur le jeu.
-  \item des algorithmes génétiques pour optimiser les poids et biais des réseaux de neurones.
+  \footnotesize
+  \item Des réseaux de neurones afin de prendre des décisions de mouvement, dont les entrées sont des informations visuelles du serpent sur son environnement.
+  \item Des algorithmes génétiques pour optimiser les poids et biais des réseaux de neurones.
   \end{itemize}
 \item Différentes stratégies de vision et de fitness ont été proposées et discutées en terme de pertinence et performance.
-\item Des pistes d'améliorations restent à explorer:
+\item Des pistes d'amélioration restent à explorer:
   \begin{itemize}
+  \footnotesize
   \item Optimisation de la conception du réseau de neurones.
   \item Utiliser une fonction de fitness dynamique pour mieux prendre en compte les contraintes de la taille du serpent.
   \end{itemize}
@@ -839,7 +848,7 @@ $\rightarrow$ réseau $\left[13, 12, 12, 4\right]$.
 \end{itemize}
 \end{frame}
 
-\end{document}
+%\end{document}
 
 \section{Annexe I: \textbf{Snake game: code en python}}
 
@@ -1045,7 +1054,7 @@ $\rightarrow$ réseau $\left[13, 12, 12, 4\right]$.
 \end{document}
 
 \begin{frame}
-  \frametitle{Algorithme d'entrainement résultant}
+  \frametitle{Algorithme d'optimisation résultant}
   \framesubtitle{Entrainement par algorithme générique d'un réseau de neurones pour jouer à Snake}
   \footnotesize
   \textbf{Principe:}

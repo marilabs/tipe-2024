@@ -23,7 +23,7 @@ ax1.set_ylabel('Fitness maximum', color=color1)
 ax1.set_yscale('log')
 # Key change: Use iterations as the x-axis data
 ax1.plot(range(1, max_iterations + 1), max_fitness1[1:max_iterations + 1], color=color2, label='Fitness strat 1')
-ax1.plot(range(1, max_iterations + 1), max_fitness5[1:max_iterations + 1], color=color1, label='Fitness strat 5')
+ax1.plot(range(1, max_iterations + 1), max_fitness5[1:max_iterations + 1], color=color1, label='Fitness strat 2')
 ax1.tick_params(axis='y', labelcolor=color1)
 
 ax1.legend(loc='upper left')  # Add a legend for clarity
@@ -33,7 +33,7 @@ ax2 = ax1.twinx()
 ax2.set_ylabel('Pommes mangées maximum', color=color3)
 # Key change: Use iterations as the x-axis data
 ax2.plot(range(1, max_iterations + 1), max_apple_eaten1[1:max_iterations + 1], color=color4, label='Pommes strat 1')
-ax2.plot(range(1, max_iterations + 1), max_apple_eaten5[1:max_iterations + 1], color=color3, label='Pommes strat 5')
+ax2.plot(range(1, max_iterations + 1), max_apple_eaten5[1:max_iterations + 1], color=color3, label='Pommes strat 2')
 ax2.tick_params(axis='y', labelcolor=color3)
 
 ax2.legend(loc='lower right')
