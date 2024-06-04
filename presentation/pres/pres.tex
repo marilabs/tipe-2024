@@ -8,15 +8,13 @@
 
 \usepackage{pgfplots}
 
-%\usepackage{algpseudocode}
-%\usepackage{algorithm2e}
 \usepackage{algorithmicx}
-\usepackage{frpseudocode}
+\usepackage{algpseudocode}
+
+%\usepackage{frpseudocode}
 
 \usepackage{caption}
 
-%\usepackage{algorithm}
-%\usepackage{algorithmic}
 \newcommand{\kw}[1]{\textrm{#1}}
 
 \usepackage{forest}
@@ -159,9 +157,10 @@ text = black}}
 manger des pommes, sans rentrer dans les murs ni se replier sur
 soi-même.
 \item \textbf{Objectif:} mettre en place une intelligence
-artificielle pouvant jouer au jeu de Snake, apprenant de manière autonome.
+artificielle pouvant jouer efficacement au jeu de Snake, apprenant de manière autonome.
 \item \textbf{Le moyen d'y parvenir:} utiliser un algorithme génétique,
-qui s'inspire de l'évolution naturelle.
+qui s'inspire de l'évolution naturelle pour entraîner un réseau de neurone opérant les décisions de mouvement
+du serpent dont les entrées sont des paramètres de vision.
 \end{itemize}
 \end{frame}
 
@@ -656,26 +655,42 @@ qui s'inspire de l'évolution naturelle.
   \begin{column}{0.70\textwidth}
   \frametitle{Algorithme d'entrainement résultant}
   \framesubtitle{Entrainement par algorithme générique d'un réseau de neurones pour jouer à Snake}
-  \footnotesize
+  \begin{algorithmic}
+    \tiny
+      \State Population $\mathcal{P}$ $\gets 484=22^2$ serpents
+      \ForAll{serpent $s \in \mathcal{P}$}
+          \State cerveau $c$ de $s$ $\gets$ réseau neurones $\left[13, 12, 12, 4\right]$, poids \& biais aléatoires
+      \EndFor
+      \State génération $g \gets 0$
+      \While{$g < 2000$}
+          \For{serpent $s \in \mathcal{P}$}
+              \State age $a_s \gets 0$ de $s$, longeur $l_s \gets 3$, point de vie $v_s \gets 50$
+              \State vivant $\gets$ true, $\text{mortVieillesse}_s \gets$ false
+              \While{vivant}
+                  \State $\text{position}_s \gets$ avance direction $=c\left[\text{vision}_s\left(\text{position}_s\right)\right]$
+                  \If{$\text{position}_s \in \left\{\text{mur}, \text{queue}\right\} \text{or } v_s<0$}
+                      \State $\text{vivant}_s =$ false
+                  \Else
+                      \State $a_s \gets a_s + 1$
+                  \EndIf
+                  \If{$\text{position}_s \in \left\{\text{pomme}\right\}}$
+                      \State $l_s \gets l_s + 1$, $v_s \gets 50$
+                      \State regénère pomme emplacement aléatoire accessible
+                  \Else
+                      \State $v_s \gets v_s - 1$
+                  \EndIf
+                  \If{$v_s<0$}
+                      \State $\text{mortVieillesse}_s \gets$ true
+                  \EndIf
+              \EndWhile
+              \State $\text{fitness}_s \gets f_s(l_s, a_s, \text{mortVieillesse}_s)$
+          \EndFor
+          \State $S \gets 20\%$ des meilleurs serpents au sens de $\text{fitness}_s$
+          \State $\mathcal{P} \gets S \bigcup \text{mutations}\left[\text{croisements}(S)\right]$
+          \State $g \gets g + 1$
+      \EndWhile
+  \end{algorithmic}
 
-
-
-  \textbf{Principe:}
-  \begin{itemize}
-  \footnotesize
-  \item On part d'une large population composée de $484=22^2$ serpents.
-  \item Chaque serpent évolue sur son propre plateau de jeu.
-  \item Le cerveau de chaque serpent est un réseau de neurones dont les entrées sont des paramètres de visions et dont les sorties fournissent les 4 décisions de directions \keystroke{$\leftarrow$}\keystroke{$\uparrow$}\keystroke{$\downarrow$}\keystroke{$\rightarrow$}.
-  \end{itemize}
-  \textbf{\'Etapes de l'algorithme:}
-  \begin{itemize}
-  \footnotesize
-  \item Initialisation: tous les réseaux de neurones sont initialisés avec des poids aléatoires.
-  \item Itération: Tous les serpents de la population évoluent dans le jeu jusqu'à ce qu'ils meurent en heurtant un mur, mangeant leur queue ou s'il n'ont pas manger de pomme pendant un nombre donné d'itérations (pour éviter les boucles infinies).
-  \item Mesure: \`A tout jeu on associe un "score" ou fonction de fitness dépendant de sa taille et du nombre de mouvements total effectués sans mourir
-  \item Sélection: seul un pourcentage des meilleurs serpents sont retenus (ici $10\%$) au sens du score de fitness.
-  \item \'Evolution: ces meilleurs serpents sont utilisés pour reconstituer la population totale par croisement et mutation entre deux des meilleurs serpents tirés au hasard.
-  \end{itemize}
   \end{column}
   \begin{column}{0.26\textwidth}
   \begin{figure}
@@ -768,6 +783,70 @@ qui s'inspire de l'évolution naturelle.
 \end{itemize}
 
 \end{frame}
+
+\section{Conclusion}
+
+\begin{frame}
+  \frametitle{Conclusion}
+\end{frame}
+
+%\end{document}
+
+\section{Annexe I: \textbf{Snake game: code en python}}
+
+\begin{frame}[t,allowframebreaks]{Configuration}{config.py}
+\scriptsize
+\inputminted[mathescape]{python}{../../snake-the-game/config.py}
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Un jeu}{game.py}
+\scriptsize
+\inputminted[mathescape]{python}{../../snake-the-game/game.py}
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{La population: collection de jeux}{game\_collection.py}
+\scriptsize
+\inputminted[mathescape]{python}{../../snake-the-game/game_collection.py}
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Algorithme génétique}{genetic\_algorithm.py}
+\scriptsize
+\inputminted[mathescape]{python}{../../snake-the-game/genetic_algorithm.py}
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Réseau de neurones}{neural\_network.py}
+\scriptsize
+\inputminted[mathescape]{python}{../../snake-the-game/neural_network.py}
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Programme principal}{main.py}
+\scriptsize
+\inputminted[mathescape]{python}{../../snake-the-game/main.py}
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Rejouer le meilleur serpent sauvé}{play\_snake.py}
+\scriptsize
+\inputminted[mathescape]{python}{../../snake-the-game/play_snake.py}
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Courbes de convergence}{plot\_compare\_convergences.py}
+\scriptsize
+\inputminted[mathescape]{python}{../../snake-the-game/plot_compare_convergences.py}
+\end{frame}
+
+\section{Annexe II: \textbf{Snake game: jeu jouable par l'utilisateur}}
+
+\begin{frame}[t,allowframebreaks]{Jeu intéractif}{playable\_game.py}
+\scriptsize
+\inputminted[mathescape]{python}{../../snake-the-game/playable-snake/playable_game.py}
+\end{frame}
+
+\begin{frame}[t,allowframebreaks]{Programme principal du jeu intéractif}{playable\_main.py}
+\scriptsize
+\inputminted[mathescape]{python}{../../snake-the-game/playable-snake/playable_main.py}
+\end{frame}
+
+\end{document}
 
 \begin{frame}
 \frametitle{Améliorations et astuces}
@@ -914,87 +993,12 @@ qui s'inspire de l'évolution naturelle.
   \frametitle{Les résultats}
 \end{frame}
 
-\section{Conclusion}
-
-\begin{frame}
-  \frametitle{Conclusion}
-\end{frame}
-
 \end{document}
-
-\section{Annexe I: \textbf{Snake game: code en python}}
-
-\begin{frame}[t,allowframebreaks]{Configuration}{config.py}
-\scriptsize
-\inputminted[mathescape]{python}{../../snake-the-game/config.py}
-\end{frame}
-
-\begin{frame}[t,allowframebreaks]{Un jeu}{game.py}
-\scriptsize
-\inputminted[mathescape]{python}{../../snake-the-game/game.py}
-\end{frame}
-
-\begin{frame}[t,allowframebreaks]{La population: collection de jeux}{game\_collection.py}
-\scriptsize
-\inputminted[mathescape]{python}{../../snake-the-game/game_collection.py}
-\end{frame}
-
-\begin{frame}[t,allowframebreaks]{Algorithme génétique}{genetic\_algorithm.py}
-\scriptsize
-\inputminted[mathescape]{python}{../../snake-the-game/genetic_algorithm.py}
-\end{frame}
-
-\begin{frame}[t,allowframebreaks]{Réseau de neurones}{neural\_network.py}
-\scriptsize
-\inputminted[mathescape]{python}{../../snake-the-game/neural_network.py}
-\end{frame}
-
-\begin{frame}[t,allowframebreaks]{Programme principal}{main.py}
-\scriptsize
-\inputminted[mathescape]{python}{../../snake-the-game/main.py}
-\end{frame}
-
-\begin{frame}[t,allowframebreaks]{Rejouer le meilleur serpent sauvé}{play\_snake.py}
-\scriptsize
-\inputminted[mathescape]{python}{../../snake-the-game/play_snake.py}
-\end{frame}
-
-\begin{frame}[t,allowframebreaks]{Courbes de convergence}{plot\_compare\_convergences.py}
-\scriptsize
-\inputminted[mathescape]{python}{../../snake-the-game/plot_compare_convergences.py}
-\end{frame}
-
-\section{Annexe II: \textbf{Snake game: jeu jouable par l'utilisateur}}
-
-\begin{frame}[t,allowframebreaks]{Jeu intéractif}{playable\_game.py}
-\scriptsize
-\inputminted[mathescape]{python}{../../snake-the-game/playable-snake/playable_game.py}
-\end{frame}
-
-\begin{frame}[t,allowframebreaks]{Programme principal du jeu intéractif}{playable\_main.py}
-\scriptsize
-\inputminted[mathescape]{python}{../../snake-the-game/playable-snake/playable_main.py}
-\end{frame}
-
-\end{document}
-
 
 \begin{frame}
   \frametitle{Algorithme d'entrainement résultant}
   \framesubtitle{Entrainement par algorithme générique d'un réseau de neurones pour jouer à Snake}
   \footnotesize
-
-  \begin{algorithmic}
-    \State $i \gets 10$
-    \If{$i\geq 5$}
-        \State $i \gets i-1$
-    \Else
-        \If{$i\leq 3$}
-            \State $i \gets i+2$
-        \EndIf
-    \EndIf
-    \end{algorithmic}
-    
   \textbf{Principe:}
   \begin{itemize}
   \footnotesize
@@ -1012,24 +1016,3 @@ qui s'inspire de l'évolution naturelle.
   \item \'Evolution: ces meilleurs serpents sont utilisés pour reconstituer la population totale par croisement et mutation entre deux des meilleurs serpents tirés au hasard.
   \end{itemize}}
 \end{frame}
-
-
-\begin{algorithmic}[0]
-  \Require Un graphe $G=(V,A)$, $V$ sommets, $A$ arêtes
-  \Require Un noeud source $s$
-  \Ensure $d$ tableau des plus court chemins de $s$ vers $v\in V$
-  \ForAll {$v \in V[G]$}
-      \State $d[v] \leftarrow +\infty$, $\kw{père}[v] \leftarrow \kw{None}$
-  \EndFor
-  \State $d[s] \leftarrow 0$, $S \leftarrow \kw{$\emptyset$}$, $Q \leftarrow V[G]$
-  \While{$Q \neq \emptyset$}
-      \State $u \leftarrow  \kw{Extrait}_{\kw{Min}}(Q)$
-      \State $S \leftarrow  S \cup \{u\}$
-      \ForAll{arête $(u,v)$ d'origine $u$}
-      \If{$d[u] + w(u,v) < d[v]$}
-          \State $d[v] \leftarrow d[u] + w(u,v)$, $\kw{père}[v] := u$
-      \EndIf
-      \EndFor
-  \EndWhile
-  \end{algorithmic}
-  \end{column}
