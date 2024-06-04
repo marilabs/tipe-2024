@@ -147,7 +147,9 @@ text = black}}
 %    \tableofcontents
 %\end{frame}
 
-\section{Introduction}
+\section{Principe}
+
+\subsection{Introduction}
 
 \begin{frame}
 \frametitle{Introduction}
@@ -163,8 +165,6 @@ qui s'inspire de l'évolution naturelle pour entraîner un réseau de neurone op
 du serpent dont les entrées sont des paramètres de vision.
 \end{itemize}
 \end{frame}
-
-\section{Le principe}
 
 \subsection{Le jeu de Snake}
 
@@ -209,6 +209,10 @@ du serpent dont les entrées sont des paramètres de vision.
 \end{column}
 \end{columns}
 \end{frame}
+
+\section{Réseau de neurones}
+
+\subsection{Cerveau du serpent}
 
 \begin{frame}
   \frametitle{Déplacer le serpent grace à un réseau de neurones}
@@ -424,6 +428,8 @@ du serpent dont les entrées sont des paramètres de vision.
 \end{columns}
 \end{frame}
 
+\subsection{Entrées: vision}
+
 \begin{frame}
 \frametitle{Stratégies de visions}
 \begin{columns}[T]
@@ -458,6 +464,10 @@ du serpent dont les entrées sont des paramètres de vision.
 \end{column}
 \end{columns}
 \end{frame}
+
+\section{Algorithme génétique}
+
+\subsection{Optimisation}
 
 \begin{frame}
 \frametitle{Optimiser les décisions du serpent}
@@ -566,6 +576,8 @@ du serpent dont les entrées sont des paramètres de vision.
 \end{columns}
 \end{frame}
 
+\subsection{Fitness}
+
 \begin{frame}
 \frametitle{\'Evaluation de la performance d'un serpent}
 \framesubtitle{Différentes fonctions de fitness}
@@ -650,11 +662,15 @@ du serpent dont les entrées sont des paramètres de vision.
 \end{columns}
 \end{frame}
 
+\section{Simulations}
+
+\subsection{Algorithme}
+
 \begin{frame}
   \begin{columns}[T]
   \begin{column}{0.70\textwidth}
   \frametitle{Algorithme d'entrainement résultant}
-  \framesubtitle{Entrainement par algorithme générique d'un réseau de neurones pour jouer à Snake}
+  \framesubtitle{Entrainement par algorithme générique\\ d'un réseau de neurones pour jouer à Snake}
   \begin{algorithmic}
     \tiny
       \State Population $\mathcal{P}$ $\gets 484=22^2$ serpents
@@ -695,7 +711,7 @@ du serpent dont les entrées sont des paramètres de vision.
   \begin{column}{0.26\textwidth}
   \begin{figure}
   \centering
-  \vspace{-1.2cm}
+  \vspace{-2.0cm}
   %\hspace{-0.6cm}
   \includegraphics[width=1\textwidth]{snake_population.png}
   \vspace{-0.7cm}
@@ -766,6 +782,8 @@ du serpent dont les entrées sont des paramètres de vision.
   \end{columns}
 \end{frame}
 
+\subsection{Convergence}
+
 \begin{frame}
 \frametitle{Résultats de convergence}
 \begin{figure}
@@ -787,10 +805,24 @@ du serpent dont les entrées sont des paramètres de vision.
 \section{Conclusion}
 
 \begin{frame}
-  \frametitle{Conclusion}
+\frametitle{Conclusion}
+\begin{itemize}
+\item Deux problématiques urbaines traitées:
+  \begin{itemize}
+  \item optimisation d'un trajet en métro
+  \item parcours touristique efficace d'une ville en empruntant différents types de chemins
+  \end{itemize}
+\item Pertinence de la modélisation des problèmes urbains par des graphes pour les résoudre.
+\item Application de la recherche opérationnelle pour trouver une solution.
+  \begin{itemize}
+  \item Optimisation fait intervenir un grand nombre de contraintes
+résultant en des problèmes combinatoires complexes sans solution analytique.
+  \item Importance du choix des algorithmes et structures de données pour obtenir des solutions pratiques efficaces.
+  \end{itemize}
+\end{itemize}
 \end{frame}
 
-%\end{document}
+\end{document}
 
 \section{Annexe I: \textbf{Snake game: code en python}}
 
