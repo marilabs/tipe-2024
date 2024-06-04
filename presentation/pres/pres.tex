@@ -174,14 +174,15 @@ du serpent dont les entrées sont des paramètres de vision.
 \begin{columns}[T]
 \begin{column}{0.70\textwidth}
 \footnotesize
-\textbf{Origines:} borne d'arcade \textit{Blockade}, créée par Gremlin en 1976, popularisé par Nokia en 1997 sur mobile
-\vspace{0.5cm}
+\textbf{Origine:} borne d'arcade \textit{Blockade}, créée par Gremlin en 1976, popularisé par Nokia en 1997 sur mobile
+
+\vspace{0.2cm}
 \textbf{Règles du jeu:}
 \begin{itemize}
 \footnotesize
-\item Le serpent débute avec une longueur initiale sur un échiquier entouré d'un mur et contenant une pomme.
+\item Le serpent débute avec une longueur initiale donnée sur un échiquier entouré d'un mur et contenant une pomme.
 \item L'objectif est de le faire grandir en mangeant des pommes.
-\item Chaque pomme consommée augmente sa longueur d'une unité et en fait apparaître une nouvelle à un emplacement aléatoire.
+\item Chaque pomme consommée augmente sa longueur d'une unité et fait apparaître une nouvelle pomme à un emplacement aléatoire.
 \item Le joueur dirige le serpent à l'aide des touches directionnelles du clavier \keystroke{$\leftarrow$}\keystroke{$\uparrow$}\keystroke{$\downarrow$}\keystroke{$\rightarrow$}.
 \item Le jeu se termine si le serpent heurte un mur ou son propre corps.
 \item Le score du joueur est égal au nombre de pommes mangées.
@@ -212,25 +213,31 @@ du serpent dont les entrées sont des paramètres de vision.
 
 \section{Réseau de neurones}
 
-\subsection{Cerveau du serpent}
+\subsection{Déplacement}
 
 \begin{frame}
-  \frametitle{Déplacer le serpent grace à un réseau de neurones}
-  \framesubtitle{Réseau de neurones: fonctionnement et modélisation}
+  \frametitle{Déplacer le serpent}
+  \framesubtitle{Grâce à un réseau de neurones}
 
   \begin{columns}[T]
   \begin{column}{0.60\textwidth}
   \footnotesize
 
-  \textbf{Idée:} utiliser un réseau de neurones multicouches à propagation avant pour déterminer le mouvement du serpent. Entrées: paramètres de vision. Sorties: les directions \keystroke{$\leftarrow$}\keystroke{$\uparrow$}\keystroke{$\downarrow$}\keystroke{$\rightarrow$}.
+  \textbf{Idée:} utiliser un réseau de neurones multicouches à propagation avant pour déterminer le mouvement du serpent.
+  \begin{itemize}
+    \item Entrées: paramètres de vision.
+    \item Sorties: les directions \keystroke{$\leftarrow$}\keystroke{$\uparrow$}\keystroke{$\downarrow$}\keystroke{$\rightarrow$}.
+  \end{itemize}
 
   \vspace{0.2cm}
-  \textbf{Modélisation d'un neurone individuel:} effectue la somme pondérée des entrés par un poids synaptique auquel on ajoute un biais. Une fonction d'activation non linéaire est appliquée pour générer la sortie.
+  \textbf{Modélisation d'un neurone:} somme pondérée des entrées par un poids synaptique auquel on ajoute un biais. Sortie générée par une fonction d'activation non linéaire.
   \begin{align*}
     %\mathbf{x} & = \colvec[x_1]{\vdots}{x_n}, \mathbf{h} = \colvec[h_1]{\vdots}{h_n} \\
     \mathbf{x} & = \linvec[x_1]{\cdots}{x_n}^\intercal, \mathbf{h} = \linvec[h_1]{\cdots}{h_n}^\intercal \\
                y & = \sigma\left(\mathbf{h}^\intercal \mathbf{x} + b\right)  \\
   \end{align*}
+
+  \vspace{-0.4cm}
   \textbf{Généralisation à un réseau multicouches:} modélisation matricielle avec fonction vectorielle $\sigma$
   \begin{equation*}
   \resizebox{\textwidth}{!}{
@@ -279,7 +286,7 @@ du serpent dont les entrées sont des paramètres de vision.
     \right] 
   $}
   \end{equation*}
-  \textbf{Décision de direction:} la direction choisie est celle qui a la plus grande valeur de sortie.
+  \textbf{Décision de direction:} celle qui a la plus grande valeur de sortie.
 
   \end{column}
   \begin{column}{0.4\textwidth}
@@ -428,20 +435,24 @@ du serpent dont les entrées sont des paramètres de vision.
 \end{columns}
 \end{frame}
 
-\subsection{Entrées: vision}
+\subsection{Vision}
 
 \begin{frame}
-\frametitle{Stratégies de visions}
+\frametitle{Stratégies de vision}
+\framesubtitle{Paramètres en entrée du réseau de neurones}
 \begin{columns}[T]
 \begin{column}{0.60\textwidth}
 \footnotesize
-\textbf{Paramètres de vision en entrées du réseau de neurones:} plusieurs stratégies ont été évaluées
 \begin{itemize}
 \footnotesize
-\item \textbf{Stratégie de vision n$\textsuperscript{o}$1:} dans les 8 directions de mouvements, 3 informations par direction (distance à la pomme, distance aux murs, distance à la queue), et la taille du serpent $\rightarrow$ réseau $\left[24, 18, 18, 4\right]$.
-\item \textbf{Stratégie de vision n$\textsuperscript{o}$5:} dans les 4 directions de mouvements, 3 informations par direction (espace libre dans la direction du mouvement, distance de Manhattan à la pomme dans la direction du mouvement, la pomme est dans l'espace libre dans cette direction), et la taille du serpent $\rightarrow$ réseau $\left[13, 12, 12, 4\right]$.
+\item \textbf{Stratégie n$\textsuperscript{o}$1:} dans les 8 directions de mouvements, 3 informations par direction (distance à la pomme, distance aux murs, distance à la queue), et la taille du serpent\\
+$\rightarrow$ réseau $\left[24, 18, 18, 4\right]$.
+\item \textbf{Stratégie n$\textsuperscript{o}$2:} dans les 4 directions de mouvements, 3 informations par direction (espace libre dans la direction du mouvement, distance de Manhattan à la pomme dans la direction du mouvement, la pomme est dans l'espace libre dans cette direction), et la taille du serpent\\
+$\rightarrow$ réseau $\left[13, 12, 12, 4\right]$.
 \end{itemize}
-\textbf{Remarque:} l'avantage le la stratégie n$\textsuperscript{o}$5 est d'avoir la connaissance de la position de la pomme et l'espace libre dans les 4 directions de mouvements pour effectuer une décision informée.
+
+\vspace{0.3cm}
+\textbf{Remarque:} la stratégie n$\textsuperscript{o}$2 est avantagée par la connaissance de la position de la pomme et l'espace libre dans les 4 directions de mouvement.
 \end{column}
 \begin{column}{0.40\textwidth}
 
@@ -450,7 +461,7 @@ du serpent dont les entrées sont des paramètres de vision.
 %\hspace{-0.6cm}
 \includegraphics[width=1\textwidth]{snake_vision_illustration2.png}
 \vspace{-0.7cm}
-\caption*{\tiny Stratégie de vision n\textsuperscript{o} 1}
+\caption*{\tiny Stratégie n\textsuperscript{o} 1}
 \end{figure}
 
 \begin{figure}
@@ -458,7 +469,7 @@ du serpent dont les entrées sont des paramètres de vision.
 %\hspace{-0.6cm}
 \includegraphics[width=1\textwidth]{snake_vision_illustration.png}
 \vspace{-0.7cm}
-\caption*{\tiny Stratégie de vision n\textsuperscript{o} 5}
+\caption*{\tiny Stratégie n\textsuperscript{o} 2}
 \end{figure}
 
 \end{column}
@@ -467,20 +478,109 @@ du serpent dont les entrées sont des paramètres de vision.
 
 \section{Algorithme génétique}
 
+\subsection{Performance}
+
+\begin{frame}
+\frametitle{\'Evaluation de la performance d'un serpent}
+\begin{columns}[T]
+\begin{column}{0.60\textwidth}
+\footnotesize
+\textbf{Objectif:} mesurer la performance d'un serpent grâce à une fonction de fitness.
+
+\vspace{0.1cm}
+\textbf{Paramètres:} taille du serpent (pommes mangées) et âge (mouvements effectués) à la fin du jeu.
+
+\vspace{0.1cm}
+\textbf{Fonctions de fitness évaluées:} maximiser $f_1$ ou $f_2$ favorise la croissance et la longévité des serpents.
+\begin{itemize}
+  \footnotesize
+  \item $f_1(\text{taille}, \text{age})=\text{taille}^3\times \text{age}$
+  \item $f_2(\text{taille}, \text{age})=(2\times\text{taille})^2\times \text{age}^{1.5}$
+\end{itemize}
+\textbf{Astuces:}
+\begin{itemize}
+  \footnotesize
+  \item \textbf{Pour éviter les boucles infinies:} un nombre de points de vie est attribué à chaque serpent, décrémenté à chaque mouvement et réinitialisé à chaque pomme mangée. \'A 0, le serpent meurt et son âge est pénalisé dans le calcul de la fitness.
+  \item \textbf{Pour favoriser une croissance rapide:} $f_1$ est utilisée au début du jeu. Ensuite on passe à $f_2$ qui valorise la survie du serpent pour manger plus de pommes.
+\end{itemize}
+
+\end{column}
+
+\begin{column}{0.40\textwidth}
+\begin{figure}
+\centering
+\vspace{-0.5cm}
+%\hspace{-0.6cm}
+\resizebox{\textwidth}{!}{
+\begin{tikzpicture}
+    \begin{axis}[
+        width=10cm,
+        view={60}{30},
+        xlabel={\shortstack{pommes \\ mangées}},
+        ylabel={age},
+        zlabel={fitness},
+        colormap/cool,
+        colorbar,
+    ]
+        \addplot3[
+            surf,
+            domain=0:100,
+            domain y=0:5000,
+        ]
+        {x^3 * y};
+    \end{axis}
+\end{tikzpicture}
+}
+\vspace{-0.4cm}
+\caption*{\tiny fitness $f(\text{taille}, \text{age})=\text{taille}^3\times \text{age}$}
+\end{figure}
+
+\begin{figure}
+\centering
+\vspace{-0.5cm}
+%\hspace{-0.6cm}
+\resizebox{\textwidth}{!}{
+\begin{tikzpicture}
+    \begin{axis}[
+        width=10cm,
+        view={60}{30},
+        xlabel={\shortstack{pommes \\ mangées}},
+        ylabel={age},
+        zlabel={fitness},
+        colormap/cool,
+        colorbar,
+    ]
+        \addplot3[
+            surf,
+            domain=0:100,
+            domain y=0:5000,
+        ]
+        {(x*2)^2 * (y^1.5)};
+    \end{axis}
+\end{tikzpicture}
+}
+\vspace{-0.4cm}
+\caption*{\tiny fitness $f(\text{taille}, \text{age})=(2\times\text{taille})^2\times \text{age}^{1.5}$}
+\end{figure}
+
+\end{column}
+\end{columns}
+\end{frame}
+
 \subsection{Optimisation}
 
 \begin{frame}
 \frametitle{Optimiser les décisions du serpent}
-\framesubtitle{Entrainement par algorithme génétique}
+\framesubtitle{Entrainement du réseau de neurones par algorithme génétique}
 \begin{columns}[T]
 \begin{column}{0.60\textwidth}
 \footnotesize
 
 \textbf{Principe:} approche évolutionniste d'une population de réseaux de neurones par algorithme génétique opérant en 3 phases:
 \begin{itemize}
-  \item Sélection: choix d'une portion individus les plus adaptés pour la reproduction, basé sur leur score de fitness (ici $20\%$).
-  \item Croisement: parmis ces serpents sélectionnés, aléatoirement par paires (parents), ils sont recombinés à l'aide d'une technique de croisement en K points (ici K=2) pour recomposer la population totale.
-  \item Mutation: ajustement mineur aléatoire dans le chromosome de chaque serpent pour maintenir la diversité.
+  \item \textbf{Sélection:} choix d'une portion individus les plus adaptés pour la reproduction, basé sur leur score de fitness (ici $20\%$).
+  \item \textbf{Croisement:} parmis ces serpents sélectionnés, aléatoirement par paires (parents), ils sont recombinés à l'aide d'une technique de croisement en K points (ici K=2) pour recomposer la population totale.
+  \item \textbf{Mutation:} ajustement mineur aléatoire dans le chromosome de chaque serpent pour maintenir la diversité.
 \end{itemize}
 
 \textbf{Formalisation de la mutation:} $p_m=0.1$ probabilité de mutation, $c_m=0.1$ le coefficient de mutation, $\forall h_i(t)$ à l'itération $t$, on tire $U \sim \mathcal{U}(0, 1)$ et $C \sim \mathcal{U}(-1, 1)$. Si $U<p_m$, $h_i(t+1)=h_i(t)+C\times c_m$ sinon $h_i(t+1)=h_i(t)$.
@@ -576,92 +676,6 @@ du serpent dont les entrées sont des paramètres de vision.
 \end{columns}
 \end{frame}
 
-\subsection{Fitness}
-
-\begin{frame}
-\frametitle{\'Evaluation de la performance d'un serpent}
-\framesubtitle{Différentes fonctions de fitness}
-\begin{columns}[T]
-\begin{column}{0.60\textwidth}
-\footnotesize
-\textbf{Objectif:} mesurer la performance d'un serpent pour guider la sélection de l'algorithme génétique.
-
-\vspace{0.1cm}
-\textbf{Paramètres:} taille du serpent (pommes mangées) et âge (mouvements effectués) à la fin du jeu.
-
-\vspace{0.1cm}
-\textbf{Fonction de fitness:} met l'accent sur les paramètres à optimiser $\rightarrow$ $f_1$ et $f_2$ favorisent la croissance et la longétivité des serpents.
-\begin{itemize}
-  \footnotesize
-  \item $f_1(\text{taille}, \text{age})=\text{taille}^3\times \text{age}$
-  \item $f_2(\text{taille}, \text{age})=(2\times\text{taille})^2\times \text{age}^{1.5}$
-  \item \textbf{\'Eviter les boucle infinies:} un nombre de points de vie est attribué à chaque serpent, décrémenté à chaque mouvement et réinitialisé à chaque pomme mangée. \'A 0, le serpent meurt et son âge est pénalisé dans le calcul de la fitness.
-  \item Utilisation de $f_1$ au début du jeu pour favoriser la croissance rapide, puis passage à $f_2$ qui valorise plus la survie du serpent pour manger plus de pommes.
-\end{itemize}
-
-\end{column}
-
-\begin{column}{0.40\textwidth}
-\begin{figure}
-\centering
-\vspace{-0.5cm}
-%\hspace{-0.6cm}
-\resizebox{\textwidth}{!}{
-\begin{tikzpicture}
-    \begin{axis}[
-        width=10cm,
-        view={60}{30},
-        xlabel={\shortstack{pommes \\ mangées}},
-        ylabel={age},
-        zlabel={fitness},
-        colormap/cool,
-        colorbar,
-    ]
-        \addplot3[
-            surf,
-            domain=0:100,
-            domain y=0:5000,
-        ]
-        {x^3 * y};
-    \end{axis}
-\end{tikzpicture}
-}
-\vspace{-0.4cm}
-\caption*{\tiny fitness $f(\text{taille}, \text{age})=\text{taille}^3\times \text{age}$}
-\end{figure}
-
-\begin{figure}
-\centering
-\vspace{-0.5cm}
-%\hspace{-0.6cm}
-\resizebox{\textwidth}{!}{
-\begin{tikzpicture}
-    \begin{axis}[
-        width=10cm,
-        view={60}{30},
-        xlabel={\shortstack{pommes \\ mangées}},
-        ylabel={age},
-        zlabel={fitness},
-        colormap/cool,
-        colorbar,
-    ]
-        \addplot3[
-            surf,
-            domain=0:100,
-            domain y=0:5000,
-        ]
-        {(x*2)^2 * (y^1.5)};
-    \end{axis}
-\end{tikzpicture}
-}
-\vspace{-0.4cm}
-\caption*{\tiny fitness $f(\text{taille}, \text{age})=(2\times\text{taille})^2\times \text{age}^{1.5}$}
-\end{figure}
-
-\end{column}
-\end{columns}
-\end{frame}
-
 \section{Simulations}
 
 \subsection{Algorithme}
@@ -702,7 +716,7 @@ du serpent dont les entrées sont des paramètres de vision.
               \State $\text{fitness}_s \gets f_s(l_s, a_s, \text{mortVieillesse}_s)$
           \EndFor
           \State $S \gets 20\%$ des meilleurs serpents au sens de $\text{fitness}_s$
-          \State $\mathcal{P} \gets S \bigcup \text{mutations}\left[\text{croisements}(S)\right]$
+          \State Reconstitue $\mathcal{P} \gets S \bigcup \text{mutations}\left[\text{croisements}(S)\right]$
           \State $g \gets g + 1$
       \EndWhile
   \end{algorithmic}
@@ -806,19 +820,22 @@ du serpent dont les entrées sont des paramètres de vision.
 
 \begin{frame}
 \frametitle{Conclusion}
+\footnotesize
 \begin{itemize}
-\item Deux problématiques urbaines traitées:
+\item Deux outils mathématiques de modélisation et d'optimisation mis en \oe{}uvre pour résoudre le problème de jeu de Snake:
   \begin{itemize}
-  \item optimisation d'un trajet en métro
-  \item parcours touristique efficace d'une ville en empruntant différents types de chemins
+  \item des réseaux de neurones afin de prendre des décisions de mouvements dont les entrées sont des informations visuelles du serpent sur le jeu.
+  \item des algorithmes génétiques pour optimiser les poids et biais des réseaux de neurones.
   \end{itemize}
-\item Pertinence de la modélisation des problèmes urbains par des graphes pour les résoudre.
-\item Application de la recherche opérationnelle pour trouver une solution.
+\item Différentes stratégies de vision et de fitness ont été proposées et discutées en terme de pertinence et performance.
+\item Des pistes d'améliorations restent à explorer:
   \begin{itemize}
-  \item Optimisation fait intervenir un grand nombre de contraintes
-résultant en des problèmes combinatoires complexes sans solution analytique.
-  \item Importance du choix des algorithmes et structures de données pour obtenir des solutions pratiques efficaces.
+  \item Optimisation de la conception du réseau de neurones.
+  \item Utiliser une fonction de fitness dynamique pour mieux prendre en compte les contraintes de la taille du serpent.
   \end{itemize}
+\item Tous les programmes ont été implémentés en python avec une interface graphique pygame permettant une visualisation en temps réel de l'optimisation de la population de serpents.
+% code from scratch
+\item La totalité du projet est disponible en annexes et sur github: \url{https://github.com/marilabs/tipe-2024}
 \end{itemize}
 \end{frame}
 
