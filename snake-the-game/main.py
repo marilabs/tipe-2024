@@ -188,21 +188,6 @@ if c.SAVE:
 
 print(max_fitness)
 
-"""
-# Set the y-axis limits from 0 to max_fitness_value
-plt.plot(range(len(max_fitness)), max_fitness, color='blue', label='Max Fitness')
-plt.plot(range(len(max_fitness)), avg_fitness, color='green', label='Average Fitness')
-plt.plot(range(len(max_fitness)), max_apple_eaten, color='red', label='Max Apples Eaten')
-
-plt.xlabel('Iteration')
-plt.ylabel('Fitness')
-plt.ylim(0, max(np.max(max_fitness), np.max(avg_fitness), np.max(max_apple_eaten)))
-plt.title('Fitness vs Iteration')
-plt.grid(True)
-plt.legend()
-plt.show()
-"""
-
 fig, ax1 = plt.subplots()
 
 color = 'tab:blue'
@@ -250,7 +235,6 @@ plt.title('Fitness vs Iteration')
 plt.grid(True)
 fig.tight_layout()
 plt.show()
-
 
 if c.DISPLAY_GRAPHICS:
     pygame.quit()

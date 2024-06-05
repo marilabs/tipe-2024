@@ -4,6 +4,8 @@ import pickle
 from game import Game
 import config as c
 from neural_network import NeuralNetwork
+import sys
+from PIL import Image
 
 def restore_snake(brain_number: int) -> Game:
     # restore brain from file and inject it into the snake
@@ -19,12 +21,15 @@ def restore_snake(brain_number: int) -> Game:
 
 game = restore_snake(c.SINGLE_SNAKE_BRAIN)
 
+frames = []
+
 # pygame setup
 pygame.init()
 
 # board contains one game/snake
 
-CELL_SIDE = c.BOARD_SIDE // max(c.WIDTH, c.HEIGHT)
+#CELL_SIDE = c.BOARD_SIDE // max(c.WIDTH, c.HEIGHT)
+CELL_SIDE = 10
 GAME_WIDTH = CELL_SIDE * c.WIDTH
 GAME_HEIGHT = CELL_SIDE * c.HEIGHT
 
@@ -83,6 +88,10 @@ while running:
 
     # flip() the display to put your work on screen
     pygame.display.flip()
+    frame_str = pygame.image.tostring(screen, "RGB")
+    frame_image = Image.frombytes("RGB", (GAME_WIDTH, GAME_HEIGHT), frame_str)
+    frames.append(frame_image)
     clock.tick(25)
 
+frames[0].save("game_animation.gif", save_all=True, append_images=frames[1:], duration=100, loop=0)
 pygame.quit()

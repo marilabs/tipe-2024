@@ -143,17 +143,6 @@ class Game:
                 self.life_points = self.max_life_points # on réinitialise la durée de vie au max
             else:
                 self.life_points += self.apple_lifetime_gain # on réinitialise la durée de vie conformément au commentaire en dessous:
-            """
-            The genetic algorithm was run many different times with many different fitness functions.
-            Formulaically, the first fitness function was:
-            ((score^3)*(frame_score)
-            Score is equivalent to the length of the snake minus 1 (since the snake always starts at length 1),
-            and frame_score is the amount of frames that the snake was alive. However, originally this fitness
-            function resulted in many snakes that looped in circles endlessly without eating any fruit to maximize
-            the frame_score component of the function. Thus, the training was modified such that all snakes are
-            killed off if they do not eat a fruit in 50 frames. Also, if a snake died due to not eating any fruit
-            for 50 frames, 50 points were subtracted from the frame_score to discourage the behaviour.
-            """
             # optimize not to recalculate last_visited and last_space for strategy 2
             # if moved_head is in last_visited it needs to be removed since the snake has its head there now
             if self.strategy == 2  or self.strategy == 5: # update last_visited and last_space
@@ -362,9 +351,6 @@ class Game:
             if self.is_possible_move(x + i, y + j):
                 moves.append(direction)
         return moves
-
-    #! todo: understand why changing fitness it is nok for previous brains...
-    #! todo: play with fitness and understand the impact on the game
 
     def count_free_moving_spaces(self, x, y) -> int:
         # Breadth-First Search, BFS, snake heads moves to (x, y) and tail's end is no more
