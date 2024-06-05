@@ -3,58 +3,182 @@
 \headcommand {\beamer@sectionpages {1}{1}}
 \headcommand {\beamer@subsectionpages {1}{1}}
 \headcommand {\sectionentry {1}{Introduction}{2}{Introduction}{0}}
-\headcommand {\slideentry {1}{0}{1}{2/2}{}{0}}
+\headcommand {\beamer@subsectionpages {2}{1}}
+\headcommand {\beamer@subsectionentry {0}{1}{1}{2}{Introduction au thème}}
+\headcommand {\slideentry {1}{1}{1}{2/2}{Introduction au thème}{0}}
 \headcommand {\beamer@framepages {2}{2}}
-\headcommand {\beamer@sectionpages {2}{2}}
 \headcommand {\beamer@subsectionpages {2}{2}}
-\headcommand {\sectionentry {2}{Le principe}{3}{Le principe}{0}}
-\headcommand {\beamer@subsectionpages {3}{2}}
-\headcommand {\beamer@subsectionentry {0}{2}{1}{3}{Le jeu de Snake}}
-\headcommand {\slideentry {2}{1}{1}{3/3}{Le jeu de Snake}{0}}
+\headcommand {\beamer@subsectionentry {0}{1}{2}{3}{Le jeu de Snake}}
+\headcommand {\slideentry {1}{2}{1}{3/3}{Le jeu de Snake}{0}}
 \headcommand {\beamer@framepages {3}{3}}
+\headcommand {\beamer@sectionpages {2}{3}}
 \headcommand {\beamer@subsectionpages {3}{3}}
-\headcommand {\beamer@subsectionentry {0}{2}{2}{4}{L'algorithme génétique}}
-\headcommand {\slideentry {2}{2}{1}{4/4}{L'algorithme génétique}{0}}
+\headcommand {\sectionentry {2}{Réseau de neurones}{4}{Réseau de neurones}{0}}
+\headcommand {\beamer@subsectionpages {4}{3}}
+\headcommand {\beamer@subsectionentry {0}{2}{1}{4}{Déplacement}}
+\headcommand {\slideentry {2}{1}{1}{4/4}{Déplacement}{0}}
 \headcommand {\beamer@framepages {4}{4}}
 \headcommand {\beamer@subsectionpages {4}{4}}
-\headcommand {\beamer@subsectionentry {0}{2}{3}{5}{Les réseaux neuronaux}}
-\headcommand {\slideentry {2}{3}{1}{5/5}{Les réseaux neuronaux}{0}}
+\headcommand {\beamer@subsectionentry {0}{2}{2}{5}{Vision}}
+\headcommand {\slideentry {2}{2}{1}{5/5}{Vision}{0}}
 \headcommand {\beamer@framepages {5}{5}}
-\headcommand {\beamer@sectionpages {3}{5}}
+\headcommand {\beamer@sectionpages {4}{5}}
 \headcommand {\beamer@subsectionpages {5}{5}}
-\headcommand {\sectionentry {3}{La théorie}{6}{La théorie}{0}}
+\headcommand {\sectionentry {3}{Algorithme génétique}{6}{Algorithme génétique}{0}}
 \headcommand {\beamer@subsectionpages {6}{5}}
-\headcommand {\beamer@subsectionentry {0}{3}{1}{6}{L'algorithme génétique}}
-\headcommand {\slideentry {3}{1}{1}{6/6}{L'algorithme génétique}{0}}
+\headcommand {\beamer@subsectionentry {0}{3}{1}{6}{Performance}}
+\headcommand {\slideentry {3}{1}{1}{6/6}{Performance}{0}}
 \headcommand {\beamer@framepages {6}{6}}
-\headcommand {\slideentry {3}{1}{2}{7/7}{L'algorithme génétique}{0}}
+\headcommand {\beamer@subsectionpages {6}{6}}
+\headcommand {\beamer@subsectionentry {0}{3}{2}{7}{Optimisation}}
+\headcommand {\slideentry {3}{2}{1}{7/7}{Optimisation}{0}}
 \headcommand {\beamer@framepages {7}{7}}
-\headcommand {\beamer@subsectionpages {6}{7}}
-\headcommand {\beamer@subsectionentry {0}{3}{2}{8}{Les réseaux neuronaux}}
-\headcommand {\slideentry {3}{2}{1}{8/8}{Les réseaux neuronaux}{0}}
+\headcommand {\beamer@sectionpages {6}{7}}
+\headcommand {\beamer@subsectionpages {7}{7}}
+\headcommand {\sectionentry {4}{Simulations}{8}{Simulations}{0}}
+\headcommand {\beamer@subsectionpages {8}{7}}
+\headcommand {\beamer@subsectionentry {0}{4}{1}{8}{Algorithme}}
+\headcommand {\slideentry {4}{1}{1}{8/8}{Algorithme}{0}}
 \headcommand {\beamer@framepages {8}{8}}
-\headcommand {\beamer@sectionpages {6}{8}}
 \headcommand {\beamer@subsectionpages {8}{8}}
-\headcommand {\sectionentry {4}{L'algorithme appliqué au jeu de Snake}{9}{L'algorithme appliqué au jeu de Snake}{0}}
-\headcommand {\beamer@subsectionpages {9}{8}}
-\headcommand {\beamer@subsectionentry {0}{4}{1}{9}{Relation algorithme génétique et réseaux de neurones}}
-\headcommand {\slideentry {4}{1}{1}{9/9}{Relation algorithme génétique et réseaux de neurones}{0}}
+\headcommand {\beamer@subsectionentry {0}{4}{2}{9}{Convergence}}
+\headcommand {\slideentry {4}{2}{1}{9/9}{Convergence}{0}}
 \headcommand {\beamer@framepages {9}{9}}
+\headcommand {\beamer@sectionpages {8}{9}}
 \headcommand {\beamer@subsectionpages {9}{9}}
-\headcommand {\beamer@subsectionentry {0}{4}{2}{10}{L'importance d'une fonction de fitness: trouver la bonne stratégie}}
-\headcommand {\slideentry {4}{2}{1}{10/10}{L'importance d'une fonction de fitness: trouver la bonne stratégie}{0}}
+\headcommand {\sectionentry {5}{Conclusion}{10}{Conclusion}{0}}
+\headcommand {\slideentry {5}{0}{1}{10/10}{}{0}}
 \headcommand {\beamer@framepages {10}{10}}
+\headcommand {\beamer@sectionpages {10}{10}}
 \headcommand {\beamer@subsectionpages {10}{10}}
-\headcommand {\beamer@subsectionentry {0}{4}{3}{11}{Les résultats}}
-\headcommand {\slideentry {4}{3}{1}{11/11}{Les résultats}{0}}
+\headcommand {\sectionentry {6}{Annexe I: \textbf {Snake game: code en python}}{11}{Annexe I: \textbf {Snake game: code en python}}{0}}
+\headcommand {\slideentry {6}{0}{1}{11/11}{}{0}}
 \headcommand {\beamer@framepages {11}{11}}
-\headcommand {\beamer@sectionpages {9}{11}}
-\headcommand {\beamer@subsectionpages {11}{11}}
-\headcommand {\sectionentry {5}{Conclusion}{12}{Conclusion}{0}}
-\headcommand {\slideentry {5}{0}{1}{12/12}{}{0}}
-\headcommand {\beamer@framepages {12}{12}}
-\headcommand {\beamer@partpages {1}{12}}
-\headcommand {\beamer@subsectionpages {12}{12}}
-\headcommand {\beamer@sectionpages {12}{12}}
-\headcommand {\beamer@documentpages {12}}
-\headcommand {\gdef \inserttotalframenumber {12}}
+\headcommand {\slideentry {6}{0}{1}{11/12}{}{0}}
+\headcommand {\beamer@framepages {11}{12}}
+\headcommand {\slideentry {6}{0}{1}{11/13}{}{0}}
+\headcommand {\beamer@framepages {11}{13}}
+\headcommand {\slideentry {6}{0}{2}{14/14}{}{0}}
+\headcommand {\beamer@framepages {14}{14}}
+\headcommand {\slideentry {6}{0}{2}{14/15}{}{0}}
+\headcommand {\beamer@framepages {14}{15}}
+\headcommand {\slideentry {6}{0}{2}{14/16}{}{0}}
+\headcommand {\beamer@framepages {14}{16}}
+\headcommand {\slideentry {6}{0}{2}{14/17}{}{0}}
+\headcommand {\beamer@framepages {14}{17}}
+\headcommand {\slideentry {6}{0}{2}{14/18}{}{0}}
+\headcommand {\beamer@framepages {14}{18}}
+\headcommand {\slideentry {6}{0}{2}{14/19}{}{0}}
+\headcommand {\beamer@framepages {14}{19}}
+\headcommand {\slideentry {6}{0}{2}{14/20}{}{0}}
+\headcommand {\beamer@framepages {14}{20}}
+\headcommand {\slideentry {6}{0}{2}{14/21}{}{0}}
+\headcommand {\beamer@framepages {14}{21}}
+\headcommand {\slideentry {6}{0}{2}{14/22}{}{0}}
+\headcommand {\beamer@framepages {14}{22}}
+\headcommand {\slideentry {6}{0}{2}{14/23}{}{0}}
+\headcommand {\beamer@framepages {14}{23}}
+\headcommand {\slideentry {6}{0}{2}{14/24}{}{0}}
+\headcommand {\beamer@framepages {14}{24}}
+\headcommand {\slideentry {6}{0}{2}{14/25}{}{0}}
+\headcommand {\beamer@framepages {14}{25}}
+\headcommand {\slideentry {6}{0}{2}{14/26}{}{0}}
+\headcommand {\beamer@framepages {14}{26}}
+\headcommand {\slideentry {6}{0}{2}{14/27}{}{0}}
+\headcommand {\beamer@framepages {14}{27}}
+\headcommand {\slideentry {6}{0}{2}{14/28}{}{0}}
+\headcommand {\beamer@framepages {14}{28}}
+\headcommand {\slideentry {6}{0}{2}{14/29}{}{0}}
+\headcommand {\beamer@framepages {14}{29}}
+\headcommand {\slideentry {6}{0}{2}{14/30}{}{0}}
+\headcommand {\beamer@framepages {14}{30}}
+\headcommand {\slideentry {6}{0}{2}{14/31}{}{0}}
+\headcommand {\beamer@framepages {14}{31}}
+\headcommand {\slideentry {6}{0}{2}{14/32}{}{0}}
+\headcommand {\beamer@framepages {14}{32}}
+\headcommand {\slideentry {6}{0}{2}{14/33}{}{0}}
+\headcommand {\beamer@framepages {14}{33}}
+\headcommand {\slideentry {6}{0}{3}{34/34}{}{0}}
+\headcommand {\beamer@framepages {34}{34}}
+\headcommand {\slideentry {6}{0}{3}{34/35}{}{0}}
+\headcommand {\beamer@framepages {34}{35}}
+\headcommand {\slideentry {6}{0}{3}{34/36}{}{0}}
+\headcommand {\beamer@framepages {34}{36}}
+\headcommand {\slideentry {6}{0}{3}{34/37}{}{0}}
+\headcommand {\beamer@framepages {34}{37}}
+\headcommand {\slideentry {6}{0}{3}{34/38}{}{0}}
+\headcommand {\beamer@framepages {34}{38}}
+\headcommand {\slideentry {6}{0}{4}{39/39}{}{0}}
+\headcommand {\beamer@framepages {39}{39}}
+\headcommand {\slideentry {6}{0}{4}{39/40}{}{0}}
+\headcommand {\beamer@framepages {39}{40}}
+\headcommand {\slideentry {6}{0}{4}{39/41}{}{0}}
+\headcommand {\beamer@framepages {39}{41}}
+\headcommand {\slideentry {6}{0}{4}{39/42}{}{0}}
+\headcommand {\beamer@framepages {39}{42}}
+\headcommand {\slideentry {6}{0}{5}{43/43}{}{0}}
+\headcommand {\beamer@framepages {43}{43}}
+\headcommand {\slideentry {6}{0}{5}{43/44}{}{0}}
+\headcommand {\beamer@framepages {43}{44}}
+\headcommand {\slideentry {6}{0}{5}{43/45}{}{0}}
+\headcommand {\beamer@framepages {43}{45}}
+\headcommand {\slideentry {6}{0}{6}{46/46}{}{0}}
+\headcommand {\beamer@framepages {46}{46}}
+\headcommand {\slideentry {6}{0}{6}{46/47}{}{0}}
+\headcommand {\beamer@framepages {46}{47}}
+\headcommand {\slideentry {6}{0}{6}{46/48}{}{0}}
+\headcommand {\beamer@framepages {46}{48}}
+\headcommand {\slideentry {6}{0}{6}{46/49}{}{0}}
+\headcommand {\beamer@framepages {46}{49}}
+\headcommand {\slideentry {6}{0}{6}{46/50}{}{0}}
+\headcommand {\beamer@framepages {46}{50}}
+\headcommand {\slideentry {6}{0}{6}{46/51}{}{0}}
+\headcommand {\beamer@framepages {46}{51}}
+\headcommand {\slideentry {6}{0}{6}{46/52}{}{0}}
+\headcommand {\beamer@framepages {46}{52}}
+\headcommand {\slideentry {6}{0}{6}{46/53}{}{0}}
+\headcommand {\beamer@framepages {46}{53}}
+\headcommand {\slideentry {6}{0}{6}{46/54}{}{0}}
+\headcommand {\beamer@framepages {46}{54}}
+\headcommand {\slideentry {6}{0}{6}{46/55}{}{0}}
+\headcommand {\beamer@framepages {46}{55}}
+\headcommand {\slideentry {6}{0}{6}{46/56}{}{0}}
+\headcommand {\beamer@framepages {46}{56}}
+\headcommand {\slideentry {6}{0}{6}{46/57}{}{0}}
+\headcommand {\beamer@framepages {46}{57}}
+\headcommand {\slideentry {6}{0}{7}{58/58}{}{0}}
+\headcommand {\beamer@framepages {58}{58}}
+\headcommand {\slideentry {6}{0}{7}{58/59}{}{0}}
+\headcommand {\beamer@framepages {58}{59}}
+\headcommand {\slideentry {6}{0}{7}{58/60}{}{0}}
+\headcommand {\beamer@framepages {58}{60}}
+\headcommand {\slideentry {6}{0}{7}{58/61}{}{0}}
+\headcommand {\beamer@framepages {58}{61}}
+\headcommand {\slideentry {6}{0}{7}{58/62}{}{0}}
+\headcommand {\beamer@framepages {58}{62}}
+\headcommand {\slideentry {6}{0}{8}{63/63}{}{0}}
+\headcommand {\beamer@framepages {63}{63}}
+\headcommand {\slideentry {6}{0}{8}{63/64}{}{0}}
+\headcommand {\beamer@framepages {63}{64}}
+\headcommand {\slideentry {6}{0}{8}{63/65}{}{0}}
+\headcommand {\beamer@framepages {63}{65}}
+\headcommand {\beamer@sectionpages {11}{65}}
+\headcommand {\beamer@subsectionpages {11}{65}}
+\headcommand {\sectionentry {7}{Annexe II: \textbf {Snake game: jeu jouable par l'utilisateur}}{66}{Annexe II: \textbf {Snake game: jeu jouable par l'utilisateur}}{0}}
+\headcommand {\slideentry {7}{0}{1}{66/66}{}{0}}
+\headcommand {\beamer@framepages {66}{66}}
+\headcommand {\slideentry {7}{0}{1}{66/67}{}{0}}
+\headcommand {\beamer@framepages {66}{67}}
+\headcommand {\slideentry {7}{0}{1}{66/68}{}{0}}
+\headcommand {\beamer@framepages {66}{68}}
+\headcommand {\slideentry {7}{0}{2}{69/69}{}{0}}
+\headcommand {\beamer@framepages {69}{69}}
+\headcommand {\slideentry {7}{0}{2}{69/70}{}{0}}
+\headcommand {\beamer@framepages {69}{70}}
+\headcommand {\slideentry {7}{0}{2}{69/71}{}{0}}
+\headcommand {\beamer@framepages {69}{71}}
+\headcommand {\beamer@partpages {1}{71}}
+\headcommand {\beamer@subsectionpages {66}{71}}
+\headcommand {\beamer@sectionpages {66}{71}}
+\headcommand {\beamer@documentpages {71}}
+\headcommand {\gdef \inserttotalframenumber {71}}

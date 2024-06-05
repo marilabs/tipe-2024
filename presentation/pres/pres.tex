@@ -131,7 +131,7 @@ text = black}}
 \title{TIPE 2024}
 \subtitle{Apprendre à une intelligence artificielle à jouer à Snake en utilisant un algorithme génétique}
 \author{Marilou Bernard de Courville}
-\institute{Lycée Charlemagne}
+\institute{N\textsuperscript{\underline{o}} SCEI 40091}
 \date{\today}
 
 \setbeamertemplate{footline}[frame number]
@@ -147,13 +147,14 @@ text = black}}
 %    \tableofcontents
 %\end{frame}
 
-\section{Principe}
+\section{Introduction}
 
-\subsection{Introduction}
+\subsection{Introduction au thème}
 
 \begin{frame}
 \frametitle{Introduction}
 \framesubtitle{Problématique et pertinence au regard du thème de l'année}
+\small
 \begin{itemize}
 \item \textbf{Le jeu de Snake:} piloter un serpent sur une grille dans le but de
 manger des pommes, sans rentrer dans les murs ni se replier sur
@@ -163,6 +164,8 @@ artificielle pouvant jouer efficacement au jeu de Snake, apprenant de manière a
 \item \textbf{Le moyen d'y parvenir:} utiliser un algorithme génétique,
 qui s'inspire de l'évolution naturelle pour entraîner un réseau de neurone opérant les décisions de mouvement
 du serpent dont les entrées sont des paramètres de vision.
+\item \textbf{Les réseaux de neurones:} Warren S. McCulloch et Walter Pitts, {\footnotesize \textit{A logical calculus of the ideas immanent in nervous activity}}, 1943, comparent les neurones à seuil binaire à la logique booléenne puis Frank Rosenblatt, {\footnotesize \textit{The perceptron: a probabilistic model for information storage and organization in the brain}}, 1958, introduit la notion de poids
+\item \textbf{L'algorithme génétique:} développé par John Holland dans les années 1970, il s'inspire de l'évolution naturelle pour résoudre des problèmes d'optimisation
 \end{itemize}
 \end{frame}
 
@@ -242,48 +245,48 @@ du serpent dont les entrées sont des paramètres de vision.
   \begin{equation*}
   \resizebox{\textwidth}{!}{
   $\begin{pmatrix}
-    y_{1} \\[0.3em]
-    y_{2} \\
-    \vdots \\
-    y_{m}
+  y_{1} \\[0.3em]
+  y_{2} \\
+  \vdots \\
+  y_{m}
   \end{pmatrix}
-    =
-    \sigma\left[
-    \begin{pmatrix}
-    h^{(2)}_{1,1} & h^{(2)}_{1,2} & \ldots & h^{(2)}_{1,k} \\
-    h^{(2)}_{2,1} & h^{(2)}_{2,2} & \ldots & h^{(2)}_{2,k} \\
-    \vdots & \vdots & \ddots & \vdots \\
-    h^{(2)}_{m,1} & h^{(2)}_{m,2} & \ldots & h^{(2)}_{m,k}
-    \end{pmatrix}
-    \sigma\left(
+  =
+  \sigma\left[
   \begin{pmatrix}
-    h^{(1)}_{1,1} & h^{(1)}_{1,2} & \ldots & h^{(1)}_{1,n} \\
-    h^{(1)}_{2,1} & h^{(1)}_{2,2} & \ldots & h^{(1)}_{2,n} \\
-    \vdots & \vdots & \ddots & \vdots \\
-    h^{(1)}_{k,1} & h^{(1)}_{k,2} & \ldots & h^{(1)}_{k,n}
-    \end{pmatrix}
-    \begin{pmatrix}
-    x_{1} \\[0.3em]
-    x_{2} \\
-    \vdots \\
-    x_{n}
-    \end{pmatrix}
-    +
-    \begin{pmatrix}
-    b_{1}^{(1)} \\[0.3em]
-    b_{2}^{(1)} \\
-    \vdots \\
-    b_{k}^{(1)}
-    \end{pmatrix}
-    \right)
-    +
-    \begin{pmatrix}
-    b_{1}^{(2)} \\[0.3em]
-    b_{2}^{(2)} \\
-    \vdots \\
-    b_{m}^{(2)}
-    \end{pmatrix}
-    \right] 
+  h^{(2)}_{1,1} & h^{(2)}_{1,2} & \ldots & h^{(2)}_{1,k} \\
+  h^{(2)}_{2,1} & h^{(2)}_{2,2} & \ldots & h^{(2)}_{2,k} \\
+  \vdots & \vdots & \ddots & \vdots \\
+  h^{(2)}_{m,1} & h^{(2)}_{m,2} & \ldots & h^{(2)}_{m,k}
+  \end{pmatrix}
+  \sigma\left(
+  \begin{pmatrix}
+  h^{(1)}_{1,1} & h^{(1)}_{1,2} & \ldots & h^{(1)}_{1,n} \\
+  h^{(1)}_{2,1} & h^{(1)}_{2,2} & \ldots & h^{(1)}_{2,n} \\
+  \vdots & \vdots & \ddots & \vdots \\
+  h^{(1)}_{k,1} & h^{(1)}_{k,2} & \ldots & h^{(1)}_{k,n}
+  \end{pmatrix}
+  \begin{pmatrix}
+  x_{1} \\[0.3em]
+  x_{2} \\
+  \vdots \\
+  x_{n}
+  \end{pmatrix}
+  +
+  \begin{pmatrix}
+  b_{1}^{(1)} \\[0.3em]
+  b_{2}^{(1)} \\
+  \vdots \\
+  b_{k}^{(1)}
+  \end{pmatrix}
+  \right)
+  +
+  \begin{pmatrix}
+  b_{1}^{(2)} \\[0.3em]
+  b_{2}^{(2)} \\
+  \vdots \\
+  b_{m}^{(2)}
+  \end{pmatrix}
+  \right]
   $}
   \end{equation*}
   \textbf{Décision de direction:} celle qui a la plus grande valeur de sortie.
@@ -378,7 +381,7 @@ du serpent dont les entrées sont des paramètres de vision.
   \end{tikzpicture}
   } % End of \resizebox
   \vspace{-0.2cm}
-  \caption*{\tiny Fonction d'activation sigmoide}
+  \caption*{\tiny Fonction d'activation sigmoïde}
   \end{figure}
 
   \begin{figure}
@@ -457,18 +460,18 @@ $\rightarrow$ réseau $\left[13, 12, 12, 4\right]$.
 \begin{column}{0.40\textwidth}
 
 \begin{figure}
-\vspace{-1.2cm}
+\vspace{-1.7cm}
 %\hspace{-0.6cm}
-\includegraphics[width=1\textwidth]{snake_vision_illustration2.png}
-\vspace{-0.7cm}
+\includegraphics[width=0.9\textwidth]{snake_vision_illustration2.png}
+%\vspace{-0.7cm}
 \caption*{\tiny Stratégie n\textsuperscript{o} 1}
 \end{figure}
 
 \begin{figure}
-\vspace{-0.8cm}
+\vspace{-0.6cm}
 %\hspace{-0.6cm}
-\includegraphics[width=1\textwidth]{snake_vision_illustration.png}
-\vspace{-0.7cm}
+\includegraphics[width=0.9\textwidth]{snake_vision_illustration.png}
+%\vspace{-0.7cm}
 \caption*{\tiny Stratégie n\textsuperscript{o} 2}
 \end{figure}
 
@@ -578,12 +581,13 @@ $\rightarrow$ réseau $\left[13, 12, 12, 4\right]$.
 
 \textbf{Principe:} approche évolutionniste d'une population de réseaux de neurones par algorithme génétique
 \begin{itemize}
-  \item \textbf{Sélection} des individus les plus adaptés pour la reproduction, basée sur leur score de fitness (ici $20\%$).
+  \item \textbf{Sélection} de parents par la "sélection roulette": chaque serpent a une certaine chance d'être choisi en fonction de sa fitness.
   \item \textbf{Croisement} des serpents sélectionnés par paires aléatoire (parents) en K points (ici K=2) pour recomposer la population totale en générant des enfants.
   \item \textbf{Mutation} par ajustement mineur aléatoire dans le chromosome de chaque serpent pour maintenir la diversité.
 \end{itemize}
 
 \textbf{Formalisation de la mutation:}
+\scriptsize
 \begin{itemize}
 \item $p_m=0.1$ probabilité de mutation,
 \item $c_m=0.1$ le coefficient de mutation,
@@ -700,29 +704,29 @@ $\rightarrow$ réseau $\left[13, 12, 12, 4\right]$.
       \State génération $g \gets 0$
       \While{$g < 2000$}
           \For{serpent $s \in \mathcal{P}$}
-              \State age $a_s \gets 0$ de $s$, longeur $l_s \gets 3$, point de vie $v_s \gets 50$
+              \State age $a_s \gets 0$ de $s$, longueur $l_s \gets 3$, point de vie $v_s \gets 50$
               \State vivant $\gets$ true, $\text{mortVieillesse}_s \gets$ false
               \While{vivant}
                   \State $\text{position}_s \gets$ avance direction $=c\left[\text{vision}_s\left(\text{position}_s\right)\right]$
-                  \If{$\text{position}_s \in \left\{\text{mur}, \text{queue}\right\} \text{or } v_s<0$}
+                  \If{$\text{position}_s \in \left\{\text{mur}, \text{queue}\right\}$}
                       \State $\text{vivant}_s =$ false
                   \Else
                       \State $a_s \gets a_s + 1$
                   \EndIf
                   \If{$\text{position}_s \in \left\{\text{pomme}\right\}}$
                       \State $l_s \gets l_s + 1$, $v_s \gets 50$
-                      \State regénère pomme emplacement aléatoire accessible
+                      \State régénère pomme emplacement aléatoire accessible
                   \Else
                       \State $v_s \gets v_s - 1$
                   \EndIf
                   \If{$v_s<0$}
-                      \State $\text{mortVieillesse}_s \gets$ true
+                      \State $\text{mortVieillesse}_s \gets$ true, $\text{vivant}_s \gets$ false
                   \EndIf
               \EndWhile
               \State $\text{fitness}_s \gets f_s(l_s, a_s, \text{mortVieillesse}_s)$
           \EndFor
           \State $S \gets 20\%$ des meilleurs serpents au sens de $\text{fitness}_s$
-          \State Reconstitue $\mathcal{P} \gets S \bigcup \text{mutations}\left[\text{croisements}(S)\right]$
+          \State Reconstitue $\mathcal{P} \gets S \bigcup \text{mutations}\left[\text{croisements}(\mathcal{P})\right]$
           \State $g \gets g + 1$
       \EndWhile
   \end{algorithmic}
@@ -795,7 +799,7 @@ $\rightarrow$ réseau $\left[13, 12, 12, 4\right]$.
   \end{tikzpicture}
   } % End of \resizebox
   \vspace{-0.7cm}
-  \caption*{\tiny Cerveau du serpent stratégie n$\textsuperscript{o}$2}
+  \caption*{\tiny Cerveau (stratégie n$\textsuperscript{o}$2)}
   \end{figure}
 
   \end{column}
@@ -829,12 +833,14 @@ $\rightarrow$ réseau $\left[13, 12, 12, 4\right]$.
 \footnotesize
 \begin{itemize}
 \footnotesize
-\item Deux outils mathématiques de modélisation et d'optimisation sont mis en \oe{}uvre pour jouer de manière autonome au jeu de Snake:
+\item Deux outils informatiques de modélisation et d'optimisation sont mis en \oe{}uvre pour jouer de manière autonome au jeu de Snake:
   \begin{itemize}
   \footnotesize
-  \item Des réseaux de neurones afin de prendre des décisions de mouvement, dont les entrées sont des informations visuelles du serpent sur son environnement.
+  \item Des réseaux de neurones afin de prendre des décisions de mouvement, dont les entrées sont des informations visuelles.
   \item Des algorithmes génétiques pour optimiser les poids et biais des réseaux de neurones.
   \end{itemize}
+\item Dans les deux cas, ces outils sont inspirés de la nature, grande source d'inspiration pour l'ingénierie.
+\item Tous les programmes ont été implémentés en python avec une interface graphique pygame sans librairie annexe permettant une visualisation en temps réel de l'optimisation de la population de serpents.
 \item Différentes stratégies de vision et de fitness ont été proposées et discutées en terme de pertinence et performance.
 \item Des pistes d'amélioration restent à explorer:
   \begin{itemize}
@@ -842,9 +848,6 @@ $\rightarrow$ réseau $\left[13, 12, 12, 4\right]$.
   \item Optimisation de la conception du réseau de neurones.
   \item Utiliser une fonction de fitness dynamique pour mieux prendre en compte les contraintes de la taille du serpent.
   \end{itemize}
-\item Tous les programmes ont été implémentés en python avec une interface graphique pygame sans librairie annexe permettant une visualisation en temps réel de l'optimisation de la population de serpents.
-% code from scratch
-\item La totalité du projet est disponible en annexes et sur github: \url{https://github.com/marilabs/tipe-2024}
 \end{itemize}
 \end{frame}
 
@@ -911,32 +914,6 @@ $\rightarrow$ réseau $\left[13, 12, 12, 4\right]$.
 \end{frame}
 
 \begin{frame}
-\frametitle{Titre}
-\framesubtitle{Sous-titre}
-\begin{columns}[T]
-\begin{column}{0.70\textwidth}
-\footnotesize
-\textbf{Point:} blah
-\vspace{0.5cm}
-\textbf{Point:}
-\begin{itemize}
-\footnotesize
-\item toto
-\item tutu
-\end{itemize}
-\end{column}
-\begin{column}{0.24\textwidth}
-\begin{figure}
-\centering
-\vspace{-1cm}\hspace{-0.6cm}
-\includegraphics[width=1\textwidth]{blockade.jpg}
-\caption*{\tiny toto}
-\end{figure}
-\end{column}
-\end{columns}
-\end{frame}
-
-\begin{frame}
   TODO
 
   Breadth-First Search (BFS) algorithm to count free spaces in each direction
@@ -944,7 +921,7 @@ $\rightarrow$ réseau $\left[13, 12, 12, 4\right]$.
 
   Mutation is necessary to prevent the population from being stuck at a local maximum.
 
-  chrommosome enfant
+  chromosome enfant
 
   TODO: choix en design du réseau de neurones
 
@@ -958,7 +935,7 @@ $\rightarrow$ réseau $\left[13, 12, 12, 4\right]$.
   Descente de gradient.
   Trop de possibilités.
   Là pas possible.
-  Reenforcement learning.
+  Reinforcement learning.
   Choix Algo génétique.
 
   Se déplacer grace à un réseau de neurones.
@@ -967,7 +944,7 @@ $\rightarrow$ réseau $\left[13, 12, 12, 4\right]$.
 
   Serpent point de vie, age et taille
 
-  Eviter les boucle infinie: décrémenter les points de vies, restaurer les points de vie dès qu'on mange une pomme, appliquer une pénalité au score en décrémentant age par 50 si mort de vieillesse
+  Éviter les boucle infinie: décrémenter les points de vies, restaurer les points de vie dès qu'on mange une pomme, appliquer une pénalité au score en décrémentant age par 50 si mort de vieillesse
 
   * The number of hidden neurons should be between the size of the input layer and the size of the output layer.
   * The number of hidden neurons should be 2/3 the size of the input layer, plus the size of the output layer.
@@ -978,80 +955,11 @@ $\rightarrow$ réseau $\left[13, 12, 12, 4\right]$.
 
 
 \subsection{L'algorithme génétique}
-\begin{frame}
-\frametitle{Le principe de l'algorithme génétique}
-\framesubtitle{Histoire, fonctionnement et applications de l'algorithme}
-\begin{itemize}
-\item \textbf{Origines:} développé par John Holland dans les années 1970
-\item \textbf{Principe:} s'inspirer de l'évolution naturelle pour
-    résoudre des problèmes d'optimisation
-\item \textbf{Fonctionnement:} on part d'une population aléatoire, on les fait évoluer en appliquant des opérateurs
-    génétiques (sélection, crossover, mutation)
-\item \textbf{Applications:} problème du voyageur de commerce, problèmes de décision (optimisation dans les banques), NASA et Sony pour des déplacements de robots, automatisation des tests d'application par Motorola
 
-\item \textbf{Ici:} application ludique, on applique cet algorithme à un réseau neuronal pour qu'il joue à Snake
-\end{itemize}
-\end{frame}
 
 \subsection{Les réseaux neuronaux}
 
-\begin{frame}
 
-  \frametitle{Le principe des réseaux neuronnaux}
-  \framesubtitle{Histoire et principe}
-
-  \begin{itemize}
-
-    \item \textbf{Origines:} Warren S. McCulloch et Walter Pitts, \textit{A logical calculus of the ideas immanent in nervous activity}, 1943, compare les neurones à seuil binaire à la logique booléenne puis Frank Rosenblatt, \textit{The perceptron: a probabilistic model for information storage and organization in the brain}, 1958, introduit la notion de poids
-
-    \item \textbf{Principe:} 3 couches de n\oe uds qui transmettent des informations à la couche suivante suivant s'ils sont activés et leurs poids, s'appuient sur l'entraînement pour être plus précis
-
-    \item \textbf{Fonctionnement:} on code des "yeux" au serpent, ie. on prend en compte ce qu'il voit devant lui, et le réseau neuronal va analyser ces données pour que le serpent tourne ou pas.
-
-    \item \textbf{Lien avec l'algorithme génétique:} les différents poids associés aux neurones vont être transmis ou non aux enfants
-
-  \end{itemize}
-
-  \end{frame}
-
-  \section{La théorie}
-
-
-  \subsection{L'algorithme génétique}
-
-  \begin{frame}
-    \frametitle{Le fonctionnement de l'algorithme génétique}
-  \end{frame}
-
-  \begin{frame}
-    \frametitle{Le Théorème de Holland}
-  \end{frame}
-
-  \subsection{Les réseaux neuronaux}
-
-
-\section{L'algorithme appliqué au jeu de Snake}
-
-\subsection{Relation algorithme génétique et réseaux de neurones}
-
-\begin{frame}
-  \frametitle{Comment algorithme génétique et réseaux de neurones sont reliés}
-
-\end{frame}
-
-\subsection{L'importance d'une fonction de fitness: trouver la bonne stratégie}
-
-\begin{frame}
-  \frametitle{Trouver la stratégie gagnante avec la fonction fitness}
-\end{frame}
-
-\subsection{Les résultats}
-
-\begin{frame}
-  \frametitle{Les résultats}
-\end{frame}
-
-\end{document}
 
 \begin{frame}
   \frametitle{Algorithme d'optimisation résultant}
@@ -1072,5 +980,5 @@ $\rightarrow$ réseau $\left[13, 12, 12, 4\right]$.
   \item Mesure: \`A tout jeu on associe un "score" ou fonction de fitness dépendant de sa taille et du nombre de mouvements total effectués sans mourir
   \item Sélection: seul un pourcentage des meilleurs serpents sont retenus (ici $10\%$) au sens du score de fitness.
   \item \'Evolution: ces meilleurs serpents sont utilisés pour reconstituer la population totale par croisement et mutation entre deux des meilleurs serpents tirés au hasard.
-  \end{itemize}}
+  \end{itemize}
 \end{frame}

@@ -1,0 +1,61 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{c+c1}{\PYGZsh{} un seul serpent}
+
+\PYG{k+kn}{from} \PYG{n+nn}{random} \PYG{k+kn}{import} \PYG{n}{randrange}
+\PYG{k+kn}{import} \PYG{n+nn}{pygame}
+
+\PYG{k}{class} \PYG{n+nc}{Game}\PYG{p}{:}
+    \PYG{n}{WIDTH} \PYG{o}{=} \PYG{l+m+mi}{20}
+    \PYG{n}{HEIGHT} \PYG{o}{=} \PYG{l+m+mi}{15}
+    \PYG{n}{snake\PYGZus{}body} \PYG{o}{=} \PYG{p}{[}
+        \PYG{p}{(}\PYG{n+nb}{int}\PYG{p}{(}\PYG{n}{WIDTH} \PYG{o}{/} \PYG{l+m+mi}{2}\PYG{p}{),} \PYG{n+nb}{int}\PYG{p}{(}\PYG{n}{HEIGHT} \PYG{o}{/} \PYG{l+m+mi}{2}\PYG{p}{)),}
+            \PYG{p}{(}\PYG{n+nb}{int}\PYG{p}{(}\PYG{n}{WIDTH} \PYG{o}{/} \PYG{l+m+mi}{2}\PYG{p}{)} \PYG{o}{+} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n+nb}{int}\PYG{p}{(}\PYG{n}{HEIGHT} \PYG{o}{/} \PYG{l+m+mi}{2}\PYG{p}{)),} 
+            \PYG{p}{(}\PYG{n+nb}{int}\PYG{p}{(}\PYG{n}{WIDTH} \PYG{o}{/} \PYG{l+m+mi}{2}\PYG{p}{)} \PYG{o}{+} \PYG{l+m+mi}{2}\PYG{p}{,} \PYG{n+nb}{int}\PYG{p}{(}\PYG{n}{HEIGHT} \PYG{o}{/} \PYG{l+m+mi}{2}\PYG{p}{))}
+        \PYG{p}{]}
+    \PYG{n}{apple} \PYG{o}{=} \PYG{p}{(}\PYG{n}{randrange}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{WIDTH}\PYG{p}{),} \PYG{n}{randrange}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{HEIGHT}\PYG{p}{))}
+
+    \PYG{n}{direction} \PYG{o}{=} \PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{step}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n+nb}{bool}\PYG{p}{:}
+        \PYG{n}{keys} \PYG{o}{=} \PYG{n}{pygame}\PYG{o}{.}\PYG{n}{key}\PYG{o}{.}\PYG{n}{get\PYGZus{}pressed}\PYG{p}{()}
+        \PYG{k}{if} \PYG{n}{keys}\PYG{p}{[}\PYG{n}{pygame}\PYG{o}{.}\PYG{n}{K\PYGZus{}RIGHT}\PYG{p}{]:}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{direction} \PYG{o}{=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{)}
+        \PYG{k}{elif} \PYG{n}{keys}\PYG{p}{[}\PYG{n}{pygame}\PYG{o}{.}\PYG{n}{K\PYGZus{}UP}\PYG{p}{]:}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{direction} \PYG{o}{=} \PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{)}
+        \PYG{k}{elif} \PYG{n}{keys}\PYG{p}{[}\PYG{n}{pygame}\PYG{o}{.}\PYG{n}{K\PYGZus{}LEFT}\PYG{p}{]:}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{direction} \PYG{o}{=} \PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{)}
+        \PYG{k}{elif} \PYG{n}{keys}\PYG{p}{[}\PYG{n}{pygame}\PYG{o}{.}\PYG{n}{K\PYGZus{}DOWN}\PYG{p}{]:}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{direction} \PYG{o}{=} \PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{)}
+        \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{move\PYGZus{}snake}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{direction}\PYG{p}{)}
+
+
+    \PYG{k}{def} \PYG{n+nf}{move\PYGZus{}snake}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{incrementer}\PYG{p}{:} \PYG{p}{(}\PYG{n+nb}{int}\PYG{p}{,} \PYG{n+nb}{int}\PYG{p}{))} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n+nb}{bool}\PYG{p}{:}
+
+        \PYG{n}{moved\PYGZus{}head} \PYG{o}{=} \PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{snake\PYGZus{}body}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{][}\PYG{l+m+mi}{0}\PYG{p}{]} \PYG{o}{+} \PYG{n}{incrementer}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{],} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{snake\PYGZus{}body}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{][}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{+} \PYG{n}{incrementer}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{])}
+        \PYG{c+c1}{\PYGZsh{} vérification de la présence de la tête dans la grille}
+        \PYG{k}{if} \PYG{o+ow}{not} \PYG{p}{(}\PYG{l+m+mi}{0} \PYG{o}{\PYGZlt{}=} \PYG{n}{moved\PYGZus{}head}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]} \PYG{o}{\PYGZlt{}} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{WIDTH} \PYG{o+ow}{and} \PYG{l+m+mi}{0} \PYG{o}{\PYGZlt{}=} \PYG{n}{moved\PYGZus{}head}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{\PYGZlt{}} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{HEIGHT}\PYG{p}{):}
+            \PYG{k}{return} \PYG{k+kc}{False}
+        
+        \PYG{c+c1}{\PYGZsh{} sauvegarde de la fin de la queue}
+        \PYG{n}{end\PYGZus{}tail} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{snake\PYGZus{}body}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}
+        
+        \PYG{c+c1}{\PYGZsh{} déplacement du serpent}
+        \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{reversed}\PYG{p}{(}\PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{snake\PYGZus{}body}\PYG{p}{))):}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{snake\PYGZus{}body}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{snake\PYGZus{}body}\PYG{p}{[}\PYG{n}{i} \PYG{o}{\PYGZhy{}} \PYG{l+m+mi}{1}\PYG{p}{]}
+        
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{snake\PYGZus{}body}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]} \PYG{o}{=} \PYG{n}{moved\PYGZus{}head}
+
+        \PYG{c+c1}{\PYGZsh{}collisions avec la corps}
+        \PYG{k}{for} \PYG{n}{bit} \PYG{o+ow}{in} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{snake\PYGZus{}body}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{:]:}
+            \PYG{k}{if} \PYG{n}{bit} \PYG{o}{==} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{snake\PYGZus{}body}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]:}
+                \PYG{k}{return} \PYG{k+kc}{False}
+            
+        \PYG{c+c1}{\PYGZsh{}collisions avec la pomme}
+        \PYG{k}{if} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{snake\PYGZus{}body}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]} \PYG{o}{==} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{apple}\PYG{p}{:}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{snake\PYGZus{}body}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{end\PYGZus{}tail}\PYG{p}{)}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{apple} \PYG{o}{=} \PYG{p}{(}\PYG{n}{randrange}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{WIDTH}\PYG{p}{),} \PYG{n}{randrange}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{HEIGHT}\PYG{p}{))}
+
+        \PYG{k}{return} \PYG{k+kc}{True}
+    
+    
+\end{Verbatim}

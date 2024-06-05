@@ -1,0 +1,99 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{k+kn}{import} \PYG{n+nn}{pygame}
+\PYG{k+kn}{import} \PYG{n+nn}{os}
+\PYG{k+kn}{import} \PYG{n+nn}{pickle}
+\PYG{k+kn}{from} \PYG{n+nn}{game} \PYG{k+kn}{import} \PYG{n}{Game}
+\PYG{k+kn}{import} \PYG{n+nn}{config} \PYG{k}{as} \PYG{n+nn}{c}
+\PYG{k+kn}{from} \PYG{n+nn}{neural\PYGZus{}network} \PYG{k+kn}{import} \PYG{n}{NeuralNetwork}
+\PYG{k+kn}{import} \PYG{n+nn}{sys}
+\PYG{k+kn}{from} \PYG{n+nn}{PIL} \PYG{k+kn}{import} \PYG{n}{Image}
+
+\PYG{k}{def} \PYG{n+nf}{restore\PYGZus{}snake}\PYG{p}{(}\PYG{n}{brain\PYGZus{}number}\PYG{p}{:} \PYG{n+nb}{int}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{Game}\PYG{p}{:}
+    \PYG{c+c1}{\PYGZsh{} restore brain from file and inject it into the snake}
+    \PYG{k}{assert}\PYG{p}{(}\PYG{n}{os}\PYG{o}{.}\PYG{n}{path}\PYG{o}{.}\PYG{n}{exists}\PYG{p}{(}\PYG{n}{c}\PYG{o}{.}\PYG{n}{BRAINS\PYGZus{}FILE}\PYG{p}{))}
+    \PYG{n}{game} \PYG{o}{=} \PYG{n}{Game}\PYG{p}{(}\PYG{n}{c}\PYG{o}{.}\PYG{n}{WIDTH}\PYG{p}{,} \PYG{n}{c}\PYG{o}{.}\PYG{n}{HEIGHT}\PYG{p}{,} \PYG{n}{c}\PYG{o}{.}\PYG{n}{MAX\PYGZus{}LIFE\PYGZus{}POINTS}\PYG{p}{,} \PYG{n}{c}\PYG{o}{.}\PYG{n}{APPLE\PYGZus{}LIFETIME\PYGZus{}GAIN}\PYG{p}{,} \PYG{n}{c}\PYG{o}{.}\PYG{n}{GAME\PYGZus{}STRATEGY}\PYG{p}{,} \PYG{n}{c}\PYG{o}{.}\PYG{n}{FITNESS\PYGZus{}STRATEGY}\PYG{p}{)}
+    \PYG{k}{with} \PYG{n+nb}{open}\PYG{p}{(}\PYG{n}{c}\PYG{o}{.}\PYG{n}{BRAINS\PYGZus{}FILE}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}rb\PYGZsq{}}\PYG{p}{)} \PYG{k}{as} \PYG{n}{f}\PYG{p}{:}
+        \PYG{n}{game\PYGZus{}brains} \PYG{o}{=} \PYG{n}{pickle}\PYG{o}{.}\PYG{n}{load}\PYG{p}{(}\PYG{n}{f}\PYG{p}{)}
+        \PYG{n}{game}\PYG{o}{.}\PYG{n}{brain} \PYG{o}{=} \PYG{n}{game\PYGZus{}brains}\PYG{p}{[}\PYG{n}{brain\PYGZus{}number}\PYG{p}{]}
+        \PYG{k}{if} \PYG{n}{c}\PYG{o}{.}\PYG{n}{DEBUG}\PYG{p}{:}
+            \PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{game}\PYG{o}{.}\PYG{n}{brain}\PYG{p}{,} \PYG{n}{end}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{} \PYGZsq{}}\PYG{p}{)}
+            \PYG{n+nb}{print}\PYG{p}{()}
+    \PYG{k}{return} \PYG{n}{game}
+
+\PYG{n}{game} \PYG{o}{=} \PYG{n}{restore\PYGZus{}snake}\PYG{p}{(}\PYG{n}{c}\PYG{o}{.}\PYG{n}{SINGLE\PYGZus{}SNAKE\PYGZus{}BRAIN}\PYG{p}{)}
+
+\PYG{n}{frames} \PYG{o}{=} \PYG{p}{[]}
+
+\PYG{c+c1}{\PYGZsh{} pygame setup}
+\PYG{n}{pygame}\PYG{o}{.}\PYG{n}{init}\PYG{p}{()}
+
+\PYG{c+c1}{\PYGZsh{} board contains one game/snake}
+
+\PYG{c+c1}{\PYGZsh{}CELL\PYGZus{}SIDE = c.BOARD\PYGZus{}SIDE // max(c.WIDTH, c.HEIGHT)}
+\PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{=} \PYG{l+m+mi}{10}
+\PYG{n}{GAME\PYGZus{}WIDTH} \PYG{o}{=} \PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{*} \PYG{n}{c}\PYG{o}{.}\PYG{n}{WIDTH}
+\PYG{n}{GAME\PYGZus{}HEIGHT} \PYG{o}{=} \PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{*} \PYG{n}{c}\PYG{o}{.}\PYG{n}{HEIGHT}
+
+\PYG{n}{screen} \PYG{o}{=} \PYG{n}{pygame}\PYG{o}{.}\PYG{n}{display}\PYG{o}{.}\PYG{n}{set\PYGZus{}mode}\PYG{p}{((}\PYG{n}{GAME\PYGZus{}WIDTH}\PYG{p}{,} \PYG{n}{GAME\PYGZus{}HEIGHT}\PYG{p}{))}
+
+\PYG{n}{clock} \PYG{o}{=} \PYG{n}{pygame}\PYG{o}{.}\PYG{n}{time}\PYG{o}{.}\PYG{n}{Clock}\PYG{p}{()}
+\PYG{n}{running} \PYG{o}{=} \PYG{k+kc}{True}
+\PYG{n}{dt} \PYG{o}{=} \PYG{l+m+mi}{0}
+
+\PYG{n}{iteration} \PYG{o}{=} \PYG{l+m+mi}{0}
+
+\PYG{n}{max\PYGZus{}snake\PYGZus{}length} \PYG{o}{=} \PYG{l+m+mi}{0}
+
+\PYG{c+c1}{\PYGZsh{}? VERIFIED}
+\PYG{k}{while} \PYG{n}{running}\PYG{p}{:}
+
+    \PYG{n}{iteration} \PYG{o}{+=} \PYG{l+m+mi}{1}
+
+    \PYG{n}{cur\PYGZus{}fitness} \PYG{o}{=} \PYG{n}{game}\PYG{o}{.}\PYG{n}{fitness}\PYG{p}{()}
+    \PYG{n}{cur\PYGZus{}apple\PYGZus{}eaten} \PYG{o}{=} \PYG{n}{game}\PYG{o}{.}\PYG{n}{apples\PYGZus{}eaten}
+    \PYG{k}{if} \PYG{n}{cur\PYGZus{}apple\PYGZus{}eaten} \PYG{o}{\PYGZgt{}=} \PYG{n}{max\PYGZus{}snake\PYGZus{}length}\PYG{p}{:}
+        \PYG{n}{max\PYGZus{}snake\PYGZus{}length} \PYG{o}{=} \PYG{n}{cur\PYGZus{}apple\PYGZus{}eaten} \PYG{o}{+} \PYG{l+m+mi}{1}
+
+    \PYG{c+c1}{\PYGZsh{} display game iteration and fitness of the game (generation) as window title}
+    \PYG{n}{info} \PYG{o}{=} \PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}Iter }\PYG{l+s+si}{\PYGZob{}}\PYG{n}{iteration}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{ \PYGZhy{} Fitness }\PYG{l+s+si}{\PYGZob{}}\PYG{n}{cur\PYGZus{}fitness}\PYG{l+s+si}{:}\PYG{l+s+s2}{.2e}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{ \PYGZhy{} Eaten }\PYG{l+s+si}{\PYGZob{}}\PYG{n}{cur\PYGZus{}apple\PYGZus{}eaten}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{ \PYGZhy{} Longest ever }\PYG{l+s+si}{\PYGZob{}}\PYG{n}{max\PYGZus{}snake\PYGZus{}length}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}
+
+    \PYG{c+c1}{\PYGZsh{} poll for events}
+    \PYG{c+c1}{\PYGZsh{} pygame.QUIT event means the user clicked X to close your window}
+    \PYG{k}{for} \PYG{n}{event} \PYG{o+ow}{in} \PYG{n}{pygame}\PYG{o}{.}\PYG{n}{event}\PYG{o}{.}\PYG{n}{get}\PYG{p}{():}
+        \PYG{k}{if} \PYG{n}{event}\PYG{o}{.}\PYG{n}{type} \PYG{o}{==} \PYG{n}{pygame}\PYG{o}{.}\PYG{n}{QUIT}\PYG{p}{:}
+            \PYG{n}{running} \PYG{o}{=} \PYG{k+kc}{False}
+    \PYG{c+c1}{\PYGZsh{} fill the screen with a color to wipe away anything from last frame}
+    \PYG{n}{screen}\PYG{o}{.}\PYG{n}{fill}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}white\PYGZdq{}}\PYG{p}{)}
+    \PYG{c+c1}{\PYGZsh{} draw grid}
+    \PYG{k}{for} \PYG{n}{x} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{GAME\PYGZus{}WIDTH}\PYG{p}{,} \PYG{n}{CELL\PYGZus{}SIDE}\PYG{p}{):}
+        \PYG{n}{pygame}\PYG{o}{.}\PYG{n}{draw}\PYG{o}{.}\PYG{n}{line}\PYG{p}{(}\PYG{n}{screen}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}gray\PYGZdq{}}\PYG{p}{,} \PYG{p}{(}\PYG{n}{x}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{),} \PYG{p}{(}\PYG{n}{x}\PYG{p}{,} \PYG{n}{GAME\PYGZus{}HEIGHT}\PYG{p}{))}
+    \PYG{k}{for} \PYG{n}{y} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{GAME\PYGZus{}HEIGHT}\PYG{p}{,} \PYG{n}{CELL\PYGZus{}SIDE}\PYG{p}{):}
+        \PYG{n}{pygame}\PYG{o}{.}\PYG{n}{draw}\PYG{o}{.}\PYG{n}{line}\PYG{p}{(}\PYG{n}{screen}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}gray\PYGZdq{}}\PYG{p}{,} \PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{y}\PYG{p}{),} \PYG{p}{(}\PYG{n}{GAME\PYGZus{}WIDTH}\PYG{p}{,} \PYG{n}{y}\PYG{p}{))}
+
+    \PYG{n}{pygame}\PYG{o}{.}\PYG{n}{display}\PYG{o}{.}\PYG{n}{set\PYGZus{}caption}\PYG{p}{(}\PYG{n}{info}\PYG{p}{)}
+
+    \PYG{k}{for} \PYG{p}{(}\PYG{n}{x}\PYG{p}{,} \PYG{n}{y}\PYG{p}{)} \PYG{o+ow}{in} \PYG{n}{game}\PYG{o}{.}\PYG{n}{snake\PYGZus{}body}\PYG{p}{:}
+        \PYG{n}{pygame}\PYG{o}{.}\PYG{n}{draw}\PYG{o}{.}\PYG{n}{circle}\PYG{p}{(}\PYG{n}{screen}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}darkolivegreen3\PYGZdq{}}\PYG{p}{,} \PYG{p}{(}\PYG{n}{x} \PYG{o}{*} \PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{+} \PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{/} \PYG{l+m+mi}{2}\PYG{p}{,} \PYG{n}{y} \PYG{o}{*} \PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{+} \PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{/} \PYG{l+m+mi}{2}\PYG{p}{),} \PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{/} \PYG{l+m+mi}{2}\PYG{p}{)}
+    \PYG{p}{(}\PYG{n}{x}\PYG{p}{,} \PYG{n}{y}\PYG{p}{)} \PYG{o}{=} \PYG{n}{game}\PYG{o}{.}\PYG{n}{snake\PYGZus{}body}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]} \PYG{c+c1}{\PYGZsh{} head of the snake}
+    \PYG{n}{pygame}\PYG{o}{.}\PYG{n}{draw}\PYG{o}{.}\PYG{n}{circle}\PYG{p}{(}\PYG{n}{screen}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}black\PYGZdq{}}\PYG{p}{,} \PYG{p}{(}\PYG{n}{x} \PYG{o}{*} \PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{+} \PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{/} \PYG{l+m+mi}{2}\PYG{p}{,} \PYG{n}{y} \PYG{o}{*} \PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{+} \PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{/} \PYG{l+m+mi}{2}\PYG{p}{),} \PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{/} \PYG{l+m+mi}{4}\PYG{p}{)}
+    \PYG{p}{(}\PYG{n}{x}\PYG{p}{,} \PYG{n}{y}\PYG{p}{)} \PYG{o}{=} \PYG{n}{game}\PYG{o}{.}\PYG{n}{apple}
+    \PYG{n}{pygame}\PYG{o}{.}\PYG{n}{draw}\PYG{o}{.}\PYG{n}{circle}\PYG{p}{(}\PYG{n}{screen}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}brown3\PYGZdq{}}\PYG{p}{,} \PYG{p}{(}\PYG{n}{x} \PYG{o}{*} \PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{+} \PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{/} \PYG{l+m+mi}{2}\PYG{p}{,} \PYG{n}{y} \PYG{o}{*} \PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{+} \PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{/} \PYG{l+m+mi}{2}\PYG{p}{),} \PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{/} \PYG{l+m+mi}{2}\PYG{p}{)}
+    \PYG{c+c1}{\PYGZsh{} suround the current game with a black rectangle}
+    \PYG{n}{pygame}\PYG{o}{.}\PYG{n}{draw}\PYG{o}{.}\PYG{n}{rect}\PYG{p}{(}\PYG{n}{screen}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}black\PYGZdq{}}\PYG{p}{,} \PYG{p}{(}\PYG{n}{GAME\PYGZus{}WIDTH}\PYG{p}{,} \PYG{n}{GAME\PYGZus{}HEIGHT}\PYG{p}{,} \PYG{n}{GAME\PYGZus{}WIDTH}\PYG{p}{,} \PYG{n}{GAME\PYGZus{}HEIGHT}\PYG{p}{),} \PYG{l+m+mi}{1}\PYG{p}{)}
+
+    \PYG{c+c1}{\PYGZsh{} update your game state here (do not constrain snake life time)}
+    \PYG{k}{if} \PYG{o+ow}{not} \PYG{n}{game}\PYG{o}{.}\PYG{n}{step}\PYG{p}{(}\PYG{k+kc}{False}\PYG{p}{):} \PYG{c+c1}{\PYGZsh{} snake is dead}
+        \PYG{k}{if} \PYG{n}{iteration} \PYG{o}{\PYGZgt{}=} \PYG{n}{c}\PYG{o}{.}\PYG{n}{MAX\PYGZus{}ITERATION}\PYG{p}{:}
+            \PYG{k}{break}
+        \PYG{n}{game} \PYG{o}{=} \PYG{n}{restore\PYGZus{}snake}\PYG{p}{(}\PYG{n}{c}\PYG{o}{.}\PYG{n}{SINGLE\PYGZus{}SNAKE\PYGZus{}BRAIN}\PYG{p}{)}
+
+    \PYG{c+c1}{\PYGZsh{} flip() the display to put your work on screen}
+    \PYG{n}{pygame}\PYG{o}{.}\PYG{n}{display}\PYG{o}{.}\PYG{n}{flip}\PYG{p}{()}
+    \PYG{n}{frame\PYGZus{}str} \PYG{o}{=} \PYG{n}{pygame}\PYG{o}{.}\PYG{n}{image}\PYG{o}{.}\PYG{n}{tostring}\PYG{p}{(}\PYG{n}{screen}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}RGB\PYGZdq{}}\PYG{p}{)}
+    \PYG{n}{frame\PYGZus{}image} \PYG{o}{=} \PYG{n}{Image}\PYG{o}{.}\PYG{n}{frombytes}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}RGB\PYGZdq{}}\PYG{p}{,} \PYG{p}{(}\PYG{n}{GAME\PYGZus{}WIDTH}\PYG{p}{,} \PYG{n}{GAME\PYGZus{}HEIGHT}\PYG{p}{),} \PYG{n}{frame\PYGZus{}str}\PYG{p}{)}
+    \PYG{n}{frames}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{frame\PYGZus{}image}\PYG{p}{)}
+    \PYG{n}{clock}\PYG{o}{.}\PYG{n}{tick}\PYG{p}{(}\PYG{l+m+mi}{25}\PYG{p}{)}
+
+\PYG{n}{frames}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}\PYG{o}{.}\PYG{n}{save}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}game\PYGZus{}animation.gif\PYGZdq{}}\PYG{p}{,} \PYG{n}{save\PYGZus{}all}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{,} \PYG{n}{append\PYGZus{}images}\PYG{o}{=}\PYG{n}{frames}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{:],} \PYG{n}{duration}\PYG{o}{=}\PYG{l+m+mi}{100}\PYG{p}{,} \PYG{n}{loop}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{)}
+\PYG{n}{pygame}\PYG{o}{.}\PYG{n}{quit}\PYG{p}{()}
+\end{Verbatim}

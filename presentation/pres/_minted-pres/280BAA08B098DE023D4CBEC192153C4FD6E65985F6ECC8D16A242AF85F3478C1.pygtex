@@ -1,0 +1,54 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{k+kn}{import} \PYG{n+nn}{pickle}
+\PYG{k+kn}{import} \PYG{n+nn}{matplotlib.pyplot} \PYG{k}{as} \PYG{n+nn}{plt}
+
+\PYG{k}{def} \PYG{n+nf}{restore\PYGZus{}curves}\PYG{p}{(}\PYG{n}{filename}\PYG{p}{):}
+    \PYG{k}{with} \PYG{n+nb}{open}\PYG{p}{(}\PYG{n}{filename}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}rb\PYGZsq{}}\PYG{p}{)} \PYG{k}{as} \PYG{n}{f}\PYG{p}{:}
+        \PYG{n}{data} \PYG{o}{=} \PYG{n}{pickle}\PYG{o}{.}\PYG{n}{load}\PYG{p}{(}\PYG{n}{f}\PYG{p}{)}
+    \PYG{k}{return} \PYG{n}{data}
+
+\PYG{n}{max\PYGZus{}iterations} \PYG{o}{=} \PYG{l+m+mi}{256}
+
+\PYG{p}{(}\PYG{n}{max\PYGZus{}fitness5}\PYG{p}{,} \PYG{n}{min\PYGZus{}fitness5}\PYG{p}{,} \PYG{n}{avg\PYGZus{}fitness5}\PYG{p}{,} \PYG{n}{max\PYGZus{}apple\PYGZus{}eaten5}\PYG{p}{,} \PYG{n}{min\PYGZus{}apple\PYGZus{}eaten5}\PYG{p}{,} \PYG{n}{avg\PYGZus{}apple\PYGZus{}eaten5}\PYG{p}{,} \PYG{n}{max\PYGZus{}snake\PYGZus{}length5}\PYG{p}{)} \PYG{o}{=} \PYG{n}{restore\PYGZus{}curves}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}curve\PYGZus{}53.pickle\PYGZdq{}}\PYG{p}{)}
+\PYG{p}{(}\PYG{n}{max\PYGZus{}fitness1}\PYG{p}{,} \PYG{n}{min\PYGZus{}fitness1}\PYG{p}{,} \PYG{n}{avg\PYGZus{}fitness1}\PYG{p}{,} \PYG{n}{max\PYGZus{}apple\PYGZus{}eaten1}\PYG{p}{,} \PYG{n}{min\PYGZus{}apple\PYGZus{}eaten1}\PYG{p}{,} \PYG{n}{avg\PYGZus{}apple\PYGZus{}eaten1}\PYG{p}{,} \PYG{n}{max\PYGZus{}snake\PYGZus{}length1}\PYG{p}{)} \PYG{o}{=} \PYG{n}{restore\PYGZus{}curves}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}curve\PYGZus{}13.pickle\PYGZdq{}}\PYG{p}{)}
+
+\PYG{n}{fig}\PYG{p}{,} \PYG{n}{ax1} \PYG{o}{=} \PYG{n}{plt}\PYG{o}{.}\PYG{n}{subplots}\PYG{p}{()}
+
+\PYG{n}{color1} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}tab:blue\PYGZsq{}}
+\PYG{n}{color2} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}tab:red\PYGZsq{}}
+\PYG{n}{color3} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}tab:green\PYGZsq{}}
+\PYG{n}{color4} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}tab:orange\PYGZsq{}}
+
+\PYG{n}{ax1}\PYG{o}{.}\PYG{n}{set\PYGZus{}xlabel}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Génération\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{ax1}\PYG{o}{.}\PYG{n}{set\PYGZus{}ylabel}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Fitness maximum\PYGZsq{}}\PYG{p}{,} \PYG{n}{color}\PYG{o}{=}\PYG{n}{color1}\PYG{p}{)}
+\PYG{n}{ax1}\PYG{o}{.}\PYG{n}{set\PYGZus{}yscale}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}log\PYGZsq{}}\PYG{p}{)}
+\PYG{c+c1}{\PYGZsh{} Key change: Use iterations as the x\PYGZhy{}axis data}
+\PYG{n}{ax1}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{max\PYGZus{}iterations} \PYG{o}{+} \PYG{l+m+mi}{1}\PYG{p}{),} \PYG{n}{max\PYGZus{}fitness1}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{:}\PYG{n}{max\PYGZus{}iterations} \PYG{o}{+} \PYG{l+m+mi}{1}\PYG{p}{],} \PYG{n}{color}\PYG{o}{=}\PYG{n}{color2}\PYG{p}{,} \PYG{n}{label}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}Fitness strat 1\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{ax1}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{max\PYGZus{}iterations} \PYG{o}{+} \PYG{l+m+mi}{1}\PYG{p}{),} \PYG{n}{max\PYGZus{}fitness5}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{:}\PYG{n}{max\PYGZus{}iterations} \PYG{o}{+} \PYG{l+m+mi}{1}\PYG{p}{],} \PYG{n}{color}\PYG{o}{=}\PYG{n}{color1}\PYG{p}{,} \PYG{n}{label}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}Fitness strat 2\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{ax1}\PYG{o}{.}\PYG{n}{tick\PYGZus{}params}\PYG{p}{(}\PYG{n}{axis}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}y\PYGZsq{}}\PYG{p}{,} \PYG{n}{labelcolor}\PYG{o}{=}\PYG{n}{color1}\PYG{p}{)}
+
+\PYG{n}{ax1}\PYG{o}{.}\PYG{n}{legend}\PYG{p}{(}\PYG{n}{loc}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}upper left\PYGZsq{}}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} Add a legend for clarity}
+
+\PYG{n}{color3} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}tab:green\PYGZsq{}}
+\PYG{n}{ax2} \PYG{o}{=} \PYG{n}{ax1}\PYG{o}{.}\PYG{n}{twinx}\PYG{p}{()}
+\PYG{n}{ax2}\PYG{o}{.}\PYG{n}{set\PYGZus{}ylabel}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Pommes mangées maximum\PYGZsq{}}\PYG{p}{,} \PYG{n}{color}\PYG{o}{=}\PYG{n}{color3}\PYG{p}{)}
+\PYG{c+c1}{\PYGZsh{} Key change: Use iterations as the x\PYGZhy{}axis data}
+\PYG{n}{ax2}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{max\PYGZus{}iterations} \PYG{o}{+} \PYG{l+m+mi}{1}\PYG{p}{),} \PYG{n}{max\PYGZus{}apple\PYGZus{}eaten1}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{:}\PYG{n}{max\PYGZus{}iterations} \PYG{o}{+} \PYG{l+m+mi}{1}\PYG{p}{],} \PYG{n}{color}\PYG{o}{=}\PYG{n}{color4}\PYG{p}{,} \PYG{n}{label}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}Pommes strat 1\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{ax2}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{max\PYGZus{}iterations} \PYG{o}{+} \PYG{l+m+mi}{1}\PYG{p}{),} \PYG{n}{max\PYGZus{}apple\PYGZus{}eaten5}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{:}\PYG{n}{max\PYGZus{}iterations} \PYG{o}{+} \PYG{l+m+mi}{1}\PYG{p}{],} \PYG{n}{color}\PYG{o}{=}\PYG{n}{color3}\PYG{p}{,} \PYG{n}{label}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}Pommes strat 2\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{ax2}\PYG{o}{.}\PYG{n}{tick\PYGZus{}params}\PYG{p}{(}\PYG{n}{axis}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}y\PYGZsq{}}\PYG{p}{,} \PYG{n}{labelcolor}\PYG{o}{=}\PYG{n}{color3}\PYG{p}{)}
+
+\PYG{n}{ax2}\PYG{o}{.}\PYG{n}{legend}\PYG{p}{(}\PYG{n}{loc}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}lower right\PYGZsq{}}\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{} Add Vertical Gridlines (The Key Change)}
+\PYG{n}{ax1}\PYG{o}{.}\PYG{n}{grid}\PYG{p}{(}\PYG{n}{axis}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}x\PYGZsq{}}\PYG{p}{,} \PYG{n}{linestyle}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}\PYGZhy{}\PYGZhy{}\PYGZsq{}}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} Gridlines on the x\PYGZhy{}axis (iterations)}
+\PYG{n}{ax2}\PYG{o}{.}\PYG{n}{grid}\PYG{p}{(}\PYG{n}{axis}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}y\PYGZsq{}}\PYG{p}{,} \PYG{n}{linestyle}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}\PYGZhy{}\PYGZhy{}\PYGZsq{}}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} You need to add it for the second axis too}
+
+\PYG{c+c1}{\PYGZsh{} Additional styling improvement}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{title}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Fitness et pommes mangées fct. nombre de générations\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{fig}\PYG{o}{.}\PYG{n}{tight\PYGZus{}layout}\PYG{p}{()}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{savefig}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}curve\PYGZus{}compare\PYGZus{}cv.svg\PYGZdq{}}\PYG{p}{)}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{savefig}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}curve\PYGZus{}compare\PYGZus{}cv.eps\PYGZdq{}}\PYG{p}{)}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{savefig}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}curve\PYGZus{}compare\PYGZus{}cv.pdf\PYGZdq{}}\PYG{p}{)}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{savefig}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}curve\PYGZus{}compare\PYGZus{}cv.png\PYGZdq{}}\PYG{p}{)}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{show}\PYG{p}{()}
+\end{Verbatim}

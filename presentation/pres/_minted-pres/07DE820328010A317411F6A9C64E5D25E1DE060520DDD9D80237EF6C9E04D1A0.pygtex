@@ -1,0 +1,258 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{k+kn}{import} \PYG{n+nn}{pygame}
+\PYG{k+kn}{import} \PYG{n+nn}{os}
+\PYG{k+kn}{import} \PYG{n+nn}{signal}
+\PYG{k+kn}{import} \PYG{n+nn}{sys}
+\PYG{k+kn}{from} \PYG{n+nn}{game\PYGZus{}collection} \PYG{k+kn}{import} \PYG{n}{GameCollection}
+\PYG{k+kn}{import} \PYG{n+nn}{math}
+\PYG{k+kn}{import} \PYG{n+nn}{matplotlib.pyplot} \PYG{k}{as} \PYG{n+nn}{plt}
+\PYG{k+kn}{import} \PYG{n+nn}{numpy} \PYG{k}{as} \PYG{n+nn}{np}
+\PYG{k+kn}{import} \PYG{n+nn}{config} \PYG{k}{as} \PYG{n+nn}{c}
+\PYG{k+kn}{from} \PYG{n+nn}{scipy.interpolate} \PYG{k+kn}{import} \PYG{n}{make\PYGZus{}interp\PYGZus{}spline}
+\PYG{k+kn}{import} \PYG{n+nn}{pickle}
+\PYG{k+kn}{import} \PYG{n+nn}{sys}
+
+\PYG{n}{game\PYGZus{}collection} \PYG{o}{=} \PYG{n}{GameCollection}\PYG{p}{(}\PYG{n}{c}\PYG{o}{.}\PYG{n}{POPULATION}\PYG{p}{,} \PYG{n}{c}\PYG{o}{.}\PYG{n}{WIDTH}\PYG{p}{,} \PYG{n}{c}\PYG{o}{.}\PYG{n}{HEIGHT}\PYG{p}{)}
+
+\PYG{k}{if} \PYG{n}{c}\PYG{o}{.}\PYG{n}{RESTORE} \PYG{o+ow}{and} \PYG{n}{os}\PYG{o}{.}\PYG{n}{path}\PYG{o}{.}\PYG{n}{exists}\PYG{p}{(}\PYG{n}{c}\PYG{o}{.}\PYG{n}{BRAINS\PYGZus{}FILE}\PYG{p}{):}
+    \PYG{n}{game\PYGZus{}collection}\PYG{o}{.}\PYG{n}{restore\PYGZus{}brains}\PYG{p}{(}\PYG{n}{c}\PYG{o}{.}\PYG{n}{BRAINS\PYGZus{}FILE}\PYG{p}{)}
+\PYG{c+c1}{\PYGZsh{} board with all populations has games\PYGZus{}per\PYGZus{}side games per side}
+\PYG{c+c1}{\PYGZsh{} each game has WIDTH x HEIGHT cells}
+
+\PYG{k}{if} \PYG{n}{c}\PYG{o}{.}\PYG{n}{DISPLAY\PYGZus{}ALL\PYGZus{}POPULATION}\PYG{p}{:}
+    \PYG{n}{games\PYGZus{}per\PYGZus{}side} \PYG{o}{=} \PYG{n}{math}\PYG{o}{.}\PYG{n}{ceil}\PYG{p}{(}\PYG{n}{math}\PYG{o}{.}\PYG{n}{sqrt}\PYG{p}{(}\PYG{n}{c}\PYG{o}{.}\PYG{n}{POPULATION}\PYG{p}{))}
+\PYG{k}{else}\PYG{p}{:}
+    \PYG{n}{games\PYGZus{}per\PYGZus{}side} \PYG{o}{=} \PYG{l+m+mi}{1}
+
+\PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{=} \PYG{p}{(}\PYG{n}{c}\PYG{o}{.}\PYG{n}{BOARD\PYGZus{}SIDE} \PYG{o}{//} \PYG{n}{games\PYGZus{}per\PYGZus{}side}\PYG{p}{)} \PYG{o}{//} \PYG{n+nb}{max}\PYG{p}{(}\PYG{n}{c}\PYG{o}{.}\PYG{n}{WIDTH}\PYG{p}{,} \PYG{n}{c}\PYG{o}{.}\PYG{n}{HEIGHT}\PYG{p}{)}
+\PYG{n}{GAME\PYGZus{}WIDTH} \PYG{o}{=} \PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{*} \PYG{n}{c}\PYG{o}{.}\PYG{n}{WIDTH}
+\PYG{n}{GAME\PYGZus{}HEIGHT} \PYG{o}{=} \PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{*} \PYG{n}{c}\PYG{o}{.}\PYG{n}{HEIGHT}
+\PYG{n}{BOARD\PYGZus{}WIDTH} \PYG{o}{=} \PYG{n}{games\PYGZus{}per\PYGZus{}side} \PYG{o}{*} \PYG{n}{GAME\PYGZus{}WIDTH}
+\PYG{n}{BOARD\PYGZus{}HEIGHT} \PYG{o}{=} \PYG{n}{games\PYGZus{}per\PYGZus{}side} \PYG{o}{*} \PYG{n}{GAME\PYGZus{}HEIGHT}
+
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}CELL\PYGZus{}SIDE: }\PYG{l+s+si}{\PYGZob{}}\PYG{n}{CELL\PYGZus{}SIDE}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{, GAME\PYGZus{}WIDTH: }\PYG{l+s+si}{\PYGZob{}}\PYG{n}{GAME\PYGZus{}WIDTH}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{, GAME\PYGZus{}HEIGHT: }\PYG{l+s+si}{\PYGZob{}}\PYG{n}{GAME\PYGZus{}HEIGHT}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{, BOARD\PYGZus{}WIDTH: }\PYG{l+s+si}{\PYGZob{}}\PYG{n}{BOARD\PYGZus{}WIDTH}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{, BOARD\PYGZus{}HEIGHT: }\PYG{l+s+si}{\PYGZob{}}\PYG{n}{BOARD\PYGZus{}HEIGHT}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+
+\PYG{k}{if} \PYG{n}{c}\PYG{o}{.}\PYG{n}{DISPLAY\PYGZus{}GRAPHICS}\PYG{p}{:}
+    \PYG{c+c1}{\PYGZsh{} pygame setup}
+    \PYG{n}{pygame}\PYG{o}{.}\PYG{n}{init}\PYG{p}{()}
+    \PYG{n}{screen} \PYG{o}{=} \PYG{n}{pygame}\PYG{o}{.}\PYG{n}{display}\PYG{o}{.}\PYG{n}{set\PYGZus{}mode}\PYG{p}{((}\PYG{n}{BOARD\PYGZus{}WIDTH}\PYG{p}{,} \PYG{n}{BOARD\PYGZus{}HEIGHT}\PYG{p}{))}
+    \PYG{n}{clock} \PYG{o}{=} \PYG{n}{pygame}\PYG{o}{.}\PYG{n}{time}\PYG{o}{.}\PYG{n}{Clock}\PYG{p}{()}
+
+\PYG{n}{running} \PYG{o}{=} \PYG{k+kc}{True}
+\PYG{n}{dt} \PYG{o}{=} \PYG{l+m+mi}{0}
+
+\PYG{n}{iteration} \PYG{o}{=} \PYG{l+m+mi}{0}
+
+\PYG{n}{max\PYGZus{}fitness} \PYG{o}{=} \PYG{p}{[]}
+\PYG{n}{min\PYGZus{}fitness} \PYG{o}{=} \PYG{p}{[]}
+\PYG{n}{avg\PYGZus{}fitness} \PYG{o}{=} \PYG{p}{[]}
+\PYG{n}{max\PYGZus{}apple\PYGZus{}eaten} \PYG{o}{=} \PYG{p}{[]}
+\PYG{n}{min\PYGZus{}apple\PYGZus{}eaten} \PYG{o}{=} \PYG{p}{[]}
+\PYG{n}{avg\PYGZus{}apple\PYGZus{}eaten} \PYG{o}{=} \PYG{p}{[]}
+\PYG{n}{max\PYGZus{}snake\PYGZus{}length} \PYG{o}{=} \PYG{l+m+mi}{0}
+
+\PYG{k}{def} \PYG{n+nf}{save\PYGZus{}curves}\PYG{p}{(}\PYG{n}{filename}\PYG{p}{):}
+    \PYG{k}{with} \PYG{n+nb}{open}\PYG{p}{(}\PYG{n}{filename}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}wb\PYGZsq{}}\PYG{p}{)} \PYG{k}{as} \PYG{n}{f}\PYG{p}{:}
+        \PYG{n}{pickle}\PYG{o}{.}\PYG{n}{dump}\PYG{p}{((}\PYG{n}{max\PYGZus{}fitness}\PYG{p}{,} \PYG{n}{min\PYGZus{}fitness}\PYG{p}{,} \PYG{n}{avg\PYGZus{}fitness}\PYG{p}{,} \PYG{n}{max\PYGZus{}apple\PYGZus{}eaten}\PYG{p}{,} \PYG{n}{min\PYGZus{}apple\PYGZus{}eaten}\PYG{p}{,} \PYG{n}{avg\PYGZus{}apple\PYGZus{}eaten}\PYG{p}{,} \PYG{n}{max\PYGZus{}snake\PYGZus{}length}\PYG{p}{),} \PYG{n}{f}\PYG{p}{)}
+
+\PYG{k}{def} \PYG{n+nf}{restore\PYGZus{}curves}\PYG{p}{(}\PYG{n}{filename}\PYG{p}{):}
+    \PYG{k}{with} \PYG{n+nb}{open}\PYG{p}{(}\PYG{n}{filename}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}rb\PYGZsq{}}\PYG{p}{)} \PYG{k}{as} \PYG{n}{f}\PYG{p}{:}
+        \PYG{n}{data} \PYG{o}{=} \PYG{n}{pickle}\PYG{o}{.}\PYG{n}{load}\PYG{p}{(}\PYG{n}{f}\PYG{p}{)}
+    \PYG{k}{return} \PYG{n}{data}
+
+\PYG{k}{def} \PYG{n+nf}{save\PYGZus{}and\PYGZus{}exit}\PYG{p}{(}\PYG{n}{signal}\PYG{p}{,} \PYG{n}{frame}\PYG{p}{):}
+    \PYG{k}{if} \PYG{n}{c}\PYG{o}{.}\PYG{n}{SAVE}\PYG{p}{:}
+        \PYG{n}{game\PYGZus{}collection}\PYG{o}{.}\PYG{n}{save\PYGZus{}brains}\PYG{p}{(}\PYG{n}{c}\PYG{o}{.}\PYG{n}{BRAINS\PYGZus{}FILE}\PYG{p}{)}
+        \PYG{n}{save\PYGZus{}curves}\PYG{p}{(}\PYG{n}{c}\PYG{o}{.}\PYG{n}{CURVES\PYGZus{}FILES}\PYG{p}{)}
+    \PYG{n}{sys}\PYG{o}{.}\PYG{n}{exit}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{} save program state in case of interruption}
+\PYG{n}{signal}\PYG{o}{.}\PYG{n}{signal}\PYG{p}{(}\PYG{n}{signal}\PYG{o}{.}\PYG{n}{SIGINT}\PYG{p}{,} \PYG{n}{save\PYGZus{}and\PYGZus{}exit}\PYG{p}{)}
+
+\PYG{k}{while} \PYG{n}{running}\PYG{p}{:}
+
+    \PYG{n}{cur\PYGZus{}max\PYGZus{}fitness} \PYG{o}{=} \PYG{n}{game\PYGZus{}collection}\PYG{o}{.}\PYG{n}{best\PYGZus{}fitness}\PYG{p}{()}
+    \PYG{n}{cur\PYGZus{}min\PYGZus{}fitness} \PYG{o}{=} \PYG{n}{game\PYGZus{}collection}\PYG{o}{.}\PYG{n}{worst\PYGZus{}fitness}\PYG{p}{()}
+    \PYG{n}{cur\PYGZus{}avg\PYGZus{}fitness} \PYG{o}{=} \PYG{n}{game\PYGZus{}collection}\PYG{o}{.}\PYG{n}{average\PYGZus{}fitness}\PYG{p}{()}
+    \PYG{n}{cur\PYGZus{}max\PYGZus{}apple\PYGZus{}eaten} \PYG{o}{=} \PYG{n}{game\PYGZus{}collection}\PYG{o}{.}\PYG{n}{max\PYGZus{}apple\PYGZus{}eaten}\PYG{p}{()}
+    \PYG{n}{cur\PYGZus{}min\PYGZus{}apple\PYGZus{}eaten} \PYG{o}{=} \PYG{n}{game\PYGZus{}collection}\PYG{o}{.}\PYG{n}{min\PYGZus{}apple\PYGZus{}eaten}\PYG{p}{()}
+    \PYG{n}{cur\PYGZus{}avg\PYGZus{}apple\PYGZus{}eaten} \PYG{o}{=} \PYG{n}{game\PYGZus{}collection}\PYG{o}{.}\PYG{n}{average\PYGZus{}apple\PYGZus{}eaten}\PYG{p}{()}
+
+    \PYG{k}{if} \PYG{n}{cur\PYGZus{}max\PYGZus{}apple\PYGZus{}eaten} \PYG{o}{\PYGZgt{}=} \PYG{n}{max\PYGZus{}snake\PYGZus{}length}\PYG{p}{:}
+        \PYG{n}{max\PYGZus{}snake\PYGZus{}length} \PYG{o}{=} \PYG{n}{cur\PYGZus{}max\PYGZus{}apple\PYGZus{}eaten} \PYG{o}{+} \PYG{l+m+mi}{1}
+
+    \PYG{c+c1}{\PYGZsh{} retrieve the new game}
+    \PYG{k}{if} \PYG{n}{c}\PYG{o}{.}\PYG{n}{DISPLAY\PYGZus{}LARGEST\PYGZus{}SNAKE}\PYG{p}{:}
+        \PYG{n}{game}\PYG{p}{,} \PYG{n}{current\PYGZus{}snake} \PYG{o}{=} \PYG{n}{game\PYGZus{}collection}\PYG{o}{.}\PYG{n}{longest\PYGZus{}snake}\PYG{p}{()} \PYG{c+c1}{\PYGZsh{} to see the longest snake}
+    \PYG{k}{else}\PYG{p}{:}
+        \PYG{n}{game}\PYG{p}{,} \PYG{n}{current\PYGZus{}snake} \PYG{o}{=} \PYG{n}{game\PYGZus{}collection}\PYG{o}{.}\PYG{n}{snake\PYGZus{}to\PYGZus{}display}\PYG{p}{()}
+
+    \PYG{c+c1}{\PYGZsh{} display game iteration and fitness of the game (generation) as window title}
+    \PYG{c+c1}{\PYGZsh{}info = f\PYGZdq{}Gen \PYGZob{}game\PYGZus{}collection.generation\PYGZcb{} \PYGZhy{} Iter \PYGZob{}game\PYGZus{}collection.iteration\PYGZcb{} \PYGZhy{} Fitness \PYGZob{}game.fitness():.2e\PYGZcb{} \PYGZhy{} Max fitness \PYGZob{}cur\PYGZus{}max\PYGZus{}fitness:.2e\PYGZcb{} \PYGZhy{} Avg fitness \PYGZob{}round(cur\PYGZus{}avg\PYGZus{}fitness, 2):.2e\PYGZcb{} \PYGZhy{} Max eaten \PYGZob{}cur\PYGZus{}max\PYGZus{}apple\PYGZus{}eaten\PYGZcb{} \PYGZhy{} Longest ever \PYGZob{}max\PYGZus{}snake\PYGZus{}length\PYGZcb{}\PYGZdq{}}
+    \PYG{n}{info} \PYG{o}{=} \PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}Gen }\PYG{l+s+si}{\PYGZob{}}\PYG{n}{game\PYGZus{}collection}\PYG{o}{.}\PYG{n}{generation}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{ \PYGZhy{} Iter }\PYG{l+s+si}{\PYGZob{}}\PYG{n}{game\PYGZus{}collection}\PYG{o}{.}\PYG{n}{iteration}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{ \PYGZhy{} Fitness (}\PYG{l+s+si}{\PYGZob{}}\PYG{n}{cur\PYGZus{}min\PYGZus{}fitness}\PYG{l+s+si}{:}\PYG{l+s+s2}{.1e}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{:}\PYG{l+s+si}{\PYGZob{}}\PYG{n}{cur\PYGZus{}avg\PYGZus{}fitness}\PYG{l+s+si}{:}\PYG{l+s+s2}{.1e}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{:}\PYG{l+s+si}{\PYGZob{}}\PYG{n}{cur\PYGZus{}max\PYGZus{}fitness}\PYG{l+s+si}{:}\PYG{l+s+s2}{.1e}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{) \PYGZhy{} Apple (}\PYG{l+s+si}{\PYGZob{}}\PYG{n}{cur\PYGZus{}min\PYGZus{}apple\PYGZus{}eaten}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{:}\PYG{l+s+si}{\PYGZob{}}\PYG{n+nb}{round}\PYG{p}{(}\PYG{n}{cur\PYGZus{}avg\PYGZus{}apple\PYGZus{}eaten}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{:}\PYG{l+s+si}{\PYGZob{}}\PYG{n}{cur\PYGZus{}max\PYGZus{}apple\PYGZus{}eaten}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{) \PYGZhy{} Best snake }\PYG{l+s+si}{\PYGZob{}}\PYG{n}{max\PYGZus{}snake\PYGZus{}length}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}
+
+    \PYG{k}{if} \PYG{n}{c}\PYG{o}{.}\PYG{n}{DISPLAY\PYGZus{}GRAPHICS}\PYG{p}{:}
+        \PYG{c+c1}{\PYGZsh{} poll for events}
+        \PYG{c+c1}{\PYGZsh{} pygame.QUIT event means the user clicked X to close your window}
+        \PYG{k}{for} \PYG{n}{event} \PYG{o+ow}{in} \PYG{n}{pygame}\PYG{o}{.}\PYG{n}{event}\PYG{o}{.}\PYG{n}{get}\PYG{p}{():}
+            \PYG{k}{if} \PYG{n}{event}\PYG{o}{.}\PYG{n}{type} \PYG{o}{==} \PYG{n}{pygame}\PYG{o}{.}\PYG{n}{QUIT}\PYG{p}{:}
+                \PYG{n}{running} \PYG{o}{=} \PYG{k+kc}{False}
+        \PYG{c+c1}{\PYGZsh{} fill the screen with a color to wipe away anything from last frame}
+        \PYG{n}{screen}\PYG{o}{.}\PYG{n}{fill}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}white\PYGZdq{}}\PYG{p}{)}
+
+        \PYG{n}{pygame}\PYG{o}{.}\PYG{n}{display}\PYG{o}{.}\PYG{n}{set\PYGZus{}caption}\PYG{p}{(}\PYG{n}{info}\PYG{p}{)}
+
+        \PYG{k}{if} \PYG{o+ow}{not} \PYG{n}{c}\PYG{o}{.}\PYG{n}{DISPLAY\PYGZus{}ALL\PYGZus{}POPULATION}\PYG{p}{:}
+            \PYG{k}{for} \PYG{p}{(}\PYG{n}{x}\PYG{p}{,} \PYG{n}{y}\PYG{p}{)} \PYG{o+ow}{in} \PYG{n}{game}\PYG{o}{.}\PYG{n}{snake\PYGZus{}body}\PYG{p}{:}
+                \PYG{n}{pygame}\PYG{o}{.}\PYG{n}{draw}\PYG{o}{.}\PYG{n}{circle}\PYG{p}{(}\PYG{n}{screen}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}darkolivegreen3\PYGZdq{}}\PYG{p}{,} \PYG{p}{(}\PYG{n}{x} \PYG{o}{*} \PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{+} \PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{/} \PYG{l+m+mi}{2}\PYG{p}{,} \PYG{n}{y} \PYG{o}{*} \PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{+} \PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{/} \PYG{l+m+mi}{2}\PYG{p}{),} \PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{/} \PYG{l+m+mi}{2}\PYG{p}{)}
+            \PYG{p}{(}\PYG{n}{x}\PYG{p}{,} \PYG{n}{y}\PYG{p}{)} \PYG{o}{=} \PYG{n}{game}\PYG{o}{.}\PYG{n}{snake\PYGZus{}body}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]} \PYG{c+c1}{\PYGZsh{} head of the snake}
+            \PYG{n}{pygame}\PYG{o}{.}\PYG{n}{draw}\PYG{o}{.}\PYG{n}{circle}\PYG{p}{(}\PYG{n}{screen}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}black\PYGZdq{}}\PYG{p}{,} \PYG{p}{(}\PYG{n}{x} \PYG{o}{*} \PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{+} \PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{/} \PYG{l+m+mi}{2}\PYG{p}{,} \PYG{n}{y} \PYG{o}{*} \PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{+} \PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{/} \PYG{l+m+mi}{2}\PYG{p}{),} \PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{/} \PYG{l+m+mi}{4}\PYG{p}{)}
+            \PYG{p}{(}\PYG{n}{x}\PYG{p}{,} \PYG{n}{y}\PYG{p}{)} \PYG{o}{=} \PYG{n}{game}\PYG{o}{.}\PYG{n}{apple}
+            \PYG{n}{pygame}\PYG{o}{.}\PYG{n}{draw}\PYG{o}{.}\PYG{n}{circle}\PYG{p}{(}\PYG{n}{screen}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}brown3\PYGZdq{}}\PYG{p}{,} \PYG{p}{(}\PYG{n}{x} \PYG{o}{*} \PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{+} \PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{/} \PYG{l+m+mi}{2}\PYG{p}{,} \PYG{n}{y} \PYG{o}{*} \PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{+} \PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{/} \PYG{l+m+mi}{2}\PYG{p}{),} \PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{/} \PYG{l+m+mi}{2}\PYG{p}{)}
+            \PYG{c+c1}{\PYGZsh{} surround the current game with a black rectangle}
+            \PYG{n}{pygame}\PYG{o}{.}\PYG{n}{draw}\PYG{o}{.}\PYG{n}{rect}\PYG{p}{(}\PYG{n}{screen}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}black\PYGZdq{}}\PYG{p}{,} \PYG{p}{(}\PYG{n}{BOARD\PYGZus{}WIDTH}\PYG{p}{,} \PYG{n}{BOARD\PYGZus{}HEIGHT}\PYG{p}{,} \PYG{n}{BOARD\PYGZus{}WIDTH}\PYG{p}{,} \PYG{n}{BOARD\PYGZus{}HEIGHT}\PYG{p}{),} \PYG{l+m+mi}{1}\PYG{p}{)}
+        \PYG{k}{else}\PYG{p}{:}
+            \PYG{c+c1}{\PYGZsh{} draw all games of the game collection in one big table and each game has coordinate and use a square matrix of sqrt(POPULATION) x sqrt(POPULATION)}
+            \PYG{c+c1}{\PYGZsh{} Iterate over each game in the collection}
+            \PYG{k}{for} \PYG{n}{i}\PYG{p}{,} \PYG{n}{game} \PYG{o+ow}{in} \PYG{n+nb}{enumerate}\PYG{p}{(}\PYG{n}{game\PYGZus{}collection}\PYG{o}{.}\PYG{n}{games}\PYG{p}{):}
+                \PYG{c+c1}{\PYGZsh{} Calculate the row and column of the current game in the table}
+                \PYG{n}{row} \PYG{o}{=} \PYG{n}{i} \PYG{o}{//} \PYG{n}{games\PYGZus{}per\PYGZus{}side}
+                \PYG{n}{col} \PYG{o}{=} \PYG{n}{i} \PYG{o}{\PYGZpc{}} \PYG{n}{games\PYGZus{}per\PYGZus{}side}
+
+                \PYG{c+c1}{\PYGZsh{} if game is lost change the color of the rectangle to red}
+                \PYG{k}{if} \PYG{n}{game}\PYG{o}{.}\PYG{n}{lost}\PYG{p}{:}
+                    \PYG{n}{pygame}\PYG{o}{.}\PYG{n}{draw}\PYG{o}{.}\PYG{n}{rect}\PYG{p}{(}\PYG{n}{screen}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}red\PYGZdq{}}\PYG{p}{,} \PYG{p}{(}\PYG{n}{col} \PYG{o}{*} \PYG{n}{GAME\PYGZus{}WIDTH}\PYG{p}{,} \PYG{n}{row} \PYG{o}{*} \PYG{n}{GAME\PYGZus{}HEIGHT}\PYG{p}{,} \PYG{n}{GAME\PYGZus{}WIDTH}\PYG{p}{,} \PYG{n}{GAME\PYGZus{}HEIGHT}\PYG{p}{))}
+
+                \PYG{c+c1}{\PYGZsh{} do a case switch to change the color of the rectangle depending on the death reason}
+                \PYG{k}{if} \PYG{n}{game}\PYG{o}{.}\PYG{n}{death\PYGZus{}reason} \PYG{o}{==} \PYG{l+s+s2}{\PYGZdq{}Wall\PYGZdq{}}\PYG{p}{:}
+                    \PYG{n}{pygame}\PYG{o}{.}\PYG{n}{draw}\PYG{o}{.}\PYG{n}{rect}\PYG{p}{(}\PYG{n}{screen}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}orange\PYGZdq{}}\PYG{p}{,} \PYG{p}{(}\PYG{n}{col} \PYG{o}{*} \PYG{n}{GAME\PYGZus{}WIDTH}\PYG{p}{,} \PYG{n}{row} \PYG{o}{*} \PYG{n}{GAME\PYGZus{}HEIGHT}\PYG{p}{,} \PYG{n}{GAME\PYGZus{}WIDTH}\PYG{p}{,} \PYG{n}{GAME\PYGZus{}HEIGHT}\PYG{p}{))}
+                \PYG{k}{elif} \PYG{n}{game}\PYG{o}{.}\PYG{n}{death\PYGZus{}reason} \PYG{o}{==} \PYG{l+s+s2}{\PYGZdq{}Body\PYGZdq{}}\PYG{p}{:}
+                    \PYG{n}{pygame}\PYG{o}{.}\PYG{n}{draw}\PYG{o}{.}\PYG{n}{rect}\PYG{p}{(}\PYG{n}{screen}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}blue\PYGZdq{}}\PYG{p}{,} \PYG{p}{(}\PYG{n}{col} \PYG{o}{*} \PYG{n}{GAME\PYGZus{}WIDTH}\PYG{p}{,} \PYG{n}{row} \PYG{o}{*} \PYG{n}{GAME\PYGZus{}HEIGHT}\PYG{p}{,} \PYG{n}{GAME\PYGZus{}WIDTH}\PYG{p}{,} \PYG{n}{GAME\PYGZus{}HEIGHT}\PYG{p}{))}
+                \PYG{k}{elif} \PYG{n}{game}\PYG{o}{.}\PYG{n}{death\PYGZus{}reason} \PYG{o}{==} \PYG{l+s+s2}{\PYGZdq{}Life\PYGZdq{}}\PYG{p}{:}
+                    \PYG{n}{pygame}\PYG{o}{.}\PYG{n}{draw}\PYG{o}{.}\PYG{n}{rect}\PYG{p}{(}\PYG{n}{screen}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}green\PYGZdq{}}\PYG{p}{,} \PYG{p}{(}\PYG{n}{col} \PYG{o}{*} \PYG{n}{GAME\PYGZus{}WIDTH}\PYG{p}{,} \PYG{n}{row} \PYG{o}{*} \PYG{n}{GAME\PYGZus{}HEIGHT}\PYG{p}{,} \PYG{n}{GAME\PYGZus{}WIDTH}\PYG{p}{,} \PYG{n}{GAME\PYGZus{}HEIGHT}\PYG{p}{))}
+
+                \PYG{c+c1}{\PYGZsh{} surround the current game with a black rectangle}
+                \PYG{n}{pygame}\PYG{o}{.}\PYG{n}{draw}\PYG{o}{.}\PYG{n}{rect}\PYG{p}{(}\PYG{n}{screen}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}black\PYGZdq{}}\PYG{p}{,} \PYG{p}{(}\PYG{n}{col} \PYG{o}{*} \PYG{n}{GAME\PYGZus{}WIDTH}\PYG{p}{,} \PYG{n}{row} \PYG{o}{*} \PYG{n}{GAME\PYGZus{}HEIGHT}\PYG{p}{,} \PYG{n}{GAME\PYGZus{}WIDTH}\PYG{p}{,} \PYG{n}{GAME\PYGZus{}HEIGHT}\PYG{p}{),} \PYG{l+m+mi}{1}\PYG{p}{)}
+
+                \PYG{c+c1}{\PYGZsh{} Calculate the position of the game cell on the screen}
+                \PYG{n}{cell\PYGZus{}x} \PYG{o}{=} \PYG{n}{col} \PYG{o}{*} \PYG{n}{GAME\PYGZus{}WIDTH}
+                \PYG{n}{cell\PYGZus{}y} \PYG{o}{=} \PYG{n}{row} \PYG{o}{*} \PYG{n}{GAME\PYGZus{}HEIGHT}
+
+                \PYG{c+c1}{\PYGZsh{} Draw the game on the screen at the calculated position}
+                \PYG{k}{for} \PYG{p}{(}\PYG{n}{x}\PYG{p}{,} \PYG{n}{y}\PYG{p}{)} \PYG{o+ow}{in} \PYG{n}{game}\PYG{o}{.}\PYG{n}{snake\PYGZus{}body}\PYG{p}{:}
+                    \PYG{n}{pygame}\PYG{o}{.}\PYG{n}{draw}\PYG{o}{.}\PYG{n}{circle}\PYG{p}{(}\PYG{n}{screen}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}darkolivegreen3\PYGZdq{}}\PYG{p}{,} \PYG{p}{(}\PYG{n}{cell\PYGZus{}x} \PYG{o}{+} \PYG{n}{x} \PYG{o}{*} \PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{+} \PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{/} \PYG{l+m+mi}{2}\PYG{p}{,} \PYG{n}{cell\PYGZus{}y} \PYG{o}{+} \PYG{n}{y} \PYG{o}{*} \PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{+} \PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{/} \PYG{l+m+mi}{2}\PYG{p}{),} \PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{/} \PYG{l+m+mi}{2}\PYG{p}{)}
+                \PYG{p}{(}\PYG{n}{x}\PYG{p}{,} \PYG{n}{y}\PYG{p}{)} \PYG{o}{=} \PYG{n}{game}\PYG{o}{.}\PYG{n}{snake\PYGZus{}body}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}
+                \PYG{n}{pygame}\PYG{o}{.}\PYG{n}{draw}\PYG{o}{.}\PYG{n}{circle}\PYG{p}{(}\PYG{n}{screen}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}black\PYGZdq{}}\PYG{p}{,} \PYG{p}{(}\PYG{n}{cell\PYGZus{}x} \PYG{o}{+} \PYG{n}{x} \PYG{o}{*} \PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{+} \PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{/} \PYG{l+m+mi}{2}\PYG{p}{,} \PYG{n}{cell\PYGZus{}y} \PYG{o}{+} \PYG{n}{y} \PYG{o}{*} \PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{+} \PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{/} \PYG{l+m+mi}{2}\PYG{p}{),} \PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{/} \PYG{l+m+mi}{4}\PYG{p}{)}
+                \PYG{p}{(}\PYG{n}{x}\PYG{p}{,} \PYG{n}{y}\PYG{p}{)} \PYG{o}{=} \PYG{n}{game}\PYG{o}{.}\PYG{n}{apple}
+                \PYG{n}{pygame}\PYG{o}{.}\PYG{n}{draw}\PYG{o}{.}\PYG{n}{circle}\PYG{p}{(}\PYG{n}{screen}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}brown3\PYGZdq{}}\PYG{p}{,} \PYG{p}{(}\PYG{n}{cell\PYGZus{}x} \PYG{o}{+} \PYG{n}{x} \PYG{o}{*} \PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{+} \PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{/} \PYG{l+m+mi}{2}\PYG{p}{,} \PYG{n}{cell\PYGZus{}y} \PYG{o}{+} \PYG{n}{y} \PYG{o}{*} \PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{+} \PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{/} \PYG{l+m+mi}{2}\PYG{p}{),} \PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{/} \PYG{l+m+mi}{2}\PYG{p}{)}
+
+            \PYG{c+c1}{\PYGZsh{} zoom on longest snake}
+            \PYG{n}{game}\PYG{p}{,} \PYG{n}{current\PYGZus{}snake} \PYG{o}{=} \PYG{n}{game\PYGZus{}collection}\PYG{o}{.}\PYG{n}{longest\PYGZus{}snake}\PYG{p}{()} \PYG{c+c1}{\PYGZsh{} to see the longest snake}
+            \PYG{n}{row} \PYG{o}{=} \PYG{n}{current\PYGZus{}snake} \PYG{o}{//} \PYG{n}{games\PYGZus{}per\PYGZus{}side}
+            \PYG{n}{col} \PYG{o}{=} \PYG{n}{current\PYGZus{}snake} \PYG{o}{\PYGZpc{}} \PYG{n}{games\PYGZus{}per\PYGZus{}side}
+            \PYG{n}{cell\PYGZus{}x} \PYG{o}{=} \PYG{n}{col} \PYG{o}{*} \PYG{n}{GAME\PYGZus{}WIDTH}
+            \PYG{n}{cell\PYGZus{}y} \PYG{o}{=} \PYG{n}{row} \PYG{o}{*} \PYG{n}{GAME\PYGZus{}HEIGHT}
+            \PYG{c+c1}{\PYGZsh{} draw a white rectangle centred on (cell\PYGZus{}x, cell\PYGZus{}y) with a width of c.ZOOM\PYGZus{}FACTOR * WIDTH + CELL\PYGZus{}SIDE and a height of c.ZOOM\PYGZus{}FACTOR * HEIGHT + CELL\PYGZus{}SIDE}
+            \PYG{n}{pygame}\PYG{o}{.}\PYG{n}{draw}\PYG{o}{.}\PYG{n}{rect}\PYG{p}{(}\PYG{n}{screen}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}yellow\PYGZdq{}}\PYG{p}{,} \PYG{p}{(}\PYG{n}{cell\PYGZus{}x}\PYG{p}{,} \PYG{n}{cell\PYGZus{}y}\PYG{p}{,} \PYG{n}{c}\PYG{o}{.}\PYG{n}{ZOOM\PYGZus{}FACTOR} \PYG{o}{*} \PYG{n}{GAME\PYGZus{}WIDTH}\PYG{p}{,} \PYG{n}{c}\PYG{o}{.}\PYG{n}{ZOOM\PYGZus{}FACTOR} \PYG{o}{*} \PYG{n}{GAME\PYGZus{}HEIGHT}\PYG{p}{))}
+            \PYG{k}{for} \PYG{p}{(}\PYG{n}{x}\PYG{p}{,} \PYG{n}{y}\PYG{p}{)} \PYG{o+ow}{in} \PYG{n}{game}\PYG{o}{.}\PYG{n}{snake\PYGZus{}body}\PYG{p}{:}
+                \PYG{n}{pygame}\PYG{o}{.}\PYG{n}{draw}\PYG{o}{.}\PYG{n}{circle}\PYG{p}{(}\PYG{n}{screen}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}darkolivegreen3\PYGZdq{}}\PYG{p}{,} \PYG{p}{(}\PYG{n}{cell\PYGZus{}x} \PYG{o}{+} \PYG{n}{c}\PYG{o}{.}\PYG{n}{ZOOM\PYGZus{}FACTOR} \PYG{o}{*} \PYG{p}{(}\PYG{n}{x} \PYG{o}{+} \PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{+} \PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{/} \PYG{l+m+mi}{2}\PYG{p}{),} \PYG{n}{cell\PYGZus{}y} \PYG{o}{+} \PYG{n}{c}\PYG{o}{.}\PYG{n}{ZOOM\PYGZus{}FACTOR} \PYG{o}{*} \PYG{p}{(}\PYG{n}{y} \PYG{o}{*} \PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{+} \PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{/} \PYG{l+m+mi}{2}\PYG{p}{)),} \PYG{n}{c}\PYG{o}{.}\PYG{n}{ZOOM\PYGZus{}FACTOR} \PYG{o}{*} \PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{/} \PYG{l+m+mi}{2}\PYG{p}{)}
+            \PYG{p}{(}\PYG{n}{x}\PYG{p}{,} \PYG{n}{y}\PYG{p}{)} \PYG{o}{=} \PYG{n}{game}\PYG{o}{.}\PYG{n}{snake\PYGZus{}body}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}
+            \PYG{n}{pygame}\PYG{o}{.}\PYG{n}{draw}\PYG{o}{.}\PYG{n}{circle}\PYG{p}{(}\PYG{n}{screen}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}black\PYGZdq{}}\PYG{p}{,} \PYG{p}{(}\PYG{n}{cell\PYGZus{}x} \PYG{o}{+} \PYG{n}{c}\PYG{o}{.}\PYG{n}{ZOOM\PYGZus{}FACTOR} \PYG{o}{*} \PYG{p}{(}\PYG{n}{x} \PYG{o}{+} \PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{+} \PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{/} \PYG{l+m+mi}{2}\PYG{p}{),} \PYG{n}{cell\PYGZus{}y} \PYG{o}{+} \PYG{n}{c}\PYG{o}{.}\PYG{n}{ZOOM\PYGZus{}FACTOR} \PYG{o}{*} \PYG{p}{(}\PYG{n}{y} \PYG{o}{*} \PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{+} \PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{/} \PYG{l+m+mi}{2}\PYG{p}{)),} \PYG{n}{c}\PYG{o}{.}\PYG{n}{ZOOM\PYGZus{}FACTOR} \PYG{o}{*} \PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{/} \PYG{l+m+mi}{4}\PYG{p}{)}
+            \PYG{p}{(}\PYG{n}{x}\PYG{p}{,} \PYG{n}{y}\PYG{p}{)} \PYG{o}{=} \PYG{n}{game}\PYG{o}{.}\PYG{n}{apple}
+            \PYG{n}{pygame}\PYG{o}{.}\PYG{n}{draw}\PYG{o}{.}\PYG{n}{circle}\PYG{p}{(}\PYG{n}{screen}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}brown3\PYGZdq{}}\PYG{p}{,} \PYG{p}{(}\PYG{n}{cell\PYGZus{}x} \PYG{o}{+} \PYG{n}{c}\PYG{o}{.}\PYG{n}{ZOOM\PYGZus{}FACTOR} \PYG{o}{*} \PYG{p}{(}\PYG{n}{x} \PYG{o}{+} \PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{+} \PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{/} \PYG{l+m+mi}{2}\PYG{p}{),} \PYG{n}{cell\PYGZus{}y} \PYG{o}{+} \PYG{n}{c}\PYG{o}{.}\PYG{n}{ZOOM\PYGZus{}FACTOR} \PYG{o}{*} \PYG{p}{(}\PYG{n}{y} \PYG{o}{*} \PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{+} \PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{/} \PYG{l+m+mi}{2}\PYG{p}{)),} \PYG{n}{c}\PYG{o}{.}\PYG{n}{ZOOM\PYGZus{}FACTOR} \PYG{o}{*} \PYG{n}{CELL\PYGZus{}SIDE} \PYG{o}{/} \PYG{l+m+mi}{2}\PYG{p}{)}
+    \PYG{k}{else}\PYG{p}{:}
+        \PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{info}\PYG{p}{)}
+
+
+    \PYG{c+c1}{\PYGZsh{} update your game state here}
+    \PYG{k}{if} \PYG{o+ow}{not} \PYG{n}{game\PYGZus{}collection}\PYG{o}{.}\PYG{n}{step}\PYG{p}{(}\PYG{n}{c}\PYG{o}{.}\PYG{n}{LIFE\PYGZus{}TIME}\PYG{p}{):} \PYG{c+c1}{\PYGZsh{} all sakes in collection dead go next iteration}
+        \PYG{n}{max\PYGZus{}fitness}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{cur\PYGZus{}max\PYGZus{}fitness}\PYG{p}{)}
+        \PYG{n}{min\PYGZus{}fitness}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{cur\PYGZus{}min\PYGZus{}fitness}\PYG{p}{)}
+        \PYG{n}{avg\PYGZus{}fitness}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{cur\PYGZus{}avg\PYGZus{}fitness}\PYG{p}{)}
+        \PYG{n}{max\PYGZus{}apple\PYGZus{}eaten}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{cur\PYGZus{}max\PYGZus{}apple\PYGZus{}eaten}\PYG{p}{)}
+        \PYG{n}{min\PYGZus{}apple\PYGZus{}eaten}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{cur\PYGZus{}min\PYGZus{}apple\PYGZus{}eaten}\PYG{p}{)}
+        \PYG{n}{avg\PYGZus{}apple\PYGZus{}eaten}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{cur\PYGZus{}avg\PYGZus{}apple\PYGZus{}eaten}\PYG{p}{)}
+        \PYG{c+c1}{\PYGZsh{} plot max\PYGZus{}fitness as function of 0:iteration}
+        \PYG{n}{iteration} \PYG{o}{+=} \PYG{l+m+mi}{1}
+        \PYG{k}{if} \PYG{n}{iteration} \PYG{o}{\PYGZgt{}=} \PYG{n}{c}\PYG{o}{.}\PYG{n}{MAX\PYGZus{}ITERATION}\PYG{p}{:}
+            \PYG{k}{break}
+
+    \PYG{k}{if} \PYG{n}{c}\PYG{o}{.}\PYG{n}{DISPLAY\PYGZus{}GRAPHICS}\PYG{p}{:}
+        \PYG{c+c1}{\PYGZsh{} flip() the display to put your work on screen}
+        \PYG{n}{pygame}\PYG{o}{.}\PYG{n}{display}\PYG{o}{.}\PYG{n}{flip}\PYG{p}{()}
+
+        \PYG{n}{clock}\PYG{o}{.}\PYG{n}{tick}\PYG{p}{(}\PYG{l+m+mi}{500}\PYG{p}{)}
+
+\PYG{k}{if} \PYG{n}{c}\PYG{o}{.}\PYG{n}{SAVE}\PYG{p}{:}
+    \PYG{n}{game\PYGZus{}collection}\PYG{o}{.}\PYG{n}{save\PYGZus{}brains}\PYG{p}{(}\PYG{n}{c}\PYG{o}{.}\PYG{n}{BRAINS\PYGZus{}FILE}\PYG{p}{)}
+    \PYG{n}{save\PYGZus{}curves}\PYG{p}{(}\PYG{n}{c}\PYG{o}{.}\PYG{n}{CURVES\PYGZus{}FILES}\PYG{p}{)}
+
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{max\PYGZus{}fitness}\PYG{p}{)}
+
+\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+\PYG{l+s+sd}{\PYGZsh{} Set the y\PYGZhy{}axis limits from 0 to max\PYGZus{}fitness\PYGZus{}value}
+\PYG{l+s+sd}{plt.plot(range(len(max\PYGZus{}fitness)), max\PYGZus{}fitness, color=\PYGZsq{}blue\PYGZsq{}, label=\PYGZsq{}Max Fitness\PYGZsq{})}
+\PYG{l+s+sd}{plt.plot(range(len(max\PYGZus{}fitness)), avg\PYGZus{}fitness, color=\PYGZsq{}green\PYGZsq{}, label=\PYGZsq{}Average Fitness\PYGZsq{})}
+\PYG{l+s+sd}{plt.plot(range(len(max\PYGZus{}fitness)), max\PYGZus{}apple\PYGZus{}eaten, color=\PYGZsq{}red\PYGZsq{}, label=\PYGZsq{}Max Apples Eaten\PYGZsq{})}
+
+\PYG{l+s+sd}{plt.xlabel(\PYGZsq{}Iteration\PYGZsq{})}
+\PYG{l+s+sd}{plt.ylabel(\PYGZsq{}Fitness\PYGZsq{})}
+\PYG{l+s+sd}{plt.ylim(0, max(np.max(max\PYGZus{}fitness), np.max(avg\PYGZus{}fitness), np.max(max\PYGZus{}apple\PYGZus{}eaten)))}
+\PYG{l+s+sd}{plt.title(\PYGZsq{}Fitness vs Iteration\PYGZsq{})}
+\PYG{l+s+sd}{plt.grid(True)}
+\PYG{l+s+sd}{plt.legend()}
+\PYG{l+s+sd}{plt.show()}
+\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+
+\PYG{n}{fig}\PYG{p}{,} \PYG{n}{ax1} \PYG{o}{=} \PYG{n}{plt}\PYG{o}{.}\PYG{n}{subplots}\PYG{p}{()}
+
+\PYG{n}{color} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}tab:blue\PYGZsq{}}
+\PYG{n}{ax1}\PYG{o}{.}\PYG{n}{set\PYGZus{}xlabel}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Iteration\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{ax1}\PYG{o}{.}\PYG{n}{set\PYGZus{}ylabel}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Max Fitness\PYGZsq{}}\PYG{p}{,} \PYG{n}{color}\PYG{o}{=}\PYG{n}{color}\PYG{p}{)}
+\PYG{c+c1}{\PYGZsh{}x\PYGZus{}new = np.linspace(0, len(max\PYGZus{}fitness), 300)}
+\PYG{c+c1}{\PYGZsh{}spl = make\PYGZus{}interp\PYGZus{}spline(range(len(max\PYGZus{}fitness)), max\PYGZus{}fitness, k=3)}
+\PYG{c+c1}{\PYGZsh{}max\PYGZus{}fitness\PYGZus{}smooth = spl(x\PYGZus{}new)}
+\PYG{c+c1}{\PYGZsh{}ax1.plot(x\PYGZus{}new, max\PYGZus{}fitness\PYGZus{}smooth, color=color)}
+\PYG{n}{ax1}\PYG{o}{.}\PYG{n}{set\PYGZus{}yscale}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}log\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{ax1}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n+nb}{range}\PYG{p}{(}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{max\PYGZus{}fitness}\PYG{p}{)),} \PYG{n}{max\PYGZus{}fitness}\PYG{p}{,} \PYG{n}{color}\PYG{o}{=}\PYG{n}{color}\PYG{p}{)}
+\PYG{n}{ax1}\PYG{o}{.}\PYG{n}{tick\PYGZus{}params}\PYG{p}{(}\PYG{n}{axis}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}y\PYGZsq{}}\PYG{p}{,} \PYG{n}{labelcolor}\PYG{o}{=}\PYG{n}{color}\PYG{p}{)}
+
+\PYG{n}{ax2} \PYG{o}{=} \PYG{n}{ax1}\PYG{o}{.}\PYG{n}{twinx}\PYG{p}{()}
+\PYG{n}{color} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}tab:red\PYGZsq{}}
+\PYG{n}{ax2}\PYG{o}{.}\PYG{n}{set\PYGZus{}ylabel}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Average Fitness\PYGZsq{}}\PYG{p}{,} \PYG{n}{color}\PYG{o}{=}\PYG{n}{color}\PYG{p}{)}
+\PYG{n}{ax2}\PYG{o}{.}\PYG{n}{set\PYGZus{}yscale}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}log\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{ax2}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n+nb}{range}\PYG{p}{(}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{avg\PYGZus{}fitness}\PYG{p}{)),} \PYG{n}{avg\PYGZus{}fitness}\PYG{p}{,} \PYG{n}{color}\PYG{o}{=}\PYG{n}{color}\PYG{p}{)}
+\PYG{n}{ax2}\PYG{o}{.}\PYG{n}{tick\PYGZus{}params}\PYG{p}{(}\PYG{n}{axis}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}y\PYGZsq{}}\PYG{p}{,} \PYG{n}{labelcolor}\PYG{o}{=}\PYG{n}{color}\PYG{p}{)}
+
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{title}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Max and Average Fitness vs Iteration\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{grid}\PYG{p}{(}\PYG{k+kc}{True}\PYG{p}{)}
+\PYG{n}{fig}\PYG{o}{.}\PYG{n}{tight\PYGZus{}layout}\PYG{p}{()}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{show}\PYG{p}{()}
+
+
+\PYG{n}{fig}\PYG{p}{,} \PYG{n}{ax1} \PYG{o}{=} \PYG{n}{plt}\PYG{o}{.}\PYG{n}{subplots}\PYG{p}{()}
+
+\PYG{n}{color1} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}tab:blue\PYGZsq{}}
+\PYG{n}{ax1}\PYG{o}{.}\PYG{n}{set\PYGZus{}xlabel}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Iteration\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{ax1}\PYG{o}{.}\PYG{n}{set\PYGZus{}ylabel}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Max Fitness\PYGZsq{}}\PYG{p}{,} \PYG{n}{color}\PYG{o}{=}\PYG{n}{color1}\PYG{p}{)}
+\PYG{n}{ax1}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n+nb}{range}\PYG{p}{(}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{max\PYGZus{}fitness}\PYG{p}{)),} \PYG{n}{max\PYGZus{}fitness}\PYG{p}{,} \PYG{n}{color}\PYG{o}{=}\PYG{n}{color1}\PYG{p}{)}
+\PYG{n}{ax1}\PYG{o}{.}\PYG{n}{tick\PYGZus{}params}\PYG{p}{(}\PYG{n}{axis}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}y\PYGZsq{}}\PYG{p}{,} \PYG{n}{labelcolor}\PYG{o}{=}\PYG{n}{color1}\PYG{p}{)}
+
+\PYG{n}{color2} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}tab:red\PYGZsq{}}
+\PYG{n}{ax2} \PYG{o}{=} \PYG{n}{ax1}\PYG{o}{.}\PYG{n}{twinx}\PYG{p}{()}
+\PYG{n}{ax2}\PYG{o}{.}\PYG{n}{set\PYGZus{}ylabel}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Average Fitness\PYGZsq{}}\PYG{p}{,} \PYG{n}{color}\PYG{o}{=}\PYG{n}{color2}\PYG{p}{)}
+\PYG{n}{ax2}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n+nb}{range}\PYG{p}{(}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{avg\PYGZus{}fitness}\PYG{p}{)),} \PYG{n}{avg\PYGZus{}fitness}\PYG{p}{,} \PYG{n}{color}\PYG{o}{=}\PYG{n}{color2}\PYG{p}{)}
+\PYG{n}{ax2}\PYG{o}{.}\PYG{n}{tick\PYGZus{}params}\PYG{p}{(}\PYG{n}{axis}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}y\PYGZsq{}}\PYG{p}{,} \PYG{n}{labelcolor}\PYG{o}{=}\PYG{n}{color2}\PYG{p}{)}
+
+\PYG{n}{color3} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}tab:green\PYGZsq{}}
+\PYG{n}{ax1}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n+nb}{range}\PYG{p}{(}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{max\PYGZus{}apple\PYGZus{}eaten}\PYG{p}{)),} \PYG{n}{max\PYGZus{}apple\PYGZus{}eaten}\PYG{p}{,} \PYG{n}{color}\PYG{o}{=}\PYG{n}{color3}\PYG{p}{,} \PYG{n}{linestyle}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}dashed\PYGZsq{}}\PYG{p}{,} \PYG{n}{label}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}Max Apples Eaten\PYGZsq{}}\PYG{p}{)}
+
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{title}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Fitness vs Iteration\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{grid}\PYG{p}{(}\PYG{k+kc}{True}\PYG{p}{)}
+\PYG{n}{fig}\PYG{o}{.}\PYG{n}{tight\PYGZus{}layout}\PYG{p}{()}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{show}\PYG{p}{()}
+
+
+\PYG{k}{if} \PYG{n}{c}\PYG{o}{.}\PYG{n}{DISPLAY\PYGZus{}GRAPHICS}\PYG{p}{:}
+    \PYG{n}{pygame}\PYG{o}{.}\PYG{n}{quit}\PYG{p}{()}
+\end{Verbatim}

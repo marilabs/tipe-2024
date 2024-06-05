@@ -1,0 +1,118 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{c+c1}{\PYGZsh{} serpents en parallèle}
+
+\PYG{k+kn}{from} \PYG{n+nn}{game} \PYG{k+kn}{import} \PYG{n}{Game}
+\PYG{k+kn}{from} \PYG{n+nn}{genetic\PYGZus{}algorithm} \PYG{k+kn}{import} \PYG{n}{GeneticAlgorithm}
+\PYG{k+kn}{import} \PYG{n+nn}{pickle}
+\PYG{k+kn}{import} \PYG{n+nn}{config} \PYG{k}{as} \PYG{n+nn}{c}
+\PYG{k+kn}{import} \PYG{n+nn}{math}
+\PYG{k+kn}{from} \PYG{n+nn}{typing} \PYG{k+kn}{import} \PYG{n}{List}\PYG{p}{,} \PYG{n}{Tuple}
+
+\PYG{k}{class} \PYG{n+nc}{GameCollection}\PYG{p}{:}
+    \PYG{n}{games} \PYG{o}{=} \PYG{p}{[]}
+    \PYG{n}{ga} \PYG{o}{=} \PYG{n}{GeneticAlgorithm}\PYG{p}{(}\PYG{n}{math}\PYG{o}{.}\PYG{n}{ceil}\PYG{p}{(}\PYG{n}{c}\PYG{o}{.}\PYG{n}{PORTION\PYGZus{}BESTS} \PYG{o}{*} \PYG{n}{c}\PYG{o}{.}\PYG{n}{POPULATION} \PYG{o}{/} \PYG{l+m+mi}{100}\PYG{p}{),} \PYG{n}{c}\PYG{o}{.}\PYG{n}{NUMBER\PYGZus{}CROSSOVER\PYGZus{}POINTS}\PYG{p}{,} \PYG{n}{c}\PYG{o}{.}\PYG{n}{MUTATION\PYGZus{}CHANCE}\PYG{p}{,} \PYG{n}{c}\PYG{o}{.}\PYG{n}{MUTATION\PYGZus{}COEFF}\PYG{p}{)}
+    \PYG{n}{iteration} \PYG{o}{=} \PYG{l+m+mi}{0}
+    \PYG{n}{generation} \PYG{o}{=} \PYG{l+m+mi}{1}
+
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{number\PYGZus{}games}\PYG{p}{:}\PYG{n+nb}{int}\PYG{p}{,} \PYG{n}{width}\PYG{p}{:}\PYG{n+nb}{int}\PYG{p}{,} \PYG{n}{height}\PYG{p}{:}\PYG{n+nb}{int}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{k+kc}{None}\PYG{p}{:}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{games} \PYG{o}{=} \PYG{p}{[}\PYG{n}{Game}\PYG{p}{(}\PYG{n}{width}\PYG{p}{,} \PYG{n}{height}\PYG{p}{,} \PYG{n}{c}\PYG{o}{.}\PYG{n}{MAX\PYGZus{}LIFE\PYGZus{}POINTS}\PYG{p}{,} \PYG{n}{c}\PYG{o}{.}\PYG{n}{APPLE\PYGZus{}LIFETIME\PYGZus{}GAIN}\PYG{p}{,} \PYG{n}{c}\PYG{o}{.}\PYG{n}{GAME\PYGZus{}STRATEGY}\PYG{p}{,} \PYG{n}{c}\PYG{o}{.}\PYG{n}{FITNESS\PYGZus{}STRATEGY}\PYG{p}{)} \PYG{k}{for} \PYG{n}{\PYGZus{}} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{number\PYGZus{}games}\PYG{p}{)]}
+
+    \PYG{k}{def} \PYG{n+nf}{snake\PYGZus{}to\PYGZus{}display}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{Tuple}\PYG{p}{[}\PYG{n}{Game}\PYG{p}{,} \PYG{n+nb}{int}\PYG{p}{]:}
+        \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{games}\PYG{p}{)):}
+            \PYG{k}{if} \PYG{o+ow}{not} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{games}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}\PYG{o}{.}\PYG{n}{lost}\PYG{p}{:}
+                \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{games}\PYG{p}{[}\PYG{n}{i}\PYG{p}{],} \PYG{n}{i}
+        \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{games}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{],} \PYG{l+m+mi}{0}
+
+    \PYG{k}{def} \PYG{n+nf}{longest\PYGZus{}snake}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{Tuple}\PYG{p}{[}\PYG{n}{Game}\PYG{p}{,} \PYG{n+nb}{int}\PYG{p}{]:}
+        \PYG{n}{longest} \PYG{o}{=} \PYG{l+m+mi}{0}
+        \PYG{n}{index} \PYG{o}{=} \PYG{l+m+mi}{0}
+        \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{games}\PYG{p}{)):}
+            \PYG{k}{if} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{games}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}\PYG{o}{.}\PYG{n}{snake\PYGZus{}body}\PYG{p}{)} \PYG{o}{\PYGZgt{}} \PYG{n}{longest}\PYG{p}{:}
+                \PYG{n}{longest} \PYG{o}{=} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{games}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}\PYG{o}{.}\PYG{n}{snake\PYGZus{}body}\PYG{p}{)}
+                \PYG{n}{index} \PYG{o}{=} \PYG{n}{i}
+        \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{games}\PYG{p}{[}\PYG{n}{index}\PYG{p}{],} \PYG{n}{index}
+
+    \PYG{k}{def} \PYG{n+nf}{step}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{life\PYGZus{}time}\PYG{p}{:} \PYG{n+nb}{bool}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n+nb}{bool}\PYG{p}{:}
+
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{iteration} \PYG{o}{+=} \PYG{l+m+mi}{1}
+
+        \PYG{n}{one\PYGZus{}game\PYGZus{}not\PYGZus{}lost} \PYG{o}{=} \PYG{k+kc}{False}
+
+        \PYG{k}{for} \PYG{n}{game} \PYG{o+ow}{in} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{games}\PYG{p}{:}
+            \PYG{k}{if} \PYG{o+ow}{not} \PYG{n}{game}\PYG{o}{.}\PYG{n}{lost}\PYG{p}{:}
+                \PYG{n}{one\PYGZus{}game\PYGZus{}not\PYGZus{}lost} \PYG{o}{=} \PYG{k+kc}{True}
+                \PYG{n}{game}\PYG{o}{.}\PYG{n}{step}\PYG{p}{(}\PYG{n}{life\PYGZus{}time}\PYG{p}{)}
+
+        \PYG{c+c1}{\PYGZsh{} if all games are lost, evolve}
+        \PYG{k}{if} \PYG{o+ow}{not} \PYG{n}{one\PYGZus{}game\PYGZus{}not\PYGZus{}lost}\PYG{p}{:}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{evolve}\PYG{p}{()}
+        \PYG{k}{return} \PYG{n}{one\PYGZus{}game\PYGZus{}not\PYGZus{}lost}
+
+    \PYG{k}{def} \PYG{n+nf}{evolve}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+
+        \PYG{n}{new\PYGZus{}population} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{ga}\PYG{o}{.}\PYG{n}{evolve}\PYG{p}{([}
+            \PYG{p}{(}\PYG{n}{game}\PYG{o}{.}\PYG{n}{brain}\PYG{p}{,} \PYG{n}{game}\PYG{o}{.}\PYG{n}{fitness}\PYG{p}{())}
+            \PYG{k}{for} \PYG{n}{game} \PYG{o+ow}{in} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{games}
+        \PYG{p}{])}
+
+        \PYG{n}{width}\PYG{p}{,} \PYG{n}{height} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{games}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}\PYG{o}{.}\PYG{n}{width}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{games}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}\PYG{o}{.}\PYG{n}{height}
+
+        \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{new\PYGZus{}population}\PYG{p}{)):}
+            \PYG{n}{g} \PYG{o}{=} \PYG{n}{Game}\PYG{p}{(}\PYG{n}{width}\PYG{p}{,} \PYG{n}{height}\PYG{p}{,} \PYG{n}{c}\PYG{o}{.}\PYG{n}{MAX\PYGZus{}LIFE\PYGZus{}POINTS}\PYG{p}{,} \PYG{n}{c}\PYG{o}{.}\PYG{n}{APPLE\PYGZus{}LIFETIME\PYGZus{}GAIN}\PYG{p}{,} \PYG{n}{c}\PYG{o}{.}\PYG{n}{GAME\PYGZus{}STRATEGY}\PYG{p}{,} \PYG{n}{c}\PYG{o}{.}\PYG{n}{FITNESS\PYGZus{}STRATEGY}\PYG{p}{)} \PYG{c+c1}{\PYGZsh{} create new game}
+            \PYG{n}{g}\PYG{o}{.}\PYG{n}{brain} \PYG{o}{=} \PYG{n}{new\PYGZus{}population}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{c+c1}{\PYGZsh{} inject brain in game}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{games}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{=} \PYG{n}{g} \PYG{c+c1}{\PYGZsh{} replace current game with new one}
+
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{iteration} \PYG{o}{=} \PYG{l+m+mi}{0}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{generation} \PYG{o}{+=} \PYG{l+m+mi}{1}
+
+    \PYG{k}{def} \PYG{n+nf}{save\PYGZus{}brains}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{filename}\PYG{p}{):}
+        \PYG{c+c1}{\PYGZsh{} save the game collection and all the games in the game collection to a file}
+        \PYG{c+c1}{\PYGZsh{}for game in self.games:}
+        \PYG{c+c1}{\PYGZsh{}    print(game.brain.layers\PYGZus{}sizes)}
+        \PYG{n}{game\PYGZus{}brains} \PYG{o}{=} \PYG{p}{[}\PYG{n}{game}\PYG{o}{.}\PYG{n}{brain} \PYG{k}{for} \PYG{n}{game} \PYG{o+ow}{in} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{games}\PYG{p}{]}
+        \PYG{k}{if} \PYG{n}{c}\PYG{o}{.}\PYG{n}{DEBUG}\PYG{p}{:}
+            \PYG{k}{for} \PYG{n}{brain} \PYG{o+ow}{in} \PYG{n}{game\PYGZus{}brains}\PYG{p}{:}
+                \PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{brain}\PYG{o}{.}\PYG{n}{weights}\PYG{p}{,} \PYG{n}{end}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{} \PYGZsq{}}\PYG{p}{)}
+            \PYG{n+nb}{print}\PYG{p}{()}
+        \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}save\PYGZus{}brains: len(game\PYGZus{}brains): \PYGZdq{}}\PYG{p}{,} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{game\PYGZus{}brains}\PYG{p}{))}
+        \PYG{k}{with} \PYG{n+nb}{open}\PYG{p}{(}\PYG{n}{filename}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}wb\PYGZsq{}}\PYG{p}{)} \PYG{k}{as} \PYG{n}{f}\PYG{p}{:}
+            \PYG{n}{pickle}\PYG{o}{.}\PYG{n}{dump}\PYG{p}{(}\PYG{n}{game\PYGZus{}brains}\PYG{p}{,} \PYG{n}{f}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{restore\PYGZus{}brains}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{filename}\PYG{p}{):}
+        \PYG{k}{with} \PYG{n+nb}{open}\PYG{p}{(}\PYG{n}{filename}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}rb\PYGZsq{}}\PYG{p}{)} \PYG{k}{as} \PYG{n}{f}\PYG{p}{:}
+            \PYG{n}{game\PYGZus{}brains} \PYG{o}{=} \PYG{n}{pickle}\PYG{o}{.}\PYG{n}{load}\PYG{p}{(}\PYG{n}{f}\PYG{p}{)}
+            \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}restore\PYGZus{}brains: len(game\PYGZus{}brains): \PYGZdq{}}\PYG{p}{,} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{game\PYGZus{}brains}\PYG{p}{))}
+            \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{games}\PYG{p}{)):}
+                \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{games}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}\PYG{o}{.}\PYG{n}{brain} \PYG{o}{=} \PYG{n}{game\PYGZus{}brains}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}
+            \PYG{k}{if} \PYG{n}{c}\PYG{o}{.}\PYG{n}{DEBUG}\PYG{p}{:}
+                \PYG{k}{for} \PYG{n}{brain} \PYG{o+ow}{in} \PYG{n}{game\PYGZus{}brains}\PYG{p}{:}
+                    \PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{brain}\PYG{o}{.}\PYG{n}{weights}\PYG{p}{,} \PYG{n}{end}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{} \PYGZsq{}}\PYG{p}{)}
+                \PYG{n+nb}{print}\PYG{p}{()}
+
+    \PYG{k}{def} \PYG{n+nf}{save\PYGZus{}to\PYGZus{}file}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{filename}\PYG{p}{):}
+        \PYG{k}{with} \PYG{n+nb}{open}\PYG{p}{(}\PYG{n}{filename}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}wb\PYGZsq{}}\PYG{p}{)} \PYG{k}{as} \PYG{n}{f}\PYG{p}{:}
+            \PYG{n}{pickle}\PYG{o}{.}\PYG{n}{dump}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{f}\PYG{p}{)}
+
+    \PYG{n+nd}{@classmethod}
+    \PYG{k}{def} \PYG{n+nf}{load\PYGZus{}from\PYGZus{}file}\PYG{p}{(}\PYG{n+nb+bp}{cls}\PYG{p}{,} \PYG{n}{filename}\PYG{p}{):}
+        \PYG{k}{with} \PYG{n+nb}{open}\PYG{p}{(}\PYG{n}{filename}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}rb\PYGZsq{}}\PYG{p}{)} \PYG{k}{as} \PYG{n}{f}\PYG{p}{:}
+            \PYG{k}{return} \PYG{n}{pickle}\PYG{o}{.}\PYG{n}{load}\PYG{p}{(}\PYG{n}{f}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{best\PYGZus{}fitness}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n+nb}{max}\PYG{p}{(}\PYG{n}{game}\PYG{o}{.}\PYG{n}{fitness}\PYG{p}{()} \PYG{k}{for} \PYG{n}{game} \PYG{o+ow}{in} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{games}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{worst\PYGZus{}fitness}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n+nb}{min}\PYG{p}{(}\PYG{n}{game}\PYG{o}{.}\PYG{n}{fitness}\PYG{p}{()} \PYG{k}{for} \PYG{n}{game} \PYG{o+ow}{in} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{games}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{average\PYGZus{}fitness}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n+nb}{sum}\PYG{p}{(}\PYG{n}{game}\PYG{o}{.}\PYG{n}{fitness}\PYG{p}{()} \PYG{k}{for} \PYG{n}{game} \PYG{o+ow}{in} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{games}\PYG{p}{)} \PYG{o}{/} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{games}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{max\PYGZus{}apple\PYGZus{}eaten}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n+nb}{max}\PYG{p}{(}\PYG{n}{game}\PYG{o}{.}\PYG{n}{apples\PYGZus{}eaten} \PYG{k}{for} \PYG{n}{game} \PYG{o+ow}{in} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{games}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{min\PYGZus{}apple\PYGZus{}eaten}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n+nb}{min}\PYG{p}{(}\PYG{n}{game}\PYG{o}{.}\PYG{n}{apples\PYGZus{}eaten} \PYG{k}{for} \PYG{n}{game} \PYG{o+ow}{in} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{games}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{average\PYGZus{}apple\PYGZus{}eaten}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n+nb}{sum}\PYG{p}{(}\PYG{n}{game}\PYG{o}{.}\PYG{n}{apples\PYGZus{}eaten} \PYG{k}{for} \PYG{n}{game} \PYG{o+ow}{in} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{games}\PYG{p}{)} \PYG{o}{/} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{games}\PYG{p}{)}
+\end{Verbatim}

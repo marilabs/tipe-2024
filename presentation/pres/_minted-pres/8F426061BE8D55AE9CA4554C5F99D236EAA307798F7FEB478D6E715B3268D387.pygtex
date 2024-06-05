@@ -1,0 +1,56 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{n}{DEBUG} \PYG{o}{=} \PYG{k+kc}{False}
+\PYG{n}{ORIGINAL\PYGZus{}SIZE\PYGZus{}THREE} \PYG{o}{=} \PYG{k+kc}{True}
+\PYG{n}{DISPLAY\PYGZus{}ALL\PYGZus{}POPULATION} \PYG{o}{=} \PYG{k+kc}{True}
+
+\PYG{n}{DISPLAY\PYGZus{}LARGEST\PYGZus{}SNAKE} \PYG{o}{=} \PYG{k+kc}{False}
+
+\PYG{n}{DISPLAY\PYGZus{}GRAPHICS} \PYG{o}{=} \PYG{k+kc}{False}
+
+\PYG{c+c1}{\PYGZsh{} number of cells for the snake to move in each game}
+\PYG{n}{WIDTH} \PYG{o}{=} \PYG{l+m+mi}{10}
+\PYG{n}{HEIGHT} \PYG{o}{=} \PYG{l+m+mi}{10}
+
+\PYG{n}{BOARD\PYGZus{}SIDE} \PYG{o}{=} \PYG{l+m+mi}{880} \PYG{c+c1}{\PYGZsh{} indication of largest board side (for max of WIDTH and HEIGHT)}
+\PYG{n}{POPULATION} \PYG{o}{=} \PYG{l+m+mi}{22}\PYG{o}{**}\PYG{l+m+mi}{2} \PYG{c+c1}{\PYGZsh{} 484 population of snakes or number of games in the collection}
+\PYG{n}{ZOOM\PYGZus{}FACTOR} \PYG{o}{=} \PYG{l+m+mi}{2} \PYG{c+c1}{\PYGZsh{} zoom factor for the longest snake}
+
+\PYG{c+c1}{\PYGZsh{} game strategy, 1:24,18,18,4; 2:9,10,10,4}
+\PYG{n}{GAME\PYGZus{}STRATEGY} \PYG{o}{=} \PYG{l+m+mi}{5}
+\PYG{n}{FITNESS\PYGZus{}STRATEGY} \PYG{o}{=} \PYG{l+m+mi}{3}
+
+\PYG{n}{MAX\PYGZus{}ITERATION} \PYG{o}{=} \PYG{l+m+mi}{2000} \PYG{c+c1}{\PYGZsh{} number of iterations before stopping the program}
+\PYG{n}{SAVE} \PYG{o}{=} \PYG{k+kc}{True} \PYG{c+c1}{\PYGZsh{} save the game brains to a file}
+\PYG{n}{RESTORE} \PYG{o}{=} \PYG{k+kc}{False} \PYG{c+c1}{\PYGZsh{} restore the game brains from a file}
+\PYG{n}{BRAINS\PYGZus{}FILE} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}saved\PYGZus{}brains\PYGZsq{}} \PYG{o}{+} \PYG{l+s+s1}{\PYGZsq{}\PYGZhy{}\PYGZsq{}} \PYG{o}{+} \PYG{n+nb}{str}\PYG{p}{(}\PYG{n}{POPULATION}\PYG{p}{)} \PYG{o}{+} \PYG{l+s+s1}{\PYGZsq{}\PYGZhy{}\PYGZsq{}} \PYG{o}{+} \PYG{n+nb}{str}\PYG{p}{(}\PYG{n}{GAME\PYGZus{}STRATEGY}\PYG{p}{)} \PYG{o}{+} \PYG{n+nb}{str}\PYG{p}{(}\PYG{n}{FITNESS\PYGZus{}STRATEGY}\PYG{p}{)} \PYG{o}{+} \PYG{l+s+s1}{\PYGZsq{}.pickle\PYGZsq{}} \PYG{c+c1}{\PYGZsh{} name of the file to save the brains}
+\PYG{n}{CURVES\PYGZus{}FILES} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}saved\PYGZus{}curves\PYGZsq{}} \PYG{o}{+} \PYG{l+s+s1}{\PYGZsq{}\PYGZhy{}\PYGZsq{}} \PYG{o}{+} \PYG{n+nb}{str}\PYG{p}{(}\PYG{n}{POPULATION}\PYG{p}{)} \PYG{o}{+} \PYG{l+s+s1}{\PYGZsq{}\PYGZhy{}\PYGZsq{}} \PYG{o}{+} \PYG{n+nb}{str}\PYG{p}{(}\PYG{n}{GAME\PYGZus{}STRATEGY}\PYG{p}{)} \PYG{o}{+} \PYG{n+nb}{str}\PYG{p}{(}\PYG{n}{FITNESS\PYGZus{}STRATEGY}\PYG{p}{)} \PYG{o}{+} \PYG{l+s+s1}{\PYGZsq{}.pickle\PYGZsq{}} \PYG{c+c1}{\PYGZsh{} name of the file to save the curves}
+
+\PYG{n}{NUMBER\PYGZus{}CROSSOVER\PYGZus{}POINTS} \PYG{o}{=} \PYG{l+m+mi}{2} \PYG{c+c1}{\PYGZsh{} number of crossover points for the genetic algorithm}
+\PYG{n}{MUTATION\PYGZus{}CHANCE} \PYG{o}{=} \PYG{l+m+mf}{0.4} \PYG{c+c1}{\PYGZsh{} chance of mutation for the genetic algorithm}
+\PYG{n}{MUTATION\PYGZus{}COEFF} \PYG{o}{=} \PYG{l+m+mf}{0.4} \PYG{c+c1}{\PYGZsh{} coefficient for the mutation}
+\PYG{n}{PORTION\PYGZus{}BESTS} \PYG{o}{=} \PYG{l+m+mi}{20} \PYG{c+c1}{\PYGZsh{} percentage of bests brains to keep for the genetic algorithm}
+
+\PYG{c+c1}{\PYGZsh{} antoine libs/game/lib.rs and game\PYGZus{}wasm/src/lib.rs}
+\PYG{c+c1}{\PYGZsh{} k=1 KPointsCrossover}
+\PYG{c+c1}{\PYGZsh{}NUMBER\PYGZus{}GAMES: u32 = 2\PYGZus{}000; WIDTH: u32 = 30; HEIGHT: u32 = 30;}
+\PYG{c+c1}{\PYGZsh{}MUTATION\PYGZus{}CHANCE: f64 = 0.5; MUTATION\PYGZus{}COEFF: f32 = 0.5; SAVE\PYGZus{}BESTS: usize = 100; MAX\PYGZus{}AGE: u32 = 500; APPLE\PYGZus{}LIFETIME\PYGZus{}GAIN: i32 = 50;}
+
+\PYG{n}{LIFE\PYGZus{}TIME} \PYG{o}{=} \PYG{k+kc}{True} \PYG{c+c1}{\PYGZsh{} apply life time constraint to the snake to avoid infinite loops}
+\PYG{n}{MAX\PYGZus{}LIFE\PYGZus{}POINTS} \PYG{o}{=} \PYG{l+m+mi}{50} \PYG{c+c1}{\PYGZsh{} maximum number of life points for the snake}
+\PYG{n}{APPLE\PYGZus{}LIFETIME\PYGZus{}GAIN} \PYG{o}{=} \PYG{l+m+mi}{20} \PYG{c+c1}{\PYGZsh{} number of life points gained when eating an apple}
+\PYG{n}{RESET\PYGZus{}LIFETIME} \PYG{o}{=} \PYG{k+kc}{True} \PYG{c+c1}{\PYGZsh{} reset life points when eating an apple}
+\PYG{n}{NORMALIZE\PYGZus{}BOARD} \PYG{o}{=} \PYG{k+kc}{False}
+
+\PYG{n}{SINGLE\PYGZus{}SNAKE\PYGZus{}BRAIN} \PYG{o}{=} \PYG{l+m+mi}{1} \PYG{c+c1}{\PYGZsh{} number of snakes in the single snake game}
+
+\PYG{n}{up} \PYG{o}{=} \PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{);}
+\PYG{n}{down} \PYG{o}{=} \PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{)}
+\PYG{n}{left} \PYG{o}{=} \PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{)}
+\PYG{n}{right} \PYG{o}{=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{)}
+\PYG{n}{up\PYGZus{}right} \PYG{o}{=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{)}
+\PYG{n}{up\PYGZus{}left} \PYG{o}{=} \PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{)}
+\PYG{n}{down\PYGZus{}left} \PYG{o}{=} \PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{)}
+\PYG{n}{down\PYGZus{}right} \PYG{o}{=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{)}
+\PYG{n}{eight\PYGZus{}directions} \PYG{o}{=} \PYG{p}{[}\PYG{n}{right}\PYG{p}{,} \PYG{n}{up\PYGZus{}right}\PYG{p}{,} \PYG{n}{up}\PYG{p}{,} \PYG{n}{up\PYGZus{}left}\PYG{p}{,} \PYG{n}{left}\PYG{p}{,} \PYG{n}{down\PYGZus{}left}\PYG{p}{,} \PYG{n}{down}\PYG{p}{,} \PYG{n}{down\PYGZus{}right}\PYG{p}{]}
+\PYG{n}{four\PYGZus{}directions} \PYG{o}{=} \PYG{p}{[}\PYG{n}{right}\PYG{p}{,} \PYG{n}{up}\PYG{p}{,} \PYG{n}{left}\PYG{p}{,} \PYG{n}{down}\PYG{p}{]}
+\end{Verbatim}

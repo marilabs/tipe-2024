@@ -1,0 +1,407 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{c+c1}{\PYGZsh{} un jeu = un seul serpent}
+
+\PYG{k+kn}{from} \PYG{n+nn}{random} \PYG{k+kn}{import} \PYG{n}{randrange}
+\PYG{k+kn}{from} \PYG{n+nn}{neural\PYGZus{}network} \PYG{k+kn}{import} \PYG{n}{NeuralNetwork}
+\PYG{k+kn}{from} \PYG{n+nn}{numpy} \PYG{k+kn}{import} \PYG{n}{argmax}
+\PYG{k+kn}{import} \PYG{n+nn}{collections}
+\PYG{k+kn}{import} \PYG{n+nn}{config} \PYG{k}{as} \PYG{n+nn}{c}
+\PYG{k+kn}{from} \PYG{n+nn}{typing} \PYG{k+kn}{import} \PYG{n}{Tuple}\PYG{p}{,} \PYG{n}{List}
+\PYG{k+kn}{import} \PYG{n+nn}{math}
+
+\PYG{k}{class} \PYG{n+nc}{Game}\PYG{p}{:}
+
+    \PYG{n}{vision} \PYG{o}{=} \PYG{p}{[]}
+
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{width}\PYG{p}{:} \PYG{n+nb}{int} \PYG{o}{=} \PYG{l+m+mi}{10}\PYG{p}{,} \PYG{n}{height}\PYG{p}{:} \PYG{n+nb}{int} \PYG{o}{=} \PYG{l+m+mi}{10}\PYG{p}{,} \PYG{n}{max\PYGZus{}life\PYGZus{}points}\PYG{p}{:} \PYG{n+nb}{int} \PYG{o}{=} \PYG{l+m+mi}{50}\PYG{p}{,} \PYG{n}{apple\PYGZus{}lifetime\PYGZus{}gain}\PYG{p}{:} \PYG{n+nb}{int} \PYG{o}{=} \PYG{l+m+mi}{500}\PYG{p}{,} \PYG{n}{strategy}\PYG{p}{:} \PYG{n+nb}{int} \PYG{o}{=} \PYG{l+m+mi}{2}\PYG{p}{,} \PYG{n}{num\PYGZus{}fitness}\PYG{p}{:} \PYG{n+nb}{int} \PYG{o}{=} \PYG{l+m+mi}{1}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{k+kc}{None}\PYG{p}{:}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{width} \PYG{o}{=} \PYG{n}{width}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{height} \PYG{o}{=} \PYG{n}{height}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{max\PYGZus{}life\PYGZus{}points} \PYG{o}{=} \PYG{n}{max\PYGZus{}life\PYGZus{}points}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{apple\PYGZus{}lifetime\PYGZus{}gain} \PYG{o}{=} \PYG{n}{apple\PYGZus{}lifetime\PYGZus{}gain}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{strategy} \PYG{o}{=} \PYG{n}{strategy}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{last\PYGZus{}space} \PYG{o}{=} \PYG{l+m+mi}{0}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{last\PYGZus{}visited} \PYG{o}{=} \PYG{n+nb}{set}\PYG{p}{()}
+
+\PYG{+w}{        }\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+\PYG{l+s+sd}{        Various rules to create a neural network:}
+\PYG{l+s+sd}{        * The number of hidden neurons should be between the size of the input layer and the size of the output layer.}
+\PYG{l+s+sd}{        * The number of hidden neurons should be 2/3 the size of the input layer, plus the size of the output layer.}
+\PYG{l+s+sd}{        * The number of hidden neurons should be less than twice the size of the input layer.}
+\PYG{l+s+sd}{        * The number of hidden neurons should be between the size of the input layer and the output layer.}
+\PYG{l+s+sd}{        * The most appropriate number of hidden neurons is sqrt(input layer nodes * output layer nodes)}
+\PYG{l+s+sd}{        \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+
+        \PYG{k}{if} \PYG{n}{strategy} \PYG{o}{==} \PYG{l+m+mi}{1}\PYG{p}{:}
+            \PYG{c+c1}{\PYGZsh{} Neural network composed of 4 layers, input layer has 24 neurons, 2 hidden layers each with 18 neurons, output layer has 4 neurons (4 directions)}
+            \PYG{c+c1}{\PYGZsh{} in total it has 24 + 18 + 18 + 4 = 64 neurons.}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{brain} \PYG{o}{=} \PYG{n}{NeuralNetwork}\PYG{p}{([}\PYG{l+m+mi}{24}\PYG{p}{,} \PYG{l+m+mi}{18}\PYG{p}{,} \PYG{l+m+mi}{18}\PYG{p}{,} \PYG{l+m+mi}{4}\PYG{p}{])}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{vision\PYGZus{}strategy} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{process\PYGZus{}vision}
+        \PYG{k}{elif} \PYG{n}{strategy} \PYG{o}{==} \PYG{l+m+mi}{2}\PYG{p}{:}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{brain} \PYG{o}{=} \PYG{n}{NeuralNetwork}\PYG{p}{([}\PYG{l+m+mi}{9}\PYG{p}{,} \PYG{l+m+mi}{10}\PYG{p}{,} \PYG{l+m+mi}{10}\PYG{p}{,} \PYG{l+m+mi}{4}\PYG{p}{])}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{vision\PYGZus{}strategy} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{process\PYGZus{}vision2}
+        \PYG{k}{elif} \PYG{n}{strategy} \PYG{o}{==} \PYG{l+m+mi}{3}\PYG{p}{:}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{brain} \PYG{o}{=} \PYG{n}{NeuralNetwork}\PYG{p}{([}\PYG{l+m+mi}{13}\PYG{p}{,} \PYG{l+m+mi}{12}\PYG{p}{,} \PYG{l+m+mi}{12}\PYG{p}{,} \PYG{l+m+mi}{4}\PYG{p}{])}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{vision\PYGZus{}strategy} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{process\PYGZus{}vision3}
+        \PYG{k}{elif} \PYG{n}{strategy} \PYG{o}{==} \PYG{l+m+mi}{4}\PYG{p}{:}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{brain} \PYG{o}{=} \PYG{n}{NeuralNetwork}\PYG{p}{([}\PYG{l+m+mi}{25}\PYG{p}{,} \PYG{l+m+mi}{18}\PYG{p}{,} \PYG{l+m+mi}{18}\PYG{p}{,} \PYG{l+m+mi}{4}\PYG{p}{])}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{vision\PYGZus{}strategy} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{process\PYGZus{}vision4}
+        \PYG{k}{elif} \PYG{n}{strategy} \PYG{o}{==} \PYG{l+m+mi}{5}\PYG{p}{:}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{brain} \PYG{o}{=} \PYG{n}{NeuralNetwork}\PYG{p}{([}\PYG{l+m+mi}{13}\PYG{p}{,} \PYG{l+m+mi}{12}\PYG{p}{,} \PYG{l+m+mi}{12}\PYG{p}{,} \PYG{l+m+mi}{4}\PYG{p}{])}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{vision\PYGZus{}strategy} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{process\PYGZus{}vision5}
+
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{age} \PYG{o}{=} \PYG{l+m+mi}{0}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{lost} \PYG{o}{=} \PYG{k+kc}{False}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{apples\PYGZus{}eaten} \PYG{o}{=} \PYG{l+m+mi}{0}
+        \PYG{c+c1}{\PYGZsh{}self.direction = (\PYGZhy{}1, 0) \PYGZsh{} default direction is left for first move}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{direction} \PYG{o}{=} \PYG{p}{(}\PYG{n}{randrange}\PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{p}{),} \PYG{n}{randrange}\PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{p}{))} \PYG{c+c1}{\PYGZsh{} make first move random}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{snake\PYGZus{}body} \PYG{o}{=} \PYG{p}{[} \PYG{c+c1}{\PYGZsh{} snake starts at the center and has 3 bits}
+            \PYG{p}{(}\PYG{n+nb}{int}\PYG{p}{(}\PYG{n}{width} \PYG{o}{/} \PYG{l+m+mi}{2}\PYG{p}{),} \PYG{n+nb}{int}\PYG{p}{(}\PYG{n}{height} \PYG{o}{/} \PYG{l+m+mi}{2}\PYG{p}{))}
+            \PYG{p}{]}
+        \PYG{k}{if} \PYG{n}{c}\PYG{o}{.}\PYG{n}{ORIGINAL\PYGZus{}SIZE\PYGZus{}THREE}\PYG{p}{:}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{snake\PYGZus{}body}\PYG{o}{.}\PYG{n}{append}\PYG{p}{((}\PYG{n+nb}{int}\PYG{p}{(}\PYG{n}{width} \PYG{o}{/} \PYG{l+m+mi}{2}\PYG{p}{)} \PYG{o}{+} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n+nb}{int}\PYG{p}{(}\PYG{n}{height} \PYG{o}{/} \PYG{l+m+mi}{2}\PYG{p}{)))}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{snake\PYGZus{}body}\PYG{o}{.}\PYG{n}{append}\PYG{p}{((}\PYG{n+nb}{int}\PYG{p}{(}\PYG{n}{width} \PYG{o}{/} \PYG{l+m+mi}{2}\PYG{p}{)} \PYG{o}{+} \PYG{l+m+mi}{2}\PYG{p}{,} \PYG{n+nb}{int}\PYG{p}{(}\PYG{n}{height} \PYG{o}{/} \PYG{l+m+mi}{2}\PYG{p}{))}
+            \PYG{p}{)}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{original\PYGZus{}size} \PYG{o}{=} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{snake\PYGZus{}body}\PYG{p}{)}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{seed\PYGZus{}new\PYGZus{}apple}\PYG{p}{()}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{life\PYGZus{}points} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{max\PYGZus{}life\PYGZus{}points}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{died\PYGZus{}bc\PYGZus{}no\PYGZus{}apple} \PYG{o}{=} \PYG{l+m+mi}{0}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{death\PYGZus{}reason} \PYG{o}{=} \PYG{l+s+s2}{\PYGZdq{}None\PYGZdq{}}
+        \PYG{k}{if} \PYG{n}{c}\PYG{o}{.}\PYG{n}{NORMALIZE\PYGZus{}BOARD}\PYG{p}{:}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{norm\PYGZus{}constant\PYGZus{}diag} \PYG{o}{=} \PYG{n}{math}\PYG{o}{.}\PYG{n}{sqrt}\PYG{p}{(}\PYG{n}{width} \PYG{o}{**} \PYG{l+m+mi}{2} \PYG{o}{+} \PYG{n}{height} \PYG{o}{**} \PYG{l+m+mi}{2}\PYG{p}{)}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{norm\PYGZus{}constant\PYGZus{}board} \PYG{o}{=} \PYG{n}{width} \PYG{o}{*} \PYG{n}{height} \PYG{o}{/} \PYG{l+m+mf}{10.0}
+        \PYG{k}{else}\PYG{p}{:}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{norm\PYGZus{}constant\PYGZus{}diag} \PYG{o}{=} \PYG{l+m+mi}{1}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{norm\PYGZus{}constant\PYGZus{}board} \PYG{o}{=} \PYG{l+m+mf}{20.0}
+
+        \PYG{k}{if} \PYG{n}{num\PYGZus{}fitness} \PYG{o}{==} \PYG{l+m+mi}{1}\PYG{p}{:}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{fitness} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{fitness1}
+        \PYG{k}{elif} \PYG{n}{num\PYGZus{}fitness} \PYG{o}{==} \PYG{l+m+mi}{2}\PYG{p}{:}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{fitness} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{fitness2}
+        \PYG{k}{elif} \PYG{n}{num\PYGZus{}fitness} \PYG{o}{==} \PYG{l+m+mi}{3}\PYG{p}{:}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{fitness} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{fitness3}
+        \PYG{k}{elif} \PYG{n}{num\PYGZus{}fitness} \PYG{o}{==} \PYG{l+m+mi}{4}\PYG{p}{:}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{fitness} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{fitness4}
+        \PYG{k}{elif} \PYG{n}{num\PYGZus{}fitness} \PYG{o}{==} \PYG{l+m+mi}{5}\PYG{p}{:}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{fitness} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{fitness5}
+
+    \PYG{k}{def} \PYG{n+nf}{seed\PYGZus{}new\PYGZus{}apple}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{apple} \PYG{o}{=} \PYG{p}{(}\PYG{n}{randrange}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{width}\PYG{p}{),} \PYG{n}{randrange}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{height}\PYG{p}{))}
+        \PYG{k}{while} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{apple} \PYG{o+ow}{in} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{snake\PYGZus{}body}\PYG{p}{:}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{apple} \PYG{o}{=} \PYG{p}{(}\PYG{n}{randrange}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{width}\PYG{p}{),} \PYG{n}{randrange}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{height}\PYG{p}{))}
+
+    \PYG{k}{def} \PYG{n+nf}{step}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{life\PYGZus{}time}\PYG{p}{:} \PYG{n+nb}{bool}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n+nb}{bool}\PYG{p}{:}
+        \PYG{c+c1}{\PYGZsh{} process the vision output through the neural network and output activation}
+        \PYG{n}{activation} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{brain}\PYG{o}{.}\PYG{n}{feedforward}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{vision\PYGZus{}strategy}\PYG{p}{())}
+        \PYG{c+c1}{\PYGZsh{} take the highest activation index for the direction to take}
+        \PYG{n}{index} \PYG{o}{=} \PYG{n}{argmax}\PYG{p}{(}\PYG{n}{activation}\PYG{p}{)}
+
+        \PYG{k}{match} \PYG{n}{index}\PYG{p}{:}
+            \PYG{k}{case} \PYG{l+m+mi}{0}\PYG{p}{:}
+                \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{direction} \PYG{o}{=} \PYG{n}{c}\PYG{o}{.}\PYG{n}{right}
+            \PYG{k}{case} \PYG{l+m+mi}{1}\PYG{p}{:}
+                \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{direction} \PYG{o}{=} \PYG{n}{c}\PYG{o}{.}\PYG{n}{up}
+            \PYG{k}{case} \PYG{l+m+mi}{2}\PYG{p}{:}
+                \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{direction} \PYG{o}{=} \PYG{n}{c}\PYG{o}{.}\PYG{n}{left}
+            \PYG{k}{case} \PYG{l+m+mi}{3}\PYG{p}{:}
+                \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{direction} \PYG{o}{=} \PYG{n}{c}\PYG{o}{.}\PYG{n}{down}
+
+        \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{move\PYGZus{}snake}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{direction}\PYG{p}{,} \PYG{n}{life\PYGZus{}time}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{move\PYGZus{}snake}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{incrementer}\PYG{p}{:} \PYG{n}{Tuple}\PYG{p}{[}\PYG{n+nb}{int}\PYG{p}{,} \PYG{n+nb}{int}\PYG{p}{],} \PYG{n}{life\PYGZus{}time}\PYG{p}{:} \PYG{n+nb}{bool}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n+nb}{bool}\PYG{p}{:}
+        \PYG{n}{moved\PYGZus{}head} \PYG{o}{=} \PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{snake\PYGZus{}body}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{][}\PYG{l+m+mi}{0}\PYG{p}{]} \PYG{o}{+} \PYG{n}{incrementer}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{],} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{snake\PYGZus{}body}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{][}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{+} \PYG{n}{incrementer}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{])}
+
+        \PYG{c+c1}{\PYGZsh{} vérification de la présence de la tête dans la grille}
+        \PYG{k}{if} \PYG{o+ow}{not} \PYG{p}{(}\PYG{l+m+mi}{0} \PYG{o}{\PYGZlt{}=} \PYG{n}{moved\PYGZus{}head}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]} \PYG{o}{\PYGZlt{}} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{width} \PYG{o+ow}{and} \PYG{l+m+mi}{0} \PYG{o}{\PYGZlt{}=} \PYG{n}{moved\PYGZus{}head}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{\PYGZlt{}} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{height}\PYG{p}{):}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{death\PYGZus{}reason} \PYG{o}{=} \PYG{l+s+s2}{\PYGZdq{}Wall\PYGZdq{}}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{lost} \PYG{o}{=} \PYG{k+kc}{True}
+            \PYG{k}{return} \PYG{k+kc}{False}
+
+        \PYG{c+c1}{\PYGZsh{} sauvegarde de la fin de la queue}
+        \PYG{n}{end\PYGZus{}tail} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{snake\PYGZus{}body}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}
+
+        \PYG{c+c1}{\PYGZsh{} déplacement du serpent}
+        \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{reversed}\PYG{p}{(}\PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{snake\PYGZus{}body}\PYG{p}{))):}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{snake\PYGZus{}body}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{snake\PYGZus{}body}\PYG{p}{[}\PYG{n}{i} \PYG{o}{\PYGZhy{}} \PYG{l+m+mi}{1}\PYG{p}{]}
+
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{snake\PYGZus{}body}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]} \PYG{o}{=} \PYG{n}{moved\PYGZus{}head}
+
+        \PYG{c+c1}{\PYGZsh{}collisions avec le corps}
+        \PYG{k}{for} \PYG{n}{bit} \PYG{o+ow}{in} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{snake\PYGZus{}body}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{:]:}
+            \PYG{k}{if} \PYG{n}{bit} \PYG{o}{==} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{snake\PYGZus{}body}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]:}
+                \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{lost} \PYG{o}{=} \PYG{k+kc}{True}
+                \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{death\PYGZus{}reason} \PYG{o}{=} \PYG{l+s+s2}{\PYGZdq{}Body\PYGZdq{}}
+                \PYG{k}{return} \PYG{k+kc}{False}
+
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{age} \PYG{o}{+=} \PYG{l+m+mi}{1}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{life\PYGZus{}points} \PYG{o}{\PYGZhy{}=} \PYG{l+m+mi}{1}
+
+        \PYG{c+c1}{\PYGZsh{}collisions avec la pomme}
+        \PYG{k}{if} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{snake\PYGZus{}body}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]} \PYG{o}{==} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{apple}\PYG{p}{:}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{snake\PYGZus{}body}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{end\PYGZus{}tail}\PYG{p}{)} \PYG{c+c1}{\PYGZsh{} agrandir le serpent avec la queue précédente}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{seed\PYGZus{}new\PYGZus{}apple}\PYG{p}{()}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{apples\PYGZus{}eaten} \PYG{o}{+=} \PYG{l+m+mi}{1}
+            \PYG{k}{if} \PYG{n}{c}\PYG{o}{.}\PYG{n}{RESET\PYGZus{}LIFETIME}\PYG{p}{:}
+                \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{life\PYGZus{}points} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{max\PYGZus{}life\PYGZus{}points} \PYG{c+c1}{\PYGZsh{} on réinitialise la durée de vie au max}
+            \PYG{k}{else}\PYG{p}{:}
+                \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{life\PYGZus{}points} \PYG{o}{+=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{apple\PYGZus{}lifetime\PYGZus{}gain} \PYG{c+c1}{\PYGZsh{} on réinitialise la durée de vie conformément au commentaire en dessous:}
+            \PYG{c+c1}{\PYGZsh{} optimize not to recalculate last\PYGZus{}visited and last\PYGZus{}space for strategy 2}
+            \PYG{c+c1}{\PYGZsh{} if moved\PYGZus{}head is in last\PYGZus{}visited it needs to be removed since the snake has its head there now}
+            \PYG{k}{if} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{strategy} \PYG{o}{==} \PYG{l+m+mi}{2}  \PYG{o+ow}{or} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{strategy} \PYG{o}{==} \PYG{l+m+mi}{5}\PYG{p}{:} \PYG{c+c1}{\PYGZsh{} update last\PYGZus{}visited and last\PYGZus{}space}
+                \PYG{k}{if} \PYG{n}{moved\PYGZus{}head} \PYG{o+ow}{in} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{last\PYGZus{}visited}\PYG{p}{:} \PYG{c+c1}{\PYGZsh{} adapt last\PYGZus{}visited and last\PYGZus{}space}
+                    \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{last\PYGZus{}visited}\PYG{o}{.}\PYG{n}{remove}\PYG{p}{(}\PYG{n}{moved\PYGZus{}head}\PYG{p}{)} \PYG{c+c1}{\PYGZsh{} only head is to be removed since tail not moved with apple eaten}
+                    \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{last\PYGZus{}space} \PYG{o}{\PYGZhy{}=} \PYG{l+m+mi}{1}
+                \PYG{k}{else}\PYG{p}{:} \PYG{c+c1}{\PYGZsh{} reset last\PYGZus{}visited and last\PYGZus{}space}
+                    \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{last\PYGZus{}space} \PYG{o}{=} \PYG{l+m+mi}{0}
+                    \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{last\PYGZus{}visited} \PYG{o}{=} \PYG{n+nb}{set}\PYG{p}{()}
+        \PYG{k}{else}\PYG{p}{:}
+            \PYG{c+c1}{\PYGZsh{} optimize not to recalculate last\PYGZus{}visited and last\PYGZus{}space for strategy 2}
+            \PYG{k}{if} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{strategy} \PYG{o}{==} \PYG{l+m+mi}{2} \PYG{o+ow}{or} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{strategy} \PYG{o}{==} \PYG{l+m+mi}{5}\PYG{p}{:} \PYG{c+c1}{\PYGZsh{} update last\PYGZus{}visited and last\PYGZus{}space}
+                \PYG{k}{if} \PYG{n}{moved\PYGZus{}head} \PYG{o+ow}{in} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{last\PYGZus{}visited}\PYG{p}{:} \PYG{c+c1}{\PYGZsh{} adapt last\PYGZus{}visited and last\PYGZus{}space}
+                    \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{last\PYGZus{}visited}\PYG{o}{.}\PYG{n}{remove}\PYG{p}{(}\PYG{n}{moved\PYGZus{}head}\PYG{p}{)} \PYG{c+c1}{\PYGZsh{} only head is to be removed since tail not moved with apple eaten}
+                    \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{last\PYGZus{}space} \PYG{o}{\PYGZhy{}=} \PYG{l+m+mi}{1}
+                    \PYG{c+c1}{\PYGZsh{} check if end\PYGZus{}tail is connected to last\PYGZus{}visited elements (can be visited) since it has moved and leaves an empty space}
+                    \PYG{k}{if} \PYG{n+nb}{any}\PYG{p}{(}\PYG{n+nb}{abs}\PYG{p}{(}\PYG{n}{end\PYGZus{}tail}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]} \PYG{o}{\PYGZhy{}} \PYG{n}{x}\PYG{p}{)} \PYG{o}{==} \PYG{l+m+mi}{1} \PYG{o}{\PYGZca{}} \PYG{n+nb}{abs}\PYG{p}{(}\PYG{n}{end\PYGZus{}tail}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{\PYGZhy{}} \PYG{n}{y}\PYG{p}{)} \PYG{o}{==} \PYG{l+m+mi}{1} \PYG{k}{for} \PYG{p}{(}\PYG{n}{x}\PYG{p}{,} \PYG{n}{y}\PYG{p}{)} \PYG{o+ow}{in} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{last\PYGZus{}visited}\PYG{p}{):}
+                        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{last\PYGZus{}visited}\PYG{o}{.}\PYG{n}{add}\PYG{p}{((}\PYG{n}{end\PYGZus{}tail}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{],} \PYG{n}{end\PYGZus{}tail}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]))}
+                        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{last\PYGZus{}space} \PYG{o}{+=} \PYG{l+m+mi}{1}
+                \PYG{k}{else}\PYG{p}{:} \PYG{c+c1}{\PYGZsh{} reset last\PYGZus{}visited and last\PYGZus{}space}
+                    \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{last\PYGZus{}space} \PYG{o}{=} \PYG{l+m+mi}{0}
+                    \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{last\PYGZus{}visited} \PYG{o}{=} \PYG{n+nb}{set}\PYG{p}{()}
+
+        \PYG{c+c1}{\PYGZsh{} vérification de la durée de vie}
+        \PYG{k}{if} \PYG{n}{life\PYGZus{}time} \PYG{o+ow}{and} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{life\PYGZus{}points} \PYG{o}{\PYGZlt{}=} \PYG{l+m+mi}{0}\PYG{p}{:}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{death\PYGZus{}reason} \PYG{o}{=} \PYG{l+s+s2}{\PYGZdq{}Life\PYGZdq{}}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{lost} \PYG{o}{=} \PYG{k+kc}{True}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{died\PYGZus{}bc\PYGZus{}no\PYGZus{}apple} \PYG{o}{=} \PYG{l+m+mi}{1}
+            \PYG{k}{return} \PYG{k+kc}{False}
+
+        \PYG{k}{return} \PYG{k+kc}{True}
+
+    \PYG{c+c1}{\PYGZsh{} vision strategy: 8 directions, 3 informations per direction}
+    \PYG{c+c1}{\PYGZsh{} (1D distance to apple in direction of move, 1 / wall\PYGZus{}distance in direction of move, tail\PYGZus{}distance in direction of move) + apples\PYGZus{}eaten + original\PYGZus{}size}
+    \PYG{k}{def} \PYG{n+nf}{process\PYGZus{}vision}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{List}\PYG{p}{[}\PYG{n+nb}{float}\PYG{p}{]:}
+        \PYG{n}{vision} \PYG{o}{=} \PYG{p}{[}\PYG{l+m+mi}{0} \PYG{k}{for} \PYG{n}{\PYGZus{}} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{3}\PYG{o}{*}\PYG{l+m+mi}{8}\PYG{p}{)]}
+
+        \PYG{k}{for} \PYG{p}{(}\PYG{n}{i}\PYG{p}{,} \PYG{n}{incrementer}\PYG{p}{)} \PYG{o+ow}{in} \PYG{n+nb}{enumerate}\PYG{p}{(}\PYG{n}{c}\PYG{o}{.}\PYG{n}{eight\PYGZus{}directions}\PYG{p}{):}
+            \PYG{n}{apple\PYGZus{}distance} \PYG{o}{=} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}
+            \PYG{n}{wall\PYGZus{}distance} \PYG{o}{=} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}
+            \PYG{n}{tail\PYGZus{}distance} \PYG{o}{=} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}
+
+            \PYG{p}{(}\PYG{n}{x}\PYG{p}{,} \PYG{n}{y}\PYG{p}{)} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{snake\PYGZus{}body}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}
+            \PYG{n}{distance} \PYG{o}{=} \PYG{l+m+mi}{0}
+
+            \PYG{k}{while} \PYG{k+kc}{True}\PYG{p}{:}
+                \PYG{n}{x} \PYG{o}{+=} \PYG{n}{incrementer}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}
+                \PYG{n}{y} \PYG{o}{+=} \PYG{n}{incrementer}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]}
+                \PYG{n}{distance} \PYG{o}{+=} \PYG{l+m+mi}{1}
+
+                \PYG{c+c1}{\PYGZsh{} sortie de grille}
+                \PYG{k}{if} \PYG{o+ow}{not} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{is\PYGZus{}on\PYGZus{}board}\PYG{p}{(}\PYG{n}{x}\PYG{p}{,} \PYG{n}{y}\PYG{p}{):}
+                    \PYG{n}{wall\PYGZus{}distance} \PYG{o}{=} \PYG{n}{distance}
+                    \PYG{k}{break}
+
+                \PYG{c+c1}{\PYGZsh{} sur la pomme}
+                \PYG{k}{if} \PYG{p}{(}\PYG{n}{x}\PYG{p}{,} \PYG{n}{y}\PYG{p}{)} \PYG{o}{==} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{apple} \PYG{o+ow}{and} \PYG{n}{apple\PYGZus{}distance} \PYG{o}{==} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{:}
+                    \PYG{n}{apple\PYGZus{}distance} \PYG{o}{=} \PYG{n}{distance}
+
+                \PYG{c+c1}{\PYGZsh{} sur la queue}
+                \PYG{k}{if} \PYG{p}{(}\PYG{n}{x}\PYG{p}{,} \PYG{n}{y}\PYG{p}{)} \PYG{o+ow}{in} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{snake\PYGZus{}body} \PYG{o+ow}{and} \PYG{n}{tail\PYGZus{}distance} \PYG{o}{==} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{:}
+                    \PYG{n}{tail\PYGZus{}distance} \PYG{o}{=} \PYG{n}{distance}
+
+            \PYG{n}{vision}\PYG{p}{[}\PYG{l+m+mi}{3}\PYG{o}{*}\PYG{n}{i}\PYG{p}{]} \PYG{o}{=} \PYG{l+m+mi}{0} \PYG{k}{if} \PYG{n}{apple\PYGZus{}distance} \PYG{o}{==} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1} \PYG{k}{else} \PYG{l+m+mi}{1}
+            \PYG{n}{vision}\PYG{p}{[}\PYG{l+m+mi}{3}\PYG{o}{*}\PYG{n}{i} \PYG{o}{+} \PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{=} \PYG{l+m+mi}{1} \PYG{o}{/} \PYG{n}{wall\PYGZus{}distance}
+            \PYG{n}{vision}\PYG{p}{[}\PYG{l+m+mi}{3}\PYG{o}{*}\PYG{n}{i} \PYG{o}{+} \PYG{l+m+mi}{2}\PYG{p}{]} \PYG{o}{=} \PYG{n}{tail\PYGZus{}distance} \PYG{k}{if} \PYG{n}{tail\PYGZus{}distance} \PYG{o}{!=} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1} \PYG{k}{else} \PYG{l+m+mi}{0}
+
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{vision} \PYG{o}{=} \PYG{n}{vision}
+        \PYG{k}{return} \PYG{n}{vision}
+
+    \PYG{c+c1}{\PYGZsh{} vision strategy: 4 directions, 3 informations per direction}
+    \PYG{c+c1}{\PYGZsh{} (manhattan distance to apple, 1 / wall\PYGZus{}distance in direction of move, tail\PYGZus{}distance in direction of move) + apples\PYGZus{}eaten + original\PYGZus{}size}
+    \PYG{k}{def} \PYG{n+nf}{process\PYGZus{}vision3}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{List}\PYG{p}{[}\PYG{n+nb}{float}\PYG{p}{]:}
+        \PYG{n}{vision} \PYG{o}{=} \PYG{p}{[]}
+
+        \PYG{k}{for} \PYG{p}{(}\PYG{n}{i}\PYG{p}{,} \PYG{n}{incrementer}\PYG{p}{)} \PYG{o+ow}{in} \PYG{n+nb}{enumerate}\PYG{p}{(}\PYG{n}{c}\PYG{o}{.}\PYG{n}{four\PYGZus{}directions}\PYG{p}{):}
+            \PYG{n}{apple\PYGZus{}distance} \PYG{o}{=} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}
+            \PYG{n}{wall\PYGZus{}distance} \PYG{o}{=} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}
+            \PYG{n}{tail\PYGZus{}distance} \PYG{o}{=} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}
+
+            \PYG{p}{(}\PYG{n}{x}\PYG{p}{,} \PYG{n}{y}\PYG{p}{)} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{snake\PYGZus{}body}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}
+            \PYG{n}{distance} \PYG{o}{=} \PYG{l+m+mi}{0}
+
+            \PYG{c+c1}{\PYGZsh{} try to get inputs between [0,1] for the neural network}
+
+            \PYG{n}{distance\PYGZus{}apple} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{manhattan\PYGZus{}distance\PYGZus{}to\PYGZus{}apple}\PYG{p}{((}\PYG{n}{x} \PYG{o}{+} \PYG{n}{incrementer}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{],} \PYG{n}{y} \PYG{o}{+} \PYG{n}{incrementer}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]))}
+
+            \PYG{n}{vision}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{l+m+mf}{1.0} \PYG{o}{/} \PYG{n}{distance\PYGZus{}apple} \PYG{k}{if} \PYG{n}{distance\PYGZus{}apple} \PYG{o}{!=} \PYG{l+m+mi}{0} \PYG{k}{else} \PYG{l+m+mi}{1}\PYG{p}{)}
+
+            \PYG{k}{while} \PYG{k+kc}{True}\PYG{p}{:}
+                \PYG{n}{x} \PYG{o}{+=} \PYG{n}{incrementer}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}
+                \PYG{n}{y} \PYG{o}{+=} \PYG{n}{incrementer}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]}
+                \PYG{n}{distance} \PYG{o}{+=} \PYG{l+m+mi}{1}
+
+                \PYG{c+c1}{\PYGZsh{} sortie de grille}
+                \PYG{k}{if} \PYG{o+ow}{not} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{is\PYGZus{}on\PYGZus{}board}\PYG{p}{(}\PYG{n}{x}\PYG{p}{,} \PYG{n}{y}\PYG{p}{):}
+                    \PYG{n}{wall\PYGZus{}distance} \PYG{o}{=} \PYG{n}{distance}
+                    \PYG{k}{break}
+
+                \PYG{c+c1}{\PYGZsh{} sur la queue}
+                \PYG{k}{if} \PYG{p}{(}\PYG{n}{x}\PYG{p}{,} \PYG{n}{y}\PYG{p}{)} \PYG{o+ow}{in} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{snake\PYGZus{}body} \PYG{o+ow}{and} \PYG{n}{tail\PYGZus{}distance} \PYG{o}{==} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{:}
+                    \PYG{n}{tail\PYGZus{}distance} \PYG{o}{=} \PYG{n}{distance}
+
+            \PYG{n}{vision}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{l+m+mf}{1.0} \PYG{o}{/} \PYG{n}{wall\PYGZus{}distance}\PYG{p}{)}
+            \PYG{n}{vision}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{l+m+mf}{1.0} \PYG{o}{/} \PYG{n}{tail\PYGZus{}distance} \PYG{k}{if} \PYG{n}{tail\PYGZus{}distance} \PYG{o}{!=} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1} \PYG{k}{else} \PYG{l+m+mi}{1}\PYG{p}{)}
+
+        \PYG{n}{vision}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{l+m+mi}{1} \PYG{o}{/} \PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{apples\PYGZus{}eaten} \PYG{o}{+} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{original\PYGZus{}size}\PYG{p}{))}
+
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{vision} \PYG{o}{=} \PYG{n}{vision}
+        \PYG{k}{return} \PYG{n}{vision}
+
+    \PYG{c+c1}{\PYGZsh{} vision strategy: 4 directions, 3 informations per direction}
+    \PYG{c+c1}{\PYGZsh{} (1 if direction is the closest to the apple, 1 / wall\PYGZus{}distance in direction of move, tail\PYGZus{}distance in direction of move) + apples\PYGZus{}eaten + original\PYGZus{}size}
+    \PYG{k}{def} \PYG{n+nf}{process\PYGZus{}vision4}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{List}\PYG{p}{[}\PYG{n+nb}{float}\PYG{p}{]:}
+        \PYG{n}{vision} \PYG{o}{=} \PYG{p}{[]}
+
+        \PYG{n}{min\PYGZus{}distance\PYGZus{}index} \PYG{o}{=} \PYG{n+nb}{min}\PYG{p}{(}\PYG{n+nb}{range}\PYG{p}{(}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{c}\PYG{o}{.}\PYG{n}{eight\PYGZus{}directions}\PYG{p}{)),} \PYG{n}{key}\PYG{o}{=}\PYG{k}{lambda} \PYG{n}{i}\PYG{p}{:} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{manhattan\PYGZus{}distance\PYGZus{}to\PYGZus{}apple}\PYG{p}{((}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{snake\PYGZus{}body}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{][}\PYG{l+m+mi}{0}\PYG{p}{]} \PYG{o}{+} \PYG{n}{c}\PYG{o}{.}\PYG{n}{eight\PYGZus{}directions}\PYG{p}{[}\PYG{n}{i}\PYG{p}{][}\PYG{l+m+mi}{0}\PYG{p}{],} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{snake\PYGZus{}body}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{][}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{+} \PYG{n}{c}\PYG{o}{.}\PYG{n}{eight\PYGZus{}directions}\PYG{p}{[}\PYG{n}{i}\PYG{p}{][}\PYG{l+m+mi}{1}\PYG{p}{])))}
+
+        \PYG{k}{for} \PYG{p}{(}\PYG{n}{i}\PYG{p}{,} \PYG{n}{incrementer}\PYG{p}{)} \PYG{o+ow}{in} \PYG{n+nb}{enumerate}\PYG{p}{(}\PYG{n}{c}\PYG{o}{.}\PYG{n}{eight\PYGZus{}directions}\PYG{p}{):}
+            \PYG{n}{apple\PYGZus{}distance} \PYG{o}{=} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}
+            \PYG{n}{wall\PYGZus{}distance} \PYG{o}{=} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}
+            \PYG{n}{tail\PYGZus{}distance} \PYG{o}{=} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}
+
+            \PYG{p}{(}\PYG{n}{x}\PYG{p}{,} \PYG{n}{y}\PYG{p}{)} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{snake\PYGZus{}body}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}
+            \PYG{n}{distance} \PYG{o}{=} \PYG{l+m+mi}{0}
+
+            \PYG{k}{while} \PYG{k+kc}{True}\PYG{p}{:}
+                \PYG{n}{x} \PYG{o}{+=} \PYG{n}{incrementer}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}
+                \PYG{n}{y} \PYG{o}{+=} \PYG{n}{incrementer}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]}
+                \PYG{n}{distance} \PYG{o}{+=} \PYG{l+m+mi}{1}
+
+                \PYG{c+c1}{\PYGZsh{} sortie de grille}
+                \PYG{k}{if} \PYG{o+ow}{not} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{is\PYGZus{}on\PYGZus{}board}\PYG{p}{(}\PYG{n}{x}\PYG{p}{,} \PYG{n}{y}\PYG{p}{):}
+                    \PYG{n}{wall\PYGZus{}distance} \PYG{o}{=} \PYG{n}{distance}
+                    \PYG{k}{break}
+
+                \PYG{c+c1}{\PYGZsh{} sur la queue}
+                \PYG{k}{if} \PYG{p}{(}\PYG{n}{x}\PYG{p}{,} \PYG{n}{y}\PYG{p}{)} \PYG{o+ow}{in} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{snake\PYGZus{}body} \PYG{o+ow}{and} \PYG{n}{tail\PYGZus{}distance} \PYG{o}{==} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{:}
+                    \PYG{n}{tail\PYGZus{}distance} \PYG{o}{=} \PYG{n}{distance}
+
+            \PYG{n}{vision}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{l+m+mi}{1} \PYG{k}{if} \PYG{n}{i} \PYG{o}{==} \PYG{n}{min\PYGZus{}distance\PYGZus{}index} \PYG{k}{else} \PYG{l+m+mi}{0}\PYG{p}{)}
+            \PYG{n}{vision}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{l+m+mf}{1.0} \PYG{o}{/} \PYG{n}{wall\PYGZus{}distance}\PYG{p}{)}
+            \PYG{n}{vision}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{tail\PYGZus{}distance} \PYG{k}{if} \PYG{n}{tail\PYGZus{}distance} \PYG{o}{!=} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1} \PYG{k}{else} \PYG{l+m+mi}{0}\PYG{p}{)}
+
+        \PYG{n}{vision}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{apples\PYGZus{}eaten} \PYG{o}{+} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{original\PYGZus{}size}\PYG{p}{)}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{vision} \PYG{o}{=} \PYG{n}{vision}
+        \PYG{k}{return} \PYG{n}{vision}
+
+    \PYG{c+c1}{\PYGZsh{}? weights 8 bits vs. float? normalization?}
+
+    \PYG{c+c1}{\PYGZsh{} vision strategy: 4 directions, 3 informations per direction}
+    \PYG{c+c1}{\PYGZsh{} (free spaces in direction of move, manhattan distance to apple in direction of move, apple is in the free space in this direction) + apples\PYGZus{}eaten + original\PYGZus{}size}
+    \PYG{k}{def} \PYG{n+nf}{process\PYGZus{}vision5}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{List}\PYG{p}{[}\PYG{n+nb}{float}\PYG{p}{]:}
+        \PYG{c+c1}{\PYGZsh{} neural network input contains free space in all directions, distance to apple in all directions, and number of apples eaten (size of snake)}
+        \PYG{c+c1}{\PYGZsh{} 9 inputs in total}
+        \PYG{n}{neural\PYGZus{}network\PYGZus{}input} \PYG{o}{=} \PYG{p}{[]}
+        \PYG{p}{(}\PYG{n}{hx}\PYG{p}{,} \PYG{n}{hy}\PYG{p}{)} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{snake\PYGZus{}body}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]} \PYG{c+c1}{\PYGZsh{} head of the snake body}
+        \PYG{k}{for} \PYG{n}{direction} \PYG{o+ow}{in} \PYG{n}{c}\PYG{o}{.}\PYG{n}{four\PYGZus{}directions}\PYG{p}{:}
+            \PYG{p}{(}\PYG{n}{dx}\PYG{p}{,} \PYG{n}{dy}\PYG{p}{)} \PYG{o}{=} \PYG{n}{direction}
+            \PYG{p}{(}\PYG{n}{cnx}\PYG{p}{,} \PYG{n}{cny}\PYG{p}{)} \PYG{o}{=} \PYG{p}{(}\PYG{n}{hx} \PYG{o}{+} \PYG{n}{dx}\PYG{p}{,} \PYG{n}{hy} \PYG{o}{+} \PYG{n}{dy}\PYG{p}{)}
+            \PYG{c+c1}{\PYGZsh{}metric = self.count\PYGZus{}free\PYGZus{}moving\PYGZus{}spaces(cnx, cny)}
+            \PYG{c+c1}{\PYGZsh{}neural\PYGZus{}network\PYGZus{}input.append(1.0 / metric if metric != 0 else 1)}
+            \PYG{c+c1}{\PYGZsh{}metric = self.manhattan\PYGZus{}distance\PYGZus{}to\PYGZus{}apple((cnx, cny))}
+            \PYG{c+c1}{\PYGZsh{}neural\PYGZus{}network\PYGZus{}input.append(1.0 / metric if metric != 0 else 1)}
+            \PYG{n}{neural\PYGZus{}network\PYGZus{}input}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{count\PYGZus{}free\PYGZus{}moving\PYGZus{}spaces}\PYG{p}{(}\PYG{n}{cnx}\PYG{p}{,} \PYG{n}{cny}\PYG{p}{)} \PYG{o}{/} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{norm\PYGZus{}constant\PYGZus{}board}\PYG{p}{)}
+            \PYG{n}{neural\PYGZus{}network\PYGZus{}input}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{manhattan\PYGZus{}distance\PYGZus{}to\PYGZus{}apple}\PYG{p}{((}\PYG{n}{cnx}\PYG{p}{,} \PYG{n}{cny}\PYG{p}{))} \PYG{o}{/} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{norm\PYGZus{}constant\PYGZus{}diag}\PYG{p}{)}
+            \PYG{n}{neural\PYGZus{}network\PYGZus{}input}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{l+m+mi}{1} \PYG{k}{if} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{apple} \PYG{o+ow}{in} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{last\PYGZus{}visited} \PYG{k}{else} \PYG{l+m+mi}{0}\PYG{p}{)} \PYG{c+c1}{\PYGZsh{} apple can be reached going in this direction}
+        \PYG{c+c1}{\PYGZsh{}neural\PYGZus{}network\PYGZus{}input.append(1.0 / (self.apples\PYGZus{}eaten + self.original\PYGZus{}size))}
+        \PYG{n}{neural\PYGZus{}network\PYGZus{}input}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{apples\PYGZus{}eaten} \PYG{o}{+} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{original\PYGZus{}size}\PYG{p}{)}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{vision} \PYG{o}{=} \PYG{n}{neural\PYGZus{}network\PYGZus{}input}
+        \PYG{k}{return} \PYG{n}{neural\PYGZus{}network\PYGZus{}input}
+
+    \PYG{c+c1}{\PYGZsh{} vision strategy: 4 directions, 2 informations per direction}
+    \PYG{c+c1}{\PYGZsh{} (free spaces in direction of move, manhattan distance to apple in direction of move) + apples\PYGZus{}eaten + original\PYGZus{}size}
+    \PYG{k}{def} \PYG{n+nf}{process\PYGZus{}vision2}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{List}\PYG{p}{[}\PYG{n+nb}{float}\PYG{p}{]:}
+        \PYG{c+c1}{\PYGZsh{} neural network input contains free space in all directions, distance to apple in all directions, and number of apples eaten (size of snake)}
+        \PYG{c+c1}{\PYGZsh{} 9 inputs in total}
+        \PYG{n}{neural\PYGZus{}network\PYGZus{}input} \PYG{o}{=} \PYG{p}{[]}
+        \PYG{p}{(}\PYG{n}{hx}\PYG{p}{,} \PYG{n}{hy}\PYG{p}{)} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{snake\PYGZus{}body}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]} \PYG{c+c1}{\PYGZsh{} head of the snake body}
+        \PYG{k}{for} \PYG{n}{direction} \PYG{o+ow}{in} \PYG{n}{c}\PYG{o}{.}\PYG{n}{four\PYGZus{}directions}\PYG{p}{:}
+            \PYG{p}{(}\PYG{n}{dx}\PYG{p}{,} \PYG{n}{dy}\PYG{p}{)} \PYG{o}{=} \PYG{n}{direction}
+            \PYG{p}{(}\PYG{n}{cnx}\PYG{p}{,} \PYG{n}{cny}\PYG{p}{)} \PYG{o}{=} \PYG{p}{(}\PYG{n}{hx} \PYG{o}{+} \PYG{n}{dx}\PYG{p}{,} \PYG{n}{hy} \PYG{o}{+} \PYG{n}{dy}\PYG{p}{)}
+            \PYG{c+c1}{\PYGZsh{}metric = self.count\PYGZus{}free\PYGZus{}moving\PYGZus{}spaces(cnx, cny)}
+            \PYG{c+c1}{\PYGZsh{}neural\PYGZus{}network\PYGZus{}input.append(1.0 / metric if metric != 0 else 1)}
+            \PYG{c+c1}{\PYGZsh{}metric = self.manhattan\PYGZus{}distance\PYGZus{}to\PYGZus{}apple((cnx, cny))}
+            \PYG{c+c1}{\PYGZsh{}neural\PYGZus{}network\PYGZus{}input.append(1.0 / metric if metric != 0 else 1)}
+            \PYG{n}{neural\PYGZus{}network\PYGZus{}input}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{count\PYGZus{}free\PYGZus{}moving\PYGZus{}spaces}\PYG{p}{(}\PYG{n}{cnx}\PYG{p}{,} \PYG{n}{cny}\PYG{p}{)} \PYG{o}{/} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{norm\PYGZus{}constant\PYGZus{}board}\PYG{p}{)}
+            \PYG{n}{neural\PYGZus{}network\PYGZus{}input}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{manhattan\PYGZus{}distance\PYGZus{}to\PYGZus{}apple}\PYG{p}{((}\PYG{n}{cnx}\PYG{p}{,} \PYG{n}{cny}\PYG{p}{))} \PYG{o}{/} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{norm\PYGZus{}constant\PYGZus{}diag}\PYG{p}{)}
+        \PYG{c+c1}{\PYGZsh{}neural\PYGZus{}network\PYGZus{}input.append(1.0 / (self.apples\PYGZus{}eaten + self.original\PYGZus{}size))}
+        \PYG{n}{neural\PYGZus{}network\PYGZus{}input}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{apples\PYGZus{}eaten} \PYG{o}{+} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{original\PYGZus{}size}\PYG{p}{)}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{vision} \PYG{o}{=} \PYG{n}{neural\PYGZus{}network\PYGZus{}input}
+        \PYG{k}{return} \PYG{n}{neural\PYGZus{}network\PYGZus{}input}
+
+    \PYG{k}{def} \PYG{n+nf}{is\PYGZus{}on\PYGZus{}board}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{x}\PYG{p}{,} \PYG{n}{y}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n+nb}{bool}\PYG{p}{:}
+        \PYG{k}{return} \PYG{l+m+mi}{0} \PYG{o}{\PYGZlt{}=} \PYG{n}{x} \PYG{o}{\PYGZlt{}} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{width} \PYG{o+ow}{and} \PYG{l+m+mi}{0} \PYG{o}{\PYGZlt{}=} \PYG{n}{y} \PYG{o}{\PYGZlt{}} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{height}
+
+    \PYG{k}{def} \PYG{n+nf}{is\PYGZus{}possible\PYGZus{}move}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{x}\PYG{p}{,} \PYG{n}{y}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n+nb}{bool}\PYG{p}{:}
+        \PYG{c+c1}{\PYGZsh{} check if the move is on the board and not on the snake body except for the tail (since it has moved)}
+        \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{is\PYGZus{}on\PYGZus{}board}\PYG{p}{(}\PYG{n}{x}\PYG{p}{,} \PYG{n}{y}\PYG{p}{)} \PYG{o+ow}{and} \PYG{p}{(}\PYG{n}{x}\PYG{p}{,} \PYG{n}{y}\PYG{p}{)} \PYG{o+ow}{not} \PYG{o+ow}{in} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{snake\PYGZus{}body}\PYG{p}{[:}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}
+
+    \PYG{k}{def} \PYG{n+nf}{get\PYGZus{}possible\PYGZus{}moves}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{cur}\PYG{p}{):}
+        \PYG{p}{(}\PYG{n}{x}\PYG{p}{,} \PYG{n}{y}\PYG{p}{)} \PYG{o}{=} \PYG{n}{cur}
+        \PYG{n}{moves} \PYG{o}{=} \PYG{p}{[]}
+        \PYG{k}{for} \PYG{n}{direction} \PYG{o+ow}{in} \PYG{n}{c}\PYG{o}{.}\PYG{n}{eight\PYGZus{}directions}\PYG{p}{:}
+            \PYG{p}{(}\PYG{n}{i}\PYG{p}{,} \PYG{n}{j}\PYG{p}{)} \PYG{o}{=} \PYG{n}{direction}
+            \PYG{k}{if} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{is\PYGZus{}possible\PYGZus{}move}\PYG{p}{(}\PYG{n}{x} \PYG{o}{+} \PYG{n}{i}\PYG{p}{,} \PYG{n}{y} \PYG{o}{+} \PYG{n}{j}\PYG{p}{):}
+                \PYG{n}{moves}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{direction}\PYG{p}{)}
+        \PYG{k}{return} \PYG{n}{moves}
+
+    \PYG{k}{def} \PYG{n+nf}{count\PYGZus{}free\PYGZus{}moving\PYGZus{}spaces}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{x}\PYG{p}{,} \PYG{n}{y}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n+nb}{int}\PYG{p}{:}
+        \PYG{c+c1}{\PYGZsh{} Breadth\PYGZhy{}First Search, BFS, snake heads moves to (x, y) and tail\PYGZsq{}s end is no more}
+        \PYG{k}{if} \PYG{o+ow}{not} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{is\PYGZus{}possible\PYGZus{}move}\PYG{p}{(}\PYG{n}{x}\PYG{p}{,} \PYG{n}{y}\PYG{p}{):} \PYG{c+c1}{\PYGZsh{} does not check snake\PYGZsq{}s tail}
+            \PYG{k}{return} \PYG{l+m+mi}{0}
+        \PYG{k}{if} \PYG{p}{(}\PYG{n}{x}\PYG{p}{,} \PYG{n}{y}\PYG{p}{)} \PYG{o+ow}{in} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{last\PYGZus{}visited}\PYG{p}{:}
+            \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{last\PYGZus{}space}
+        \PYG{n}{space} \PYG{o}{=} \PYG{l+m+mi}{0}
+        \PYG{n}{visited} \PYG{o}{=} \PYG{n+nb}{set}\PYG{p}{([(}\PYG{n}{x}\PYG{p}{,} \PYG{n}{y}\PYG{p}{)])}
+        \PYG{n}{queue} \PYG{o}{=} \PYG{n}{collections}\PYG{o}{.}\PYG{n}{deque}\PYG{p}{([(}\PYG{n}{x}\PYG{p}{,} \PYG{n}{y}\PYG{p}{)])} \PYG{c+c1}{\PYGZsh{} efficient for pop(0) and append}
+        \PYG{k}{while} \PYG{p}{(}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{queue}\PYG{p}{)} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{0}\PYG{p}{):}
+            \PYG{n}{cur} \PYG{o}{=} \PYG{n}{queue}\PYG{o}{.}\PYG{n}{popleft}\PYG{p}{()}
+            \PYG{n}{space} \PYG{o}{+=} \PYG{l+m+mi}{1}
+            \PYG{k}{for} \PYG{n}{direction} \PYG{o+ow}{in} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{get\PYGZus{}possible\PYGZus{}moves}\PYG{p}{(}\PYG{n}{cur}\PYG{p}{):}
+                \PYG{p}{(}\PYG{n}{i}\PYG{p}{,} \PYG{n}{j}\PYG{p}{)} \PYG{o}{=} \PYG{n}{direction}
+                \PYG{p}{(}\PYG{n}{cx}\PYG{p}{,} \PYG{n}{cy}\PYG{p}{)} \PYG{o}{=} \PYG{n}{cur}
+                \PYG{n}{cn} \PYG{o}{=} \PYG{p}{(}\PYG{n}{cx} \PYG{o}{+} \PYG{n}{i}\PYG{p}{,} \PYG{n}{cy} \PYG{o}{+} \PYG{n}{j}\PYG{p}{)}
+                \PYG{p}{(}\PYG{n}{cnx}\PYG{p}{,} \PYG{n}{cny}\PYG{p}{)} \PYG{o}{=} \PYG{n}{cn}
+                \PYG{k}{if} \PYG{n}{cn} \PYG{o+ow}{not} \PYG{o+ow}{in} \PYG{n}{visited} \PYG{o+ow}{and} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{is\PYGZus{}possible\PYGZus{}move}\PYG{p}{(}\PYG{n}{cnx}\PYG{p}{,} \PYG{n}{cny}\PYG{p}{):} \PYG{c+c1}{\PYGZsh{} does not check snake\PYGZsq{}s tail}
+                    \PYG{n}{queue}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{cn}\PYG{p}{)}
+                    \PYG{n}{visited}\PYG{o}{.}\PYG{n}{add}\PYG{p}{(}\PYG{n}{cn}\PYG{p}{)}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{last\PYGZus{}visited} \PYG{o}{=} \PYG{n}{visited}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{last\PYGZus{}space} \PYG{o}{=} \PYG{n}{space}
+        \PYG{k}{return} \PYG{n}{space}
+
+    \PYG{k}{def} \PYG{n+nf}{manhattan\PYGZus{}distance\PYGZus{}to\PYGZus{}apple}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{head}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n+nb}{abs}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{apple}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]} \PYG{o}{\PYGZhy{}} \PYG{n}{head}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{])} \PYG{o}{+} \PYG{n+nb}{abs}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{apple}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{\PYGZhy{}} \PYG{n}{head}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{])}
+
+    \PYG{k}{def} \PYG{n+nf}{fitness1}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n+nb}{pow}\PYG{p}{(}\PYG{l+m+mi}{3}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{apples\PYGZus{}eaten}\PYG{p}{)} \PYG{o}{*} \PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{age} \PYG{o}{\PYGZhy{}} \PYG{l+m+mi}{50} \PYG{o}{*} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{died\PYGZus{}bc\PYGZus{}no\PYGZus{}apple}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{fitness2}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{k}{return} \PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{apples\PYGZus{}eaten} \PYG{o}{**} \PYG{l+m+mi}{3}\PYG{p}{)} \PYG{o}{*} \PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{age} \PYG{o}{\PYGZhy{}} \PYG{l+m+mi}{50} \PYG{o}{*} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{died\PYGZus{}bc\PYGZus{}no\PYGZus{}apple}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{fitness3}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{k}{return} \PYG{p}{((}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{apples\PYGZus{}eaten} \PYG{o}{*} \PYG{l+m+mi}{2}\PYG{p}{)} \PYG{o}{**} \PYG{l+m+mi}{2}\PYG{p}{)} \PYG{o}{*} \PYG{p}{((}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{age} \PYG{o}{\PYGZhy{}} \PYG{l+m+mi}{50} \PYG{o}{*} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{died\PYGZus{}bc\PYGZus{}no\PYGZus{}apple}\PYG{p}{)} \PYG{o}{**} \PYG{l+m+mf}{1.5}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{fitness4}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{k}{return} \PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{age} \PYG{o}{*} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{age}\PYG{p}{)} \PYG{o}{*} \PYG{n+nb}{pow}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{apples\PYGZus{}eaten}\PYG{p}{)} \PYG{o}{*} \PYG{p}{(}\PYG{l+m+mi}{100} \PYG{o}{*} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{apples\PYGZus{}eaten} \PYG{o}{+} \PYG{l+m+mi}{1}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{fitness5}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{k}{return} \PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{age} \PYG{o}{*} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{age} \PYG{o}{*} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{age} \PYG{o}{*} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{age}\PYG{p}{)} \PYG{o}{*} \PYG{n+nb}{pow}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{apples\PYGZus{}eaten}\PYG{p}{)} \PYG{o}{*} \PYG{p}{(}\PYG{l+m+mi}{500} \PYG{o}{*} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{apples\PYGZus{}eaten} \PYG{o}{+} \PYG{l+m+mi}{1}\PYG{p}{)}
+
+    \PYG{c+c1}{\PYGZsh{} age\PYGZca{}2*2\PYGZca{}apple*(coeff*apple+1)}
+    \PYG{c+c1}{\PYGZsh{} age\PYGZca{}2*2\PYGZca{}10*(apple\PYGZhy{}9)*(coeff*10)}
+
+    \PYG{c+c1}{\PYGZsh{} score = self.apples\PYGZus{}eaten, frame\PYGZus{}score = self.age}
+    \PYG{c+c1}{\PYGZsh{} ((score\PYGZca{}3)*(frame\PYGZus{}score)}
+    \PYG{c+c1}{\PYGZsh{} ((score*2)\PYGZca{}2)*(frame\PYGZus{}score\PYGZca{}1.5)}
+
+    \PYG{c+c1}{\PYGZsh{} remarks}
+    \PYG{c+c1}{\PYGZsh{} * 3\PYGZca{}apple*(age): pow(3, self.apples\PYGZus{}eaten) * (self.age \PYGZhy{} 50 * self.died\PYGZus{}bc\PYGZus{}no\PYGZus{}apple) trains faster}
+\end{Verbatim}
