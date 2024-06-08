@@ -8,8 +8,8 @@ def restore_curves(filename):
 
 max_iterations = 256
 
-(max_fitness5, min_fitness5, avg_fitness5, max_apple_eaten5, min_apple_eaten5, avg_apple_eaten5, max_snake_length5) = restore_curves("saved_curves-484-53.pickle")
-(max_fitness1, min_fitness1, avg_fitness1, max_apple_eaten1, min_apple_eaten1, avg_apple_eaten1, max_snake_length1) = restore_curves("saved_curves-484-13.pickle")
+(max_fitness5, min_fitness5, avg_fitness5, max_apple_eaten5, min_apple_eaten5, avg_apple_eaten5, max_snake_length5) = restore_curves("curve_53.pickle")
+(max_fitness1, min_fitness1, avg_fitness1, max_apple_eaten1, min_apple_eaten1, avg_apple_eaten1, max_snake_length1) = restore_curves("curve_13.pickle")
 
 fig, ax1 = plt.subplots()
 
