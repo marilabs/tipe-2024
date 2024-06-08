@@ -9,8 +9,7 @@ import matplotlib.animation as animation
 
 def restore_brain(brain_number: int) -> Game:
     # restore brain from file and inject it into the snake
-    assert(os.path.exists(c.BRAINS_FILE))
-    with open(c.BRAINS_FILE, 'rb') as f:
+    with open("brains_53.pickle", 'rb') as f:
         game_brains = pickle.load(f)
         brain = game_brains[brain_number]
         if c.DEBUG:
