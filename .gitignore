@@ -21,6 +21,7 @@ Cargo.lock
 **__pycache__/
 
 ## Core latex/pdflatex auxiliary files:
+**/*.nav
 **/*.aux
 **/*.lof
 **/*.log
