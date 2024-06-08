@@ -42,6 +42,8 @@ NORMALIZE_BOARD = False
 
 SINGLE_SNAKE_BRAIN = 1 # number of snakes in the single snake game
 
+PLAY_SNAKE_ITERATIONS = 10  # number of iterations for the play snake game
+
 up = (0, 1);
 down = (0, -1)
 left = (-1, 0)
