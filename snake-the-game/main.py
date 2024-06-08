@@ -190,50 +190,39 @@ print(max_fitness)
 
 fig, ax1 = plt.subplots()
 
-color = 'tab:blue'
-ax1.set_xlabel('Iteration')
-ax1.set_ylabel('Max Fitness', color=color)
-#x_new = np.linspace(0, len(max_fitness), 300)
-#spl = make_interp_spline(range(len(max_fitness)), max_fitness, k=3)
-#max_fitness_smooth = spl(x_new)
-#ax1.plot(x_new, max_fitness_smooth, color=color)
-ax1.set_yscale('log')
-ax1.plot(range(len(max_fitness)), max_fitness, color=color)
-ax1.tick_params(axis='y', labelcolor=color)
-
-ax2 = ax1.twinx()
-color = 'tab:red'
-ax2.set_ylabel('Average Fitness', color=color)
-ax2.set_yscale('log')
-ax2.plot(range(len(avg_fitness)), avg_fitness, color=color)
-ax2.tick_params(axis='y', labelcolor=color)
-
-plt.title('Max and Average Fitness vs Iteration')
-plt.grid(True)
-fig.tight_layout()
-plt.show()
-
-
-fig, ax1 = plt.subplots()
-
 color1 = 'tab:blue'
-ax1.set_xlabel('Iteration')
-ax1.set_ylabel('Max Fitness', color=color1)
-ax1.plot(range(len(max_fitness)), max_fitness, color=color1)
+color2 = 'tab:red'
+color3 = 'tab:green'
+color4 = 'tab:orange'
+
+ax1.set_xlabel('Génération')
+ax1.set_ylabel('Fitness maximum', color=color1)
+ax1.set_yscale('log')
+
+# Key change: Use iterations as the x-axis data
+ax1.plot(range(len(max_fitness)), max_fitness, color=color2, label='Fitness max')
+ax1.plot(range(len(avg_fitness)), avg_fitness, color=color1, label='Fitness avg')
 ax1.tick_params(axis='y', labelcolor=color1)
 
-color2 = 'tab:red'
-ax2 = ax1.twinx()
-ax2.set_ylabel('Average Fitness', color=color2)
-ax2.plot(range(len(avg_fitness)), avg_fitness, color=color2)
-ax2.tick_params(axis='y', labelcolor=color2)
+ax1.legend(loc='upper left')  # Add a legend for clarity
 
 color3 = 'tab:green'
-ax1.plot(range(len(max_apple_eaten)), max_apple_eaten, color=color3, linestyle='dashed', label='Max Apples Eaten')
+ax2 = ax1.twinx()
+ax2.set_ylabel('Pommes mangées maximum', color=color3)
+# Key change: Use iterations as the x-axis data
+ax2.plot(range(len(max_apple_eaten)), max_apple_eaten, color=color4, label='Pommes')
+ax2.tick_params(axis='y', labelcolor=color3)
 
-plt.title('Fitness vs Iteration')
-plt.grid(True)
+ax2.legend(loc='lower right')
+
+# Add Vertical Gridlines (The Key Change)
+ax1.grid(axis='x', linestyle='--')  # Gridlines on the x-axis (iterations)
+ax2.grid(axis='y', linestyle='--')  # You need to add it for the second axis too
+
+# Additional styling improvement
+plt.title('Fitness et pommes mangées fct. nombre de générations')
 fig.tight_layout()
+
 plt.show()
 
 if c.DISPLAY_GRAPHICS:
