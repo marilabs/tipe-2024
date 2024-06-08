@@ -250,22 +250,22 @@ du serpent dont les entrées sont des paramètres de vision.
   y_{1} \\[0.3em]
   y_{2} \\
   \vdots \\
-  y_{m}
+  y_{k}
   \end{pmatrix}
   =
   \sigma\left[
   \begin{pmatrix}
-  h^{(2)}_{1,1} & h^{(2)}_{1,2} & \ldots & h^{(2)}_{1,k} \\
-  h^{(2)}_{2,1} & h^{(2)}_{2,2} & \ldots & h^{(2)}_{2,k} \\
+  h^{(2)}_{1,1} & h^{(2)}_{1,2} & \ldots & h^{(2)}_{1,m} \\
+  h^{(2)}_{2,1} & h^{(2)}_{2,2} & \ldots & h^{(2)}_{2,m} \\
   \vdots & \vdots & \ddots & \vdots \\
-  h^{(2)}_{m,1} & h^{(2)}_{m,2} & \ldots & h^{(2)}_{m,k}
+  h^{(2)}_{k,1} & h^{(2)}_{k,2} & \ldots & h^{(2)}_{k,m}
   \end{pmatrix}
   \sigma\left(
   \begin{pmatrix}
   h^{(1)}_{1,1} & h^{(1)}_{1,2} & \ldots & h^{(1)}_{1,n} \\
   h^{(1)}_{2,1} & h^{(1)}_{2,2} & \ldots & h^{(1)}_{2,n} \\
   \vdots & \vdots & \ddots & \vdots \\
-  h^{(1)}_{k,1} & h^{(1)}_{k,2} & \ldots & h^{(1)}_{k,n}
+  h^{(1)}_{m,1} & h^{(1)}_{m,2} & \ldots & h^{(1)}_{m,n}
   \end{pmatrix}
   \begin{pmatrix}
   x_{1} \\[0.3em]
@@ -278,7 +278,7 @@ du serpent dont les entrées sont des paramètres de vision.
   b_{1}^{(1)} \\[0.3em]
   b_{2}^{(1)} \\
   \vdots \\
-  b_{k}^{(1)}
+  b_{m}^{(1)}
   \end{pmatrix}
   \right)
   +
@@ -286,7 +286,7 @@ du serpent dont les entrées sont des paramètres de vision.
   b_{1}^{(2)} \\[0.3em]
   b_{2}^{(2)} \\
   \vdots \\
-  b_{m}^{(2)}
+  b_{k}^{(2)}
   \end{pmatrix}
   \right]
   $}
@@ -738,9 +738,9 @@ $\rightarrow$ réseau $\left[13, 12, 12, 4\right]$.
   \begin{figure}
   \centering
   \vspace{-2.0cm}
-  %\hspace{-0.6cm}
-  \includegraphics[width=1\textwidth]{snake_population.png}
-  \vspace{-0.7cm}
+  \hspace{-0.3cm}
+  \includegraphics[width=1.3\textwidth]{snake_population.png}
+  \vspace{-1cm}
   \caption*{\tiny Population de serpents}
   \end{figure}
 
@@ -748,7 +748,7 @@ $\rightarrow$ réseau $\left[13, 12, 12, 4\right]$.
   \centering
   \vspace{-0.6cm}
   %\hspace{-0.6cm}
-  \includegraphics[width=1\textwidth]{snake_game.png}
+  \includegraphics[width=0.6\textwidth]{snake_game.png}
   \vspace{-0.7cm}
   \caption*{\tiny Le jeu pour un serpent}
   \end{figure}
@@ -853,7 +853,7 @@ $\rightarrow$ réseau $\left[13, 12, 12, 4\right]$.
 \end{itemize}
 \end{frame}
 
-%\end{document}
+\end{document}
 
 \section{Annexe I: \textbf{Snake game: code en python}}
 
@@ -917,6 +917,8 @@ $\rightarrow$ réseau $\left[13, 12, 12, 4\right]$.
 
 \begin{frame}
   TODO
+
+  avec 2000 itérations meilleur serpent 51 cases soit plus de la moitier du plateau
 
   Breadth-First Search (BFS) algorithm to count free spaces in each direction
   Optimisation pour recalculer récursivement à chaque itération

@@ -18,7 +18,7 @@ ZOOM_FACTOR = 2 # zoom factor for the longest snake
 GAME_STRATEGY = 5
 FITNESS_STRATEGY = 3
 
-MAX_ITERATION = 2000 # number of iterations before stopping the program
+MAX_ITERATION = 256 # number of iterations before stopping the program
 SAVE = True # save the game brains to a file
 RESTORE = False # restore the game brains from a file
 BRAINS_FILE = 'saved_brains' + '-' + str(POPULATION) + '-' + str(GAME_STRATEGY) + str(FITNESS_STRATEGY) + '.pickle' # name of the file to save the brains

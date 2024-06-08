@@ -380,13 +380,13 @@ class Game:
         return abs(self.apple[0] - head[0]) + abs(self.apple[1] - head[1])
 
     def fitness1(self):
-        return pow(3, self.apples_eaten) * (self.age - 50 * self.died_bc_no_apple)
+        return pow(3, self.apples_eaten) * (self.age - c.MAX_LIFE_POINTS * self.died_bc_no_apple)
 
     def fitness2(self):
-        return (self.apples_eaten ** 3) * (self.age - 50 * self.died_bc_no_apple)
+        return (self.apples_eaten ** 3) * (self.age - c.MAX_LIFE_POINTS * self.died_bc_no_apple)
 
     def fitness3(self):
-        return ((self.apples_eaten * 2) ** 2) * ((self.age - 50 * self.died_bc_no_apple) ** 1.5)
+        return ((self.apples_eaten * 2) ** 2) * ((self.age - c.MAX_LIFE_POINTS * self.died_bc_no_apple) ** 1.5)
 
     def fitness4(self):
         return (self.age * self.age) * pow(2, self.apples_eaten) * (100 * self.apples_eaten + 1)
