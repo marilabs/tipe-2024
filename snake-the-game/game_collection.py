@@ -68,7 +68,8 @@ class GameCollection:
         # save the game collection and all the games in the game collection to a file
         #for game in self.games:
         #    print(game.brain.layers_sizes)
-        game_brains = [game.brain for game in self.games]
+        new_games = sorted(self.games, key=lambda game: game.fitness())
+        game_brains = [game.brain for game in new_games]
         if c.DEBUG:
             for brain in game_brains:
                 print(brain.weights, end=' ')
