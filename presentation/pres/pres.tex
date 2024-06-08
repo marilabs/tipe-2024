@@ -246,48 +246,63 @@ du serpent dont les entrées sont des paramètres de vision.
   \textbf{Généralisation à un réseau multicouches:} modélisation matricielle avec fonction vectorielle $\sigma$
   \begin{equation*}
   \resizebox{\textwidth}{!}{
-  $\begin{pmatrix}
+    $\underbrace{\begin{pmatrix}
   y_{1} \\[0.3em]
   y_{2} \\
   \vdots \\
   y_{k}
-  \end{pmatrix}
+  \end{pmatrix}}_{\text{Couche sortie}}
   =
   \sigma\left[
-  \begin{pmatrix}
-  h^{(2)}_{1,1} & h^{(2)}_{1,2} & \ldots & h^{(2)}_{1,m} \\
-  h^{(2)}_{2,1} & h^{(2)}_{2,2} & \ldots & h^{(2)}_{2,m} \\
-  \vdots & \vdots & \ddots & \vdots \\
-  h^{(2)}_{k,1} & h^{(2)}_{k,2} & \ldots & h^{(2)}_{k,m}
-  \end{pmatrix}
-  \sigma\left(
-  \begin{pmatrix}
-  h^{(1)}_{1,1} & h^{(1)}_{1,2} & \ldots & h^{(1)}_{1,n} \\
-  h^{(1)}_{2,1} & h^{(1)}_{2,2} & \ldots & h^{(1)}_{2,n} \\
-  \vdots & \vdots & \ddots & \vdots \\
-  h^{(1)}_{m,1} & h^{(1)}_{m,2} & \ldots & h^{(1)}_{m,n}
-  \end{pmatrix}
-  \begin{pmatrix}
-  x_{1} \\[0.3em]
-  x_{2} \\
-  \vdots \\
-  x_{n}
-  \end{pmatrix}
+    \underbrace{\begin{pmatrix}
+    h^{(2)}_{1,1} & h^{(2)}_{1,2} & \ldots & h^{(2)}_{1,m} \\
+    h^{(2)}_{2,1} & h^{(2)}_{2,2} & \ldots & h^{(2)}_{2,m} \\
+    \vdots & \vdots & \ddots & \vdots \\
+    h^{(2)}_{k,1} & h^{(2)}_{k,2} & \ldots & h^{(2)}_{k,m}
+    \end{pmatrix}}_{\text{Poids couche 3}}
+      \sigma\left(
+        \underbrace{\begin{pmatrix}
+        h^{(1)}_{1,1} & h^{(1)}_{1,2} & \ldots & h^{(1)}_{1,m} \\
+        h^{(1)}_{2,1} & h^{(1)}_{2,2} & \ldots & h^{(1)}_{2,m} \\
+        \vdots & \vdots & \ddots & \vdots \\
+        h^{(1)}_{m,1} & h^{(1)}_{m,2} & \ldots & h^{(1)}_{m,m}
+        \end{pmatrix}}_{\text{Poids couche 2}}
+          \sigma\left(
+              \underbrace{\begin{pmatrix}
+              h^{(1)}_{1,1} & h^{(1)}_{1,2} & \ldots & h^{(1)}_{1,n} \\
+              h^{(1)}_{2,1} & h^{(1)}_{2,2} & \ldots & h^{(1)}_{2,n} \\
+              \vdots & \vdots & \ddots & \vdots \\
+              h^{(1)}_{m,1} & h^{(1)}_{m,2} & \ldots & h^{(1)}_{m,n}
+              \end{pmatrix}}_{\text{Poids couche 1}}
+              \underbrace{\begin{pmatrix}
+              x_{1} \\[0.3em]
+              x_{2} \\
+              \vdots \\
+              x_{n}
+              \end{pmatrix}}_{\text{Couche entrée}}
+              +
+              \underbrace{\begin{pmatrix}
+              b_{1}^{(1)} \\[0.3em]
+              b_{2}^{(1)} \\
+              \vdots \\
+              b_{m}^{(1)}
+              \end{pmatrix}}_{\text{Bais couche 1}}
+        \right)
+        +
+        \underbrace{\begin{pmatrix}
+        b_{1}^{(2)} \\[0.3em]
+        b_{2}^{(2)} \\
+        \vdots \\
+        b_{m}^{(2)}
+        \end{pmatrix}}_{\text{Bais couche 2}}
+      \right)
   +
-  \begin{pmatrix}
-  b_{1}^{(1)} \\[0.3em]
-  b_{2}^{(1)} \\
+  \underbrace{\begin{pmatrix}
+  b_{1}^{(3)} \\[0.3em]
+  b_{2}^{(3)} \\
   \vdots \\
-  b_{m}^{(1)}
-  \end{pmatrix}
-  \right)
-  +
-  \begin{pmatrix}
-  b_{1}^{(2)} \\[0.3em]
-  b_{2}^{(2)} \\
-  \vdots \\
-  b_{k}^{(2)}
-  \end{pmatrix}
+  b_{k}^{(3)}
+  \end{pmatrix}}_{\text{Bais couche 3}}
   \right]
   $}
   \end{equation*}
@@ -426,10 +441,10 @@ du serpent dont les entrées sont des paramètres de vision.
     }
 
     % LABELS
-    \node[above=0.5,align=center,mydarkgreen] at (N1-1.90) {Input\\[-0.2em]layer};
-    \node[above=0.8,align=center,mydarkblue] at (N2-1.90) {Hidden\\[-0.2em]layers};
-      \node[above=0.8,align=center,mydarkblue] at (N3-1.90) {Hidden\\[-0.2em]layers};
-    \node[above=1.2,align=center,mydarkred] at (N\Nnodlen-1.90) {Output\\[-0.2em]layer};
+    \node[above=0.5,align=center,mydarkgreen] at (N1-1.90) {Couche\\[-0.2em]d'entrée};
+    \node[above=0.8,align=center,mydarkblue] at (N2-1.90) {Couche\\[-0.2em]cachée};
+    \node[above=0.8,align=center,mydarkblue] at (N3-1.90) {Couche\\[-0.2em]cachée};
+    \node[above=1.2,align=center,mydarkred] at (N\Nnodlen-1.90) {Couche\\[-0.2em]de sortie};
 
   \end{tikzpicture}
   }
@@ -794,10 +809,10 @@ $\rightarrow$ réseau $\left[13, 12, 12, 4\right]$.
       }
     }
     % LABELS
-    \node[above=0.5,align=center,mydarkgreen] at (N1-1.north) {Input\\[-0.2em]layer};
-    \node[above=0.8,align=center,mydarkblue] at (N2-1.north) {Hidden\\[-0.2em]layers};
-    \node[above=0.8,align=center,mydarkblue] at (N3-1.north) {Hidden\\[-0.2em]layers};
-    \node[above=1.2,align=center,mydarkred] at (N4-1.north) {Output\\[-0.2em]layer};
+    \node[above=0.5,align=center,mydarkgreen] at (N1-1.90) {Couche\\[-0.2em]d'entrée};
+    \node[above=0.8,align=center,mydarkblue] at (N2-1.90) {Couche\\[-0.2em]cachée};
+    \node[above=0.8,align=center,mydarkblue] at (N3-1.90) {Couche\\[-0.2em]cachée};
+    \node[above=1.2,align=center,mydarkred] at (N4-1.90) {Couche\\[-0.2em]de sortie};
   \end{tikzpicture}
   } % End of \resizebox
   \vspace{-0.7cm}
@@ -853,9 +868,218 @@ $\rightarrow$ réseau $\left[13, 12, 12, 4\right]$.
 \end{itemize}
 \end{frame}
 
-\end{document}
+% BEST SNAKES strat 1 22, strat 2 41->47
 
-\section{Annexe I: \textbf{Snake game: code en python}}
+\section{Annexe I: \textbf{Simulations complémentaires}}
+
+\begin{frame}
+  \frametitle{Matrices de poids synaptiques}
+  \footnotesize
+  \textbf{Cerveau du serpent:} réseau de neurones $\left[n, m, m, k\right]$.
+
+  \textbf{Formulation mathématique:} couche d'entrée vision $n$, deux couches cachées $m$, couche de sortie direction $k$. 
+  
+  \resizebox{\textwidth}{!}{
+  $\underbrace{\begin{pmatrix}
+  y_{1} \\[0.3em]
+  y_{2} \\
+  \vdots \\
+  y_{k}
+  \end{pmatrix}}_{\text{Couche sortie}}
+  =
+  \sigma\left[
+    \underbrace{\begin{pmatrix}
+    h^{(2)}_{1,1} & h^{(2)}_{1,2} & \ldots & h^{(2)}_{1,m} \\
+    h^{(2)}_{2,1} & h^{(2)}_{2,2} & \ldots & h^{(2)}_{2,m} \\
+    \vdots & \vdots & \ddots & \vdots \\
+    h^{(2)}_{k,1} & h^{(2)}_{k,2} & \ldots & h^{(2)}_{k,m}
+    \end{pmatrix}}_{\text{Poids couche 3}}
+      \sigma\left(
+        \underbrace{\begin{pmatrix}
+        h^{(1)}_{1,1} & h^{(1)}_{1,2} & \ldots & h^{(1)}_{1,m} \\
+        h^{(1)}_{2,1} & h^{(1)}_{2,2} & \ldots & h^{(1)}_{2,m} \\
+        \vdots & \vdots & \ddots & \vdots \\
+        h^{(1)}_{m,1} & h^{(1)}_{m,2} & \ldots & h^{(1)}_{m,m}
+        \end{pmatrix}}_{\text{Poids couche 2}}
+          \sigma\left(
+              \underbrace{\begin{pmatrix}
+              h^{(1)}_{1,1} & h^{(1)}_{1,2} & \ldots & h^{(1)}_{1,n} \\
+              h^{(1)}_{2,1} & h^{(1)}_{2,2} & \ldots & h^{(1)}_{2,n} \\
+              \vdots & \vdots & \ddots & \vdots \\
+              h^{(1)}_{m,1} & h^{(1)}_{m,2} & \ldots & h^{(1)}_{m,n}
+              \end{pmatrix}}_{\text{Poids couche 1}}
+              \underbrace{\begin{pmatrix}
+              x_{1} \\[0.3em]
+              x_{2} \\
+              \vdots \\
+              x_{n}
+              \end{pmatrix}}_{\text{Couche entrée}}
+              +
+              \underbrace{\begin{pmatrix}
+              b_{1}^{(1)} \\[0.3em]
+              b_{2}^{(1)} \\
+              \vdots \\
+              b_{m}^{(1)}
+              \end{pmatrix}}_{\text{Bais couche 1}}
+        \right)
+        +
+        \underbrace{\begin{pmatrix}
+        b_{1}^{(2)} \\[0.3em]
+        b_{2}^{(2)} \\
+        \vdots \\
+        b_{m}^{(2)}
+        \end{pmatrix}}_{\text{Bais couche 2}}
+      \right)
+  +
+  \underbrace{\begin{pmatrix}
+  b_{1}^{(3)} \\[0.3em]
+  b_{2}^{(3)} \\
+  \vdots \\
+  b_{k}^{(3)}
+  \end{pmatrix}}_{\text{Bais couche 3}}
+  \right]
+  $}
+
+\begin{columns}[T]
+
+\begin{column}{0.40\textwidth}
+\begin{figure}
+\centering
+%\vspace{-1.7cm}
+%\hspace{-0.6cm}
+\resizebox{\textwidth}{!}{
+\begin{tikzpicture}[x=5.4cm,y=1.2cm]
+\readlist\Nnod{24,18,18,4}
+\readlist\Nstr{13,12,4} % array of string number of nodes per layer
+\readlist\Cstr{x,h^{(\prev)},y} % array of coefficient symbol per layer
+\def\yshift{0.55} % shift last node for dots
+% Calculate the maximum number of nodes in any layer
+\def\maxN{0}
+\foreachitem \X \in \Nnod{
+  \ifnum\X>\maxN
+    \xdef\maxN{\X}
+  \fi
+}
+% LOOP over LAYERS
+\foreachitem \N \in \Nnod{
+  \def\lay{\Ncnt} % alias of index of current layer
+  \pgfmathsetmacro\prev{int(\Ncnt-1)} % number of previous layer
+  \pgfmathsetmacro\midY{(\N-1)/2} % midpoint of the current layer
+  \foreach \i [evaluate={\c=int(\i==\N); \y=\midY-\i; % Adjusted \y calculation
+                \x=\lay; \n=\nstyle;
+                \index=(\i<\N?int(\i):"\Nstr[\n]");}] in {1,...,\N}{ % loop over nodes
+    % NODES
+    \node[node \n] (N\lay-\i) at (\x,\y) {$\strut\Cstr[\n]_{\index}$};
+
+    % CONNECTIONS
+    \ifnumcomp{\lay}{>}{1}{ % connect to previous layer
+      \foreach \j in {1,...,\Nnod[\prev]}{ % loop over nodes in previous layer
+        \draw[white,line width=1.2,shorten >=1] (N\prev-\j) -- (N\lay-\i);
+        \draw[connect] (N\prev-\j) -- (N\lay-\i);
+      }
+    }{
+      \draw[connect] (0.5,\y) -- (N\lay-\i); % arrows in
+    }
+  }
+}
+% LABELS
+\node[above=0.5,align=center,mydarkgreen] at (N1-1.90) {Couche\\[-0.2em]d'entrée};
+\node[above=0.8,align=center,mydarkblue] at (N2-1.90) {Couche\\[-0.2em]cachée};
+\node[above=0.8,align=center,mydarkblue] at (N3-1.90) {Couche\\[-0.2em]cachée};
+\node[above=1.2,align=center,mydarkred] at (N4-1.90) {Couche\\[-0.2em]de sortie};
+\end{tikzpicture}
+}
+\vspace{-0.7cm}
+\caption*{\tiny Stratégie vision n$\textsuperscript{o}$1: $\left[24, 18, 18, 4\right]$}
+\end{figure}
+\end{column}
+
+\begin{column}{0.60\textwidth}
+\begin{figure}
+\centering
+%\vspace{-1.7cm}
+%\hspace{-0.6cm}
+\resizebox{\textwidth}{!}{
+\begin{tikzpicture}[x=5.4cm,y=1.2cm]
+  \readlist\Nnod{13,12,12,4}
+  \readlist\Nstr{13,12,4} % array of string number of nodes per layer
+  \readlist\Cstr{x,h^{(\prev)},y} % array of coefficient symbol per layer
+  \def\yshift{0.55} % shift last node for dots
+  % Calculate the maximum number of nodes in any layer
+  \def\maxN{0}
+  \foreachitem \X \in \Nnod{
+    \ifnum\X>\maxN
+      \xdef\maxN{\X}
+    \fi
+  }
+  % LOOP over LAYERS
+  \foreachitem \N \in \Nnod{
+    \def\lay{\Ncnt} % alias of index of current layer
+    \pgfmathsetmacro\prev{int(\Ncnt-1)} % number of previous layer
+    \pgfmathsetmacro\midY{(\N-1)/2} % midpoint of the current layer
+    \foreach \i [evaluate={\c=int(\i==\N); \y=\midY-\i; % Adjusted \y calculation
+                  \x=\lay; \n=\nstyle;
+                  \index=(\i<\N?int(\i):"\Nstr[\n]");}] in {1,...,\N}{ % loop over nodes
+      % NODES
+      \node[node \n] (N\lay-\i) at (\x,\y) {$\strut\Cstr[\n]_{\index}$};
+
+      % CONNECTIONS
+      \ifnumcomp{\lay}{>}{1}{ % connect to previous layer
+        \foreach \j in {1,...,\Nnod[\prev]}{ % loop over nodes in previous layer
+          \draw[white,line width=1.2,shorten >=1] (N\prev-\j) -- (N\lay-\i);
+          \draw[connect] (N\prev-\j) -- (N\lay-\i);
+        }
+      }{
+        \draw[connect] (0.5,\y) -- (N\lay-\i); % arrows in
+      }
+    }
+  }
+  % LABELS
+  \node[above=0.5,align=center,mydarkgreen] at (N1-1.90) {Couche\\[-0.2em]d'entrée};
+  \node[above=0.8,align=center,mydarkblue] at (N2-1.90) {Couche\\[-0.2em]cachée};
+  \node[above=0.8,align=center,mydarkblue] at (N3-1.90) {Couche\\[-0.2em]cachée};
+  \node[above=1.2,align=center,mydarkred] at (N4-1.90) {Couche\\[-0.2em]de sortie};
+\end{tikzpicture}
+} 
+\caption*{\tiny Stratégie vision n$\textsuperscript{o}$2: $\left[13, 12, 12, 4\right]$}
+\end{figure}
+\end{column}
+
+\end{columns}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Convergence des matrices de poids synaptiques}
+  \framesubtitle{Stratégie vision n$\textsuperscript{o}$1: $\left[24, 18, 18, 4\right]$}
+  \footnotesize
+\begin{center} 
+  Couche d'entrée vision $n=24$, deux couches cachées $m=18$, couche de sortie direction $k=4$.
+\end{center}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=1\textwidth]{brain_matrix_13.eps}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Convergence des matrices de poids synaptiques}
+  \framesubtitle{Stratégie vision n$\textsuperscript{o}$2: $\left[13, 12, 12, 4\right]$}
+  \footnotesize
+\begin{center} 
+Couche d'entrée vision $n=13$, deux couches cachées $m=12$, couche de sortie direction $k=4$. 
+\end{center}
+
+ \begin{figure}
+  \centering
+  \includegraphics[width=1\textwidth]{brain_matrix_53.eps}
+\end{figure}
+\end{frame}
+
+%\end{document}
+
+\section{Annexe II: \textbf{Snake game: code en python}}
 
 \begin{frame}[t,allowframebreaks]{Configuration}{config.py}
 \scriptsize
@@ -897,7 +1121,12 @@ $\rightarrow$ réseau $\left[13, 12, 12, 4\right]$.
 \inputminted[mathescape]{python}{../../snake-the-game/plot_compare_convergences.py}
 \end{frame}
 
-\section{Annexe II: \textbf{Snake game: jeu jouable par l'utilisateur}}
+\begin{frame}[t,allowframebreaks]{Matrice des poids synaptiques}{plot\_brain.py}
+\scriptsize
+\inputminted[mathescape]{python}{../../snake-the-game/plot_brain.py}
+\end{frame}
+
+\section{Annexe III: \textbf{Snake game: jeu jouable par l'utilisateur}}
 
 \begin{frame}[t,allowframebreaks]{Jeu intéractif}{playable\_game.py}
 \scriptsize
