@@ -1,0 +1,14 @@
+Août 2023: recherche bibliographique et suivi du tutoriel "Shorelark" [1, étape 2] sur les algorithmes génétiques pour simuler l'évolution d'une population. Choix du sujet de TIPE pour concevoir une IA qui joue de manière autonome à Snake.
+
+Septembre 2023: programmation d'un jeu Snake jouable en python avec modélisation par un réseau de neurones des décisions de direction du serpent. Formulation matricielle des réseaux de neurones.
+
+Novembre 2023: implémentation de l'algorithme génétique utilisant la "roulette wheel selection" et des croisements K-points pour optimiser les réseaux de neurones d'une population de serpents.
+
+Février 2024: ajouts d’heuristiques, notamment d'un concept de points de vie du serpent pour éviter les boucles infinies.
+
+Mars 2024: exploration de différentes stratégies de vision et sélection après simulation de celles qui maximisent la longueur du serpent. Affichage simultané de toute la population de serpents pour comprendre les raisons de décès et leurs comportements.
+
+Mai 2024: obtention des courbes de convergence pour le score de fitness ou le nombre de pommes mangées en fonction des générations de serpents. Validation de la convergence et comparaison des différentes stratégies de vision.
+
+Juin 2024: finalisation de la présentation en LaTeX regroupant les résultats obtenus.
+
