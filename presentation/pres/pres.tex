@@ -285,7 +285,7 @@ du serpent dont les entrées sont des paramètres de vision.
               b_{1}^{(1)} \\[0.3em]
               b_{2}^{(1)} \\
               \vdots \\
-              b_{m}^{(1)}
+              b_{n}^{(1)}
               \end{pmatrix}}_{\text{Bais couche 1}}
         \right)
         +
@@ -762,7 +762,7 @@ $\rightarrow$ réseau $\left[13, 12, 12, 4\right]$.
   \begin{figure}
   \centering
   \vspace{-1.2cm}
-  \raisebox{0pt}[\height][\depth]{\hspace{-0.40cm}
+  \raisebox{0pt}[\height][\depth]{\hspace{-0.50cm}
   % NEURAL NETWORK
   \resizebox{1.3\textwidth}{!}{
   \begin{tikzpicture}[x=5cm,y=1.5cm]
@@ -825,11 +825,12 @@ $\rightarrow$ réseau $\left[13, 12, 12, 4\right]$.
 \vspace{-0.4cm}
 \caption*{\tiny Convergence des stratégies de vision n$\textsuperscript{o}$1 et n$\textsuperscript{o}$2}
 \end{figure}
-\vspace{-0.4cm}
+\vspace{-0.6cm}
 \begin{itemize}
 \footnotesize
 \item \textbf{Observation:} la stratégie de vision n$\textsuperscript{o}$2 converge plus rapidement que la stratégie n$\textsuperscript{o}$1, et atteint un score de fitness plus élevé.
 \item \textbf{Interprétation:} la stratégie de vision n$\textsuperscript{o}$2 fournit au serpent des informations plus pertinentes pour localiser et atteindre la pomme.
+\item \textbf{Après 2000 générations:} le serpent le plus long atteint en simulation est de taille 58 (plus de la moitié du plateau).
 \end{itemize}
 
 \end{frame}
@@ -864,7 +865,7 @@ $\rightarrow$ réseau $\left[13, 12, 12, 4\right]$.
 \section{Annexe I: \textbf{Simulations complémentaires}}
 
 \begin{frame}
-  \frametitle{Matrices de poids synaptiques}
+  \frametitle{Matrices des poids synaptiques}
   \footnotesize
   \textbf{Cerveau du serpent:} réseau de neurones $\left[n, m, m, k\right]$.
 
@@ -910,7 +911,7 @@ $\rightarrow$ réseau $\left[13, 12, 12, 4\right]$.
               b_{1}^{(1)} \\[0.3em]
               b_{2}^{(1)} \\
               \vdots \\
-              b_{m}^{(1)}
+              b_{n}^{(1)}
               \end{pmatrix}}_{\text{Bais couche 1}}
         \right)
         +
@@ -941,7 +942,7 @@ $\rightarrow$ réseau $\left[13, 12, 12, 4\right]$.
 \resizebox{\textwidth}{!}{
 \begin{tikzpicture}[x=5.4cm,y=1.2cm]
 \readlist\Nnod{24,18,18,4}
-\readlist\Nstr{13,12,4} % array of string number of nodes per layer
+\readlist\Nstr{24,18,4} % array of string number of nodes per layer
 \readlist\Cstr{x,h^{(\prev)},y} % array of coefficient symbol per layer
 \def\yshift{0.55} % shift last node for dots
 % Calculate the maximum number of nodes in any layer
@@ -1138,7 +1139,6 @@ Couche d'entrée vision $n=13$, deux couches cachées $m=12$, couche de sortie d
 \begin{frame}
   TODO
 
-  avec 2000 itérations meilleur serpent 51 cases soit plus de la moitier du plateau
 
   Breadth-First Search (BFS) algorithm to count free spaces in each direction
   Optimisation pour recalculer récursivement à chaque itération
@@ -1177,32 +1177,3 @@ Couche d'entrée vision $n=13$, deux couches cachées $m=12$, couche de sortie d
   * The most appropriate number of hidden neurons is sqrt(input layer nodes * output layer nodes)
   \end{frame}
 
-
-\subsection{L'algorithme génétique}
-
-
-\subsection{Les réseaux neuronaux}
-
-
-
-\begin{frame}
-  \frametitle{Algorithme d'optimisation résultant}
-  \framesubtitle{Entrainement par algorithme générique d'un réseau de neurones pour jouer à Snake}
-  \footnotesize
-  \textbf{Principe:}
-  \begin{itemize}
-  \footnotesize
-  \item On part d'une large population composée de $484=22^2$ serpents.
-  \item Chaque serpent évolue sur son propre plateau de jeu.
-  \item Le cerveau de chaque serpent est un réseau de neurones dont les entrées sont des paramètres de visions et dont les sorties fournissent les 4 décisions de directions \keystroke{$\leftarrow$}\keystroke{$\uparrow$}\keystroke{$\downarrow$}\keystroke{$\rightarrow$}.
-  \end{itemize}
-  \textbf{\'Etapes de l'algorithme:}
-  \begin{itemize}
-  \footnotesize
-  \item Initialisation: tous les réseaux de neurones sont initialisés avec des poids aléatoires.
-  \item Itération: Tous les serpents de la population évoluent dans le jeu jusqu'à ce qu'ils meurent en heurtant un mur, mangeant leur queue ou s'il n'ont pas manger de pomme pendant un nombre donné d'itérations (pour éviter les boucles infinies).
-  \item Mesure: \`A tout jeu on associe un "score" ou fonction de fitness dépendant de sa taille et du nombre de mouvements total effectués sans mourir
-  \item Sélection: seul un pourcentage des meilleurs serpents sont retenus (ici $10\%$) au sens du score de fitness.
-  \item \'Evolution: ces meilleurs serpents sont utilisés pour reconstituer la population totale par croisement et mutation entre deux des meilleurs serpents tirés au hasard.
-  \end{itemize}
-\end{frame}
