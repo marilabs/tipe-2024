@@ -1,0 +1,58 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{ORIGINAL\PYGZus{}SIZE\PYGZus{}THREE}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n}{True}
+\PYG{n}{DISPLAY\PYGZus{}ALL\PYGZus{}POPULATION}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n}{True}
+
+\PYG{n}{DISPLAY\PYGZus{}LARGEST\PYGZus{}SNAKE}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n}{False}
+
+\PYG{n}{DISPLAY\PYGZus{}GRAPHICS}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n}{False}
+
+\PYG{err}{\PYGZsh{}}\PYG{+w}{ }\PYG{n}{number}\PYG{+w}{ }\PYG{n}{of}\PYG{+w}{ }\PYG{n}{cells}\PYG{+w}{ }\PYG{k}{for}\PYG{+w}{ }\PYG{n}{the}\PYG{+w}{ }\PYG{n}{snake}\PYG{+w}{ }\PYG{n}{to}\PYG{+w}{ }\PYG{n}{move}\PYG{+w}{ }\PYG{k}{in}\PYG{+w}{ }\PYG{n}{each}\PYG{+w}{ }\PYG{n}{game}
+\PYG{n}{WIDTH}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{l+m+mi}{10}
+\PYG{n}{HEIGHT}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{l+m+mi}{10}
+
+\PYG{n}{BOARD\PYGZus{}SIDE}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{l+m+mi}{880}\PYG{+w}{ }\PYG{err}{\PYGZsh{}}\PYG{+w}{ }\PYG{n}{indication}\PYG{+w}{ }\PYG{n}{of}\PYG{+w}{ }\PYG{n}{largest}\PYG{+w}{ }\PYG{n}{board}\PYG{+w}{ }\PYG{n}{side}\PYG{+w}{ }\PYG{p}{(}\PYG{k}{for}\PYG{+w}{ }\PYG{n}{max}\PYG{+w}{ }\PYG{n}{of}\PYG{+w}{ }\PYG{n}{WIDTH}\PYG{+w}{ }\PYG{n}{and}\PYG{+w}{ }\PYG{n}{HEIGHT}\PYG{p}{)}
+\PYG{n}{POPULATION}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{l+m+mi}{22}\PYG{p}{**}\PYG{l+m+mi}{2}\PYG{+w}{ }\PYG{err}{\PYGZsh{}}\PYG{+w}{ }\PYG{l+m+mi}{484}\PYG{+w}{ }\PYG{n}{population}\PYG{+w}{ }\PYG{n}{of}\PYG{+w}{ }\PYG{n}{snakes}\PYG{+w}{ }\PYG{n}{or}\PYG{+w}{ }\PYG{n}{number}\PYG{+w}{ }\PYG{n}{of}\PYG{+w}{ }\PYG{n}{games}\PYG{+w}{ }\PYG{k}{in}\PYG{+w}{ }\PYG{n}{the}\PYG{+w}{ }\PYG{n}{collection}
+\PYG{n}{ZOOM\PYGZus{}FACTOR}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{l+m+mi}{2}\PYG{+w}{ }\PYG{err}{\PYGZsh{}}\PYG{+w}{ }\PYG{n}{zoom}\PYG{+w}{ }\PYG{n}{factor}\PYG{+w}{ }\PYG{k}{for}\PYG{+w}{ }\PYG{n}{the}\PYG{+w}{ }\PYG{n}{longest}\PYG{+w}{ }\PYG{n}{snake}
+
+\PYG{err}{\PYGZsh{}}\PYG{+w}{ }\PYG{n}{game}\PYG{+w}{ }\PYG{n}{strategy}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{p}{:}\PYG{l+m+mi}{24}\PYG{p}{,}\PYG{l+m+mi}{18}\PYG{p}{,}\PYG{l+m+mi}{18}\PYG{p}{,}\PYG{l+m+mi}{4}\PYG{p}{;}\PYG{+w}{ }\PYG{l+m+mi}{2}\PYG{p}{:}\PYG{l+m+mi}{9}\PYG{p}{,}\PYG{l+m+mi}{10}\PYG{p}{,}\PYG{l+m+mi}{10}\PYG{p}{,}\PYG{l+m+mi}{4}
+\PYG{n}{GAME\PYGZus{}STRATEGY}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{l+m+mi}{5}
+\PYG{n}{FITNESS\PYGZus{}STRATEGY}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{l+m+mi}{3}
+
+\PYG{n}{MAX\PYGZus{}ITERATION}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{l+m+mi}{256}\PYG{+w}{ }\PYG{err}{\PYGZsh{}}\PYG{+w}{ }\PYG{n}{number}\PYG{+w}{ }\PYG{n}{of}\PYG{+w}{ }\PYG{n}{iterations}\PYG{+w}{ }\PYG{n}{before}\PYG{+w}{ }\PYG{n}{stopping}\PYG{+w}{ }\PYG{n}{the}\PYG{+w}{ }\PYG{n}{program}
+\PYG{n}{SAVE}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n}{True}\PYG{+w}{ }\PYG{err}{\PYGZsh{}}\PYG{+w}{ }\PYG{n}{save}\PYG{+w}{ }\PYG{n}{the}\PYG{+w}{ }\PYG{n}{game}\PYG{+w}{ }\PYG{n}{brains}\PYG{+w}{ }\PYG{n}{to}\PYG{+w}{ }\PYG{n}{a}\PYG{+w}{ }\PYG{n}{file}
+\PYG{n}{RESTORE}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n}{False}\PYG{+w}{ }\PYG{err}{\PYGZsh{}}\PYG{+w}{ }\PYG{n}{restore}\PYG{+w}{ }\PYG{n}{the}\PYG{+w}{ }\PYG{n}{game}\PYG{+w}{ }\PYG{n}{brains}\PYG{+w}{ }\PYG{n}{from}\PYG{+w}{ }\PYG{n}{a}\PYG{+w}{ }\PYG{n}{file}
+\PYG{n}{BRAINS\PYGZus{}FILE}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{err}{\PYGZsq{}}\PYG{n}{saved\PYGZus{}brains}\PYG{err}{\PYGZsq{}}\PYG{+w}{ }\PYG{p}{+}\PYG{+w}{ }\PYG{l+s+sc}{\PYGZsq{}\PYGZhy{}\PYGZsq{}}\PYG{+w}{ }\PYG{p}{+}\PYG{+w}{ }\PYG{n}{str}\PYG{p}{(}\PYG{n}{POPULATION}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{+}\PYG{+w}{ }\PYG{l+s+sc}{\PYGZsq{}\PYGZhy{}\PYGZsq{}}\PYG{+w}{ }\PYG{p}{+}\PYG{+w}{ }\PYG{n}{str}\PYG{p}{(}\PYG{n}{GAME\PYGZus{}STRATEGY}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{+}\PYG{+w}{ }\PYG{n}{str}\PYG{p}{(}\PYG{n}{FITNESS\PYGZus{}STRATEGY}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{+}\PYG{+w}{ }\PYG{err}{\PYGZsq{}}\PYG{p}{.}\PYG{n}{pickle}\PYG{err}{\PYGZsq{}}\PYG{+w}{ }\PYG{err}{\PYGZsh{}}\PYG{+w}{ }\PYG{n}{name}\PYG{+w}{ }\PYG{n}{of}\PYG{+w}{ }\PYG{n}{the}\PYG{+w}{ }\PYG{n}{file}\PYG{+w}{ }\PYG{n}{to}\PYG{+w}{ }\PYG{n}{save}\PYG{+w}{ }\PYG{n}{the}\PYG{+w}{ }\PYG{n}{brains}
+\PYG{n}{CURVES\PYGZus{}FILES}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{err}{\PYGZsq{}}\PYG{n}{saved\PYGZus{}curves}\PYG{err}{\PYGZsq{}}\PYG{+w}{ }\PYG{p}{+}\PYG{+w}{ }\PYG{l+s+sc}{\PYGZsq{}\PYGZhy{}\PYGZsq{}}\PYG{+w}{ }\PYG{p}{+}\PYG{+w}{ }\PYG{n}{str}\PYG{p}{(}\PYG{n}{POPULATION}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{+}\PYG{+w}{ }\PYG{l+s+sc}{\PYGZsq{}\PYGZhy{}\PYGZsq{}}\PYG{+w}{ }\PYG{p}{+}\PYG{+w}{ }\PYG{n}{str}\PYG{p}{(}\PYG{n}{GAME\PYGZus{}STRATEGY}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{+}\PYG{+w}{ }\PYG{n}{str}\PYG{p}{(}\PYG{n}{FITNESS\PYGZus{}STRATEGY}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{+}\PYG{+w}{ }\PYG{err}{\PYGZsq{}}\PYG{p}{.}\PYG{n}{pickle}\PYG{err}{\PYGZsq{}}\PYG{+w}{ }\PYG{err}{\PYGZsh{}}\PYG{+w}{ }\PYG{n}{name}\PYG{+w}{ }\PYG{n}{of}\PYG{+w}{ }\PYG{n}{the}\PYG{+w}{ }\PYG{n}{file}\PYG{+w}{ }\PYG{n}{to}\PYG{+w}{ }\PYG{n}{save}\PYG{+w}{ }\PYG{n}{the}\PYG{+w}{ }\PYG{n}{curves}
+
+\PYG{n}{NUMBER\PYGZus{}CROSSOVER\PYGZus{}POINTS}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{l+m+mi}{2}\PYG{+w}{ }\PYG{err}{\PYGZsh{}}\PYG{+w}{ }\PYG{n}{number}\PYG{+w}{ }\PYG{n}{of}\PYG{+w}{ }\PYG{n}{crossover}\PYG{+w}{ }\PYG{n}{points}\PYG{+w}{ }\PYG{k}{for}\PYG{+w}{ }\PYG{n}{the}\PYG{+w}{ }\PYG{n}{genetic}\PYG{+w}{ }\PYG{n}{algorithm}
+\PYG{n}{MUTATION\PYGZus{}CHANCE}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{l+m+mf}{0.4}\PYG{+w}{ }\PYG{err}{\PYGZsh{}}\PYG{+w}{ }\PYG{n}{chance}\PYG{+w}{ }\PYG{n}{of}\PYG{+w}{ }\PYG{n}{mutation}\PYG{+w}{ }\PYG{k}{for}\PYG{+w}{ }\PYG{n}{the}\PYG{+w}{ }\PYG{n}{genetic}\PYG{+w}{ }\PYG{n}{algorithm}
+\PYG{n}{MUTATION\PYGZus{}COEFF}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{l+m+mf}{0.4}\PYG{+w}{ }\PYG{err}{\PYGZsh{}}\PYG{+w}{ }\PYG{n}{coefficient}\PYG{+w}{ }\PYG{k}{for}\PYG{+w}{ }\PYG{n}{the}\PYG{+w}{ }\PYG{n}{mutation}
+\PYG{n}{PORTION\PYGZus{}BESTS}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{l+m+mi}{20}\PYG{+w}{ }\PYG{err}{\PYGZsh{}}\PYG{+w}{ }\PYG{n}{percentage}\PYG{+w}{ }\PYG{n}{of}\PYG{+w}{ }\PYG{n}{bests}\PYG{+w}{ }\PYG{n}{brains}\PYG{+w}{ }\PYG{n}{to}\PYG{+w}{ }\PYG{n}{keep}\PYG{+w}{ }\PYG{k}{for}\PYG{+w}{ }\PYG{n}{the}\PYG{+w}{ }\PYG{n}{genetic}\PYG{+w}{ }\PYG{n}{algorithm}
+
+\PYG{err}{\PYGZsh{}}\PYG{+w}{ }\PYG{n}{antoine}\PYG{+w}{ }\PYG{n}{libs}\PYG{p}{/}\PYG{n}{game}\PYG{p}{/}\PYG{n}{lib}\PYG{p}{.}\PYG{n}{rs}\PYG{+w}{ }\PYG{n}{and}\PYG{+w}{ }\PYG{n}{game\PYGZus{}wasm}\PYG{p}{/}\PYG{n}{src}\PYG{p}{/}\PYG{n}{lib}\PYG{p}{.}\PYG{n}{rs}
+\PYG{err}{\PYGZsh{}}\PYG{+w}{ }\PYG{n}{k}\PYG{p}{=}\PYG{l+m+mi}{1}\PYG{+w}{ }\PYG{n}{KPointsCrossover}
+\PYG{err}{\PYGZsh{}}\PYG{n}{NUMBER\PYGZus{}GAMES}\PYG{p}{:}\PYG{+w}{ }\PYG{n}{u32}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{l+m+mi}{2\PYGZus{}000}\PYG{p}{;}\PYG{+w}{ }\PYG{n}{WIDTH}\PYG{p}{:}\PYG{+w}{ }\PYG{n}{u32}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{l+m+mi}{30}\PYG{p}{;}\PYG{+w}{ }\PYG{n}{HEIGHT}\PYG{p}{:}\PYG{+w}{ }\PYG{n}{u32}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{l+m+mi}{30}\PYG{p}{;}
+\PYG{err}{\PYGZsh{}}\PYG{n}{MUTATION\PYGZus{}CHANCE}\PYG{p}{:}\PYG{+w}{ }\PYG{n}{f64}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{l+m+mf}{0.5}\PYG{p}{;}\PYG{+w}{ }\PYG{n}{MUTATION\PYGZus{}COEFF}\PYG{p}{:}\PYG{+w}{ }\PYG{n}{f32}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{l+m+mf}{0.5}\PYG{p}{;}\PYG{+w}{ }\PYG{n}{SAVE\PYGZus{}BESTS}\PYG{p}{:}\PYG{+w}{ }\PYG{n}{usize}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{l+m+mi}{100}\PYG{p}{;}\PYG{+w}{ }\PYG{n}{MAX\PYGZus{}AGE}\PYG{p}{:}\PYG{+w}{ }\PYG{n}{u32}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{l+m+mi}{500}\PYG{p}{;}\PYG{+w}{ }\PYG{n}{APPLE\PYGZus{}LIFETIME\PYGZus{}GAIN}\PYG{p}{:}\PYG{+w}{ }\PYG{n}{i32}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{l+m+mi}{50}\PYG{p}{;}
+
+\PYG{n}{LIFE\PYGZus{}TIME}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n}{True}\PYG{+w}{ }\PYG{err}{\PYGZsh{}}\PYG{+w}{ }\PYG{n}{apply}\PYG{+w}{ }\PYG{n}{life}\PYG{+w}{ }\PYG{n}{time}\PYG{+w}{ }\PYG{n}{constraint}\PYG{+w}{ }\PYG{n}{to}\PYG{+w}{ }\PYG{n}{the}\PYG{+w}{ }\PYG{n}{snake}\PYG{+w}{ }\PYG{n}{to}\PYG{+w}{ }\PYG{n}{avoid}\PYG{+w}{ }\PYG{n}{infinite}\PYG{+w}{ }\PYG{n}{loops}
+\PYG{n}{MAX\PYGZus{}LIFE\PYGZus{}POINTS}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{l+m+mi}{50}\PYG{+w}{ }\PYG{err}{\PYGZsh{}}\PYG{+w}{ }\PYG{n}{maximum}\PYG{+w}{ }\PYG{n}{number}\PYG{+w}{ }\PYG{n}{of}\PYG{+w}{ }\PYG{n}{life}\PYG{+w}{ }\PYG{n}{points}\PYG{+w}{ }\PYG{k}{for}\PYG{+w}{ }\PYG{n}{the}\PYG{+w}{ }\PYG{n}{snake}
+\PYG{n}{APPLE\PYGZus{}LIFETIME\PYGZus{}GAIN}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{l+m+mi}{20}\PYG{+w}{ }\PYG{err}{\PYGZsh{}}\PYG{+w}{ }\PYG{n}{number}\PYG{+w}{ }\PYG{n}{of}\PYG{+w}{ }\PYG{n}{life}\PYG{+w}{ }\PYG{n}{points}\PYG{+w}{ }\PYG{n}{gained}\PYG{+w}{ }\PYG{n}{when}\PYG{+w}{ }\PYG{n}{eating}\PYG{+w}{ }\PYG{n}{an}\PYG{+w}{ }\PYG{n}{apple}
+\PYG{n}{RESET\PYGZus{}LIFETIME}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n}{True}\PYG{+w}{ }\PYG{err}{\PYGZsh{}}\PYG{+w}{ }\PYG{n}{reset}\PYG{+w}{ }\PYG{n}{life}\PYG{+w}{ }\PYG{n}{points}\PYG{+w}{ }\PYG{n}{when}\PYG{+w}{ }\PYG{n}{eating}\PYG{+w}{ }\PYG{n}{an}\PYG{+w}{ }\PYG{n}{apple}
+\PYG{n}{NORMALIZE\PYGZus{}BOARD}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{n}{False}
+
+\PYG{n}{SINGLE\PYGZus{}SNAKE\PYGZus{}BRAIN}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{+w}{ }\PYG{err}{\PYGZsh{}}\PYG{+w}{ }\PYG{n}{number}\PYG{+w}{ }\PYG{n}{of}\PYG{+w}{ }\PYG{n}{snakes}\PYG{+w}{ }\PYG{k}{in}\PYG{+w}{ }\PYG{n}{the}\PYG{+w}{ }\PYG{n}{single}\PYG{+w}{ }\PYG{n}{snake}\PYG{+w}{ }\PYG{n}{game}
+
+\PYG{n}{PLAY\PYGZus{}SNAKE\PYGZus{}ITERATIONS}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{l+m+mi}{10}\PYG{+w}{  }\PYG{err}{\PYGZsh{}}\PYG{+w}{ }\PYG{n}{number}\PYG{+w}{ }\PYG{n}{of}\PYG{+w}{ }\PYG{n}{iterations}\PYG{+w}{ }\PYG{k}{for}\PYG{+w}{ }\PYG{n}{the}\PYG{+w}{ }\PYG{n}{play}\PYG{+w}{ }\PYG{n}{snake}\PYG{+w}{ }\PYG{n}{game}
+
+\PYG{n}{up}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{p}{);}
+\PYG{n}{down}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{+w}{ }\PYG{p}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{)}
+\PYG{n}{left}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{p}{(\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m+mi}{0}\PYG{p}{)}
+\PYG{n}{right}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m+mi}{0}\PYG{p}{)}
+\PYG{n}{up\PYGZus{}right}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{p}{)}
+\PYG{n}{up\PYGZus{}left}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{p}{(\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{p}{)}
+\PYG{n}{down\PYGZus{}left}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{p}{(\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{+w}{ }\PYG{p}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{)}
+\PYG{n}{down\PYGZus{}right}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{+w}{ }\PYG{p}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{)}
+\PYG{n}{eight\PYGZus{}directions}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{p}{[}\PYG{n}{right}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{up\PYGZus{}right}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{up}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{up\PYGZus{}left}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{left}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{down\PYGZus{}left}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{down}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{down\PYGZus{}right}\PYG{p}{]}
+\PYG{n}{four\PYGZus{}directions}\PYG{+w}{ }\PYG{p}{=}\PYG{+w}{ }\PYG{p}{[}\PYG{n}{right}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{up}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{left}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{down}\PYG{p}{]}
+
+\end{Verbatim}

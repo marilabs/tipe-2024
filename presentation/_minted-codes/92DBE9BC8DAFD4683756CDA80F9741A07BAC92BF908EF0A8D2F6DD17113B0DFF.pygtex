@@ -1,0 +1,75 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+  \PYG{k+kn}{import} \PYG{n+nn}{numpy} \PYG{k}{as} \PYG{n+nn}{np}
+  \PYG{k+kn}{from} \PYG{n+nn}{neural\PYGZus{}network} \PYG{k+kn}{import} \PYG{n}{NeuralNetwork}
+  \PYG{k+kn}{from} \PYG{n+nn}{typing} \PYG{k+kn}{import} \PYG{n}{List}\PYG{p}{,} \PYG{n}{Tuple}
+  \PYG{k+kn}{import} \PYG{n+nn}{copy}
+
+  \PYG{k}{class} \PYG{n+nc}{GeneticAlgorithm}\PYG{p}{:}
+
+      \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{save\PYGZus{}bests}\PYG{p}{:} \PYG{n+nb}{int} \PYG{o}{=} \PYG{l+m+mi}{10}\PYG{p}{,} \PYG{n}{k}\PYG{p}{:} \PYG{n+nb}{int} \PYG{o}{=} \PYG{l+m+mi}{5}\PYG{p}{,} \PYG{n}{mut\PYGZus{}chance}\PYG{p}{:} \PYG{n+nb}{float} \PYG{o}{=} \PYG{l+m+mf}{0.5}\PYG{p}{,} \PYG{n}{coeff}\PYG{p}{:} \PYG{n+nb}{float} \PYG{o}{=} \PYG{l+m+mf}{0.5}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{k+kc}{None}\PYG{p}{:}
+          \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{save\PYGZus{}bests} \PYG{o}{=} \PYG{n}{save\PYGZus{}bests}
+          \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{k} \PYG{o}{=} \PYG{n}{k}
+          \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{mut\PYGZus{}chance} \PYG{o}{=} \PYG{n}{mut\PYGZus{}chance}
+          \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{coeff} \PYG{o}{=} \PYG{n}{coeff}
+
+      \PYG{k}{def} \PYG{n+nf}{select\PYGZus{}parent}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{population}\PYG{p}{:} \PYG{n}{List}\PYG{p}{[}\PYG{n}{Tuple}\PYG{p}{[}\PYG{n}{NeuralNetwork}\PYG{p}{,} \PYG{n+nb}{int}\PYG{p}{]])} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{Tuple}\PYG{p}{[}\PYG{n}{NeuralNetwork}\PYG{p}{,} \PYG{n}{NeuralNetwork}\PYG{p}{]:}
+          \PYG{c+c1}{\PYGZsh{} Roulette\PYGZhy{}wheel selection: numpy.random.choice}
+          \PYG{n}{maxi} \PYG{o}{=} \PYG{n+nb}{sum}\PYG{p}{([}\PYG{n}{x}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{k}{for} \PYG{n}{x} \PYG{o+ow}{in} \PYG{n}{population}\PYG{p}{])}
+          \PYG{n}{selection\PYGZus{}probability} \PYG{o}{=} \PYG{p}{[}\PYG{n}{x}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{/} \PYG{n}{maxi} \PYG{k}{for} \PYG{n}{x} \PYG{o+ow}{in} \PYG{n}{population}\PYG{p}{]}
+          \PYG{n}{parent1}\PYG{p}{,} \PYG{n}{parent2} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{random}\PYG{o}{.}\PYG{n}{choice}\PYG{p}{(}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{population}\PYG{p}{),} \PYG{n}{p}\PYG{o}{=}\PYG{n}{selection\PYGZus{}probability}\PYG{p}{),} \PYG{n}{np}\PYG{o}{.}\PYG{n}{random}\PYG{o}{.}\PYG{n}{choice}\PYG{p}{(}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{population}\PYG{p}{),} \PYG{n}{p}\PYG{o}{=}\PYG{n}{selection\PYGZus{}probability}\PYG{p}{)}
+          \PYG{k}{return} \PYG{n}{population}\PYG{p}{[}\PYG{n}{parent1}\PYG{p}{][}\PYG{l+m+mi}{0}\PYG{p}{],} \PYG{n}{population}\PYG{p}{[}\PYG{n}{parent2}\PYG{p}{][}\PYG{l+m+mi}{0}\PYG{p}{]}
+
+      \PYG{k}{def} \PYG{n+nf}{crossover}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{parent\PYGZus{}a}\PYG{p}{:} \PYG{n}{List}\PYG{p}{[}\PYG{n+nb}{float}\PYG{p}{],} \PYG{n}{parent\PYGZus{}b}\PYG{p}{:} \PYG{n}{List}\PYG{p}{[}\PYG{n+nb}{float}\PYG{p}{])} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{List}\PYG{p}{[}\PYG{n+nb}{float}\PYG{p}{]:}
+\PYG{+w}{          }\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+\PYG{l+s+sd}{          K\PYGZhy{}point crossover cf Wikipedia:}
+\PYG{l+s+sd}{          \PYGZhy{} select k random points in range(len(parent\PYGZus{}a))}
+\PYG{l+s+sd}{          \PYGZhy{} create a new array which alternate between coefficients of parent\PYGZus{}a and parent\PYGZus{}b}
+\PYG{l+s+sd}{          \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+          \PYG{n}{n} \PYG{o}{=} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{parent\PYGZus{}a}\PYG{p}{)}
+          \PYG{c+c1}{\PYGZsh{} list of crossover points}
+          \PYG{n}{l} \PYG{o}{=} \PYG{n+nb}{sorted}\PYG{p}{([}\PYG{n}{np}\PYG{o}{.}\PYG{n}{random}\PYG{o}{.}\PYG{n}{randint}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{n}\PYG{p}{)} \PYG{k}{for} \PYG{n}{\PYGZus{}} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{k}\PYG{p}{)])} \PYG{c+c1}{\PYGZsh{} to avoid having two times the same index}
+          \PYG{n}{l}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{)} \PYG{c+c1}{\PYGZsh{} to avoid index out of range but never ued}
+          \PYG{n}{child} \PYG{o}{=} \PYG{p}{[]}
+          \PYG{n}{current\PYGZus{}parent} \PYG{o}{=} \PYG{l+m+mi}{0}
+          \PYG{n}{current\PYGZus{}index} \PYG{o}{=} \PYG{l+m+mi}{0}
+          \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{n}\PYG{p}{):}
+              \PYG{k}{if} \PYG{n}{i} \PYG{o}{==} \PYG{n}{l}\PYG{p}{[}\PYG{n}{current\PYGZus{}index}\PYG{p}{]:}
+                  \PYG{n}{current\PYGZus{}parent} \PYG{o}{=} \PYG{l+m+mi}{1} \PYG{o}{\PYGZhy{}} \PYG{n}{current\PYGZus{}parent}
+                  \PYG{n}{current\PYGZus{}index} \PYG{o}{+=} \PYG{l+m+mi}{1}
+              \PYG{k}{if} \PYG{n}{current\PYGZus{}parent} \PYG{o}{==} \PYG{l+m+mi}{0}\PYG{p}{:}
+                  \PYG{n}{child}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{parent\PYGZus{}a}\PYG{p}{[}\PYG{n}{i}\PYG{p}{])}
+              \PYG{k}{else}\PYG{p}{:}
+                  \PYG{n}{child}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{parent\PYGZus{}b}\PYG{p}{[}\PYG{n}{i}\PYG{p}{])}
+          \PYG{k}{return} \PYG{n}{child}
+
+      \PYG{k}{def} \PYG{n+nf}{mutate}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{genome}\PYG{p}{:} \PYG{n}{List}\PYG{p}{[}\PYG{n+nb}{float}\PYG{p}{])} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{k+kc}{None}\PYG{p}{:}
+\PYG{+w}{          }\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+\PYG{l+s+sd}{          Gaussian mutation:}
+\PYG{l+s+sd}{          \PYGZhy{} for each coefficient:}
+\PYG{l+s+sd}{              \PYGZhy{} if random() \PYGZlt{}=  mutation chance (paramètre réglé):}
+\PYG{l+s+sd}{                  \PYGZhy{} generate a sign at random}
+\PYG{l+s+sd}{                  \PYGZhy{} generate an amplitude (between 0 and 1)}
+\PYG{l+s+sd}{                  \PYGZhy{} add sign * amplitude * coeff to the coefficient (coeff is a parameter)}
+\PYG{l+s+sd}{          \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+          \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{genome}\PYG{p}{)):}
+              \PYG{k}{if} \PYG{n}{np}\PYG{o}{.}\PYG{n}{random}\PYG{o}{.}\PYG{n}{random}\PYG{p}{()} \PYG{o}{\PYGZlt{}=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{mut\PYGZus{}chance}\PYG{p}{:}
+                  \PYG{n}{sign} \PYG{o}{=} \PYG{l+m+mi}{1} \PYG{k}{if} \PYG{n}{np}\PYG{o}{.}\PYG{n}{random}\PYG{o}{.}\PYG{n}{random}\PYG{p}{()} \PYG{o}{\PYGZlt{}=} \PYG{l+m+mf}{0.5} \PYG{k}{else} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}
+                  \PYG{n}{amplitude} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{random}\PYG{o}{.}\PYG{n}{random}\PYG{p}{()}
+                  \PYG{n}{genome}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{+=} \PYG{n}{sign} \PYG{o}{*} \PYG{n}{amplitude} \PYG{o}{*} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{coeff}
+
+      \PYG{k}{def} \PYG{n+nf}{evolve}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{population}\PYG{p}{:} \PYG{n}{Tuple}\PYG{p}{[}\PYG{n}{NeuralNetwork}\PYG{p}{,} \PYG{n+nb}{int}\PYG{p}{])} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n+nb}{list}\PYG{p}{:}
+          \PYG{k}{assert}\PYG{p}{(}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{population}\PYG{p}{)} \PYG{o}{!=} \PYG{l+m+mi}{0}\PYG{p}{)}
+          \PYG{n}{new\PYGZus{}population} \PYG{o}{=} \PYG{p}{[]}
+          \PYG{c+c1}{\PYGZsh{} sélection des meilleurs}
+          \PYG{n}{population}\PYG{o}{.}\PYG{n}{sort}\PYG{p}{(}\PYG{n}{key}\PYG{o}{=}\PYG{k}{lambda} \PYG{n}{x} \PYG{p}{:} \PYG{n}{x}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{],} \PYG{n}{reverse}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{)}
+          \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{population}\PYG{p}{)):}
+              \PYG{k}{if} \PYG{n}{i} \PYG{o}{\PYGZlt{}} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{save\PYGZus{}bests}\PYG{p}{:}
+                  \PYG{n}{new\PYGZus{}population}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{copy}\PYG{o}{.}\PYG{n}{deepcopy}\PYG{p}{(}\PYG{n}{population}\PYG{p}{[}\PYG{n}{i}\PYG{p}{][}\PYG{l+m+mi}{0}\PYG{p}{]))} \PYG{c+c1}{\PYGZsh{} to avoid reference}
+              \PYG{k}{else}\PYG{p}{:}
+                  \PYG{n}{parent\PYGZus{}a}\PYG{p}{,} \PYG{n}{parent\PYGZus{}b} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{select\PYGZus{}parent}\PYG{p}{(}\PYG{n}{population}\PYG{p}{)}
+                  \PYG{n}{child} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{crossover}\PYG{p}{(}\PYG{n}{parent\PYGZus{}a}\PYG{o}{.}\PYG{n}{to\PYGZus{}genome}\PYG{p}{(),} \PYG{n}{parent\PYGZus{}b}\PYG{o}{.}\PYG{n}{to\PYGZus{}genome}\PYG{p}{())}
+                  \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{mutate}\PYG{p}{(}\PYG{n}{child}\PYG{p}{)}
+                  \PYG{n}{new\PYGZus{}population}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{NeuralNetwork}\PYG{o}{.}\PYG{n}{from\PYGZus{}genome}\PYG{p}{(}\PYG{n}{child}\PYG{p}{,} \PYG{n}{population}\PYG{p}{[}\PYG{n}{i}\PYG{p}{][}\PYG{l+m+mi}{0}\PYG{p}{]}\PYG{o}{.}\PYG{n}{layers\PYGZus{}sizes}\PYG{p}{))}
+          \PYG{k}{return} \PYG{n}{new\PYGZus{}population}
+
+\end{Verbatim}
